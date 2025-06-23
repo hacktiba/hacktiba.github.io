@@ -5,46 +5,95 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hacktiba Pulse 05 - Destaque Internacional</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 2em; line-height: 1.6; background-color: #f9f9f9; color: #333; }
-    h1, h2 { color: #000; }
-    .lang-section { margin-bottom: 3em; }
-    a { color: #0073e6; text-decoration: none; }
-    .logo-container { text-align: center; margin-bottom: 2em; }
-    .logo-container img { max-height: 70px; margin: 0 1em; vertical-align: middle; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+    header {
+      background-color: #222;
+      color: #fff;
+      padding: 2rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    .logo-bar {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+    }
+    .logo-bar img {
+      height: 60px;
+      margin: 0 1rem;
+      vertical-align: middle;
+    }
+    .content {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .lang-section {
+      margin-bottom: 3rem;
+    }
+    h2 {
+      margin-bottom: 0.5rem;
+    }
+    p {
+      margin: 0.5rem 0;
+    }
+    a {
+      color: #0056b3;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
+  <header>
+    <h1>🌍 Hacktiba Pulse 05 – Destaque Internacional 2024/2025</h1>
+  </header>
 
-  <h1>🌍 Hacktiba Pulse 05 – Destaque Internacional 2024/2025</h1>
-
-  <div class="logo-container">
-    <img src="https://www.convisoappsec.com/images/logo-dark.svg" alt="Conviso Logo">
-    <img src="https://portswigger.net/images/branding/portswigger-logo.svg" alt="PortSwigger Logo">
+  <div class="logo-bar">
+    <a href="https://blog.convisoappsec.com" target="_blank">
+      <img src="https://blog.convisoappsec.com/wp-content/uploads/2022/02/Logo.png" alt="Conviso Logo">
+    </a>
+    <a href="https://portswigger.net" target="_blank">
+      <img src="https://avatars.githubusercontent.com/u/13749115?s=200&v=4" alt="PortSwigger Logo">
+    </a>
   </div>
 
-  <div class="lang-section">
-    <h2>🇧🇷 Português</h2>
-    <p><strong>🔎 Destaque Internacional: Conviso Research Team</strong></p>
-    <p>A equipe da Conviso publicou um estudo técnico de alto nível: <a href="https://blog.convisoappsec.com/en/from-arbitrary-file-write-to-rce-in-restricted-rails-apps/" target="_blank">De Escrita Arbitrária de Arquivo a RCE em Apps Rails Restritas</a>.</p>
-    <p>O artigo mostra como uma vulnerabilidade foi explorada mesmo com restrições impostas por Docker. Essa pesquisa representa o Brasil com força na comunidade internacional.</p>
-    <p>🔗 Nomeie para o <a href="https://portswigger.net/research/top-10-web-hacking-techniques-of-2024-nominations-open" target="_blank">Top 10 Web Hacking Techniques 2024</a> promovido pela PortSwigger.</p>
-  </div>
+  <div class="content">
+    <div class="lang-section">
+      <h2>🇧🇷 Português</h2>
+      <p><strong>🔎 Destaque Internacional: Conviso Research Team</strong></p>
+      <p>A equipe da Conviso publicou um estudo técnico de alto nível: <a href="https://blog.convisoappsec.com/en/from-arbitrary-file-write-to-rce-in-restricted-rails-apps/" target="_blank">De Escrita Arbitrária de Arquivo a RCE em Apps Rails Restritas</a>.</p>
+      <p>O artigo mostra como uma vulnerabilidade foi explorada mesmo com restrições impostas por Docker. Essa pesquisa representa o Brasil com força na comunidade internacional.</p>
+      <p>🔗 Nomeie para o <a href="https://portswigger.net/research/top-10-web-hacking-techniques-of-2024-nominations-open" target="_blank">Top 10 Web Hacking Techniques 2024</a> promovido pela PortSwigger.</p>
+    </div>
 
-  <div class="lang-section">
-    <h2>🇺🇸 English</h2>
-    <p><strong>🔎 International Highlight: Conviso Research Team</strong></p>
-    <p>The Conviso team published a high-impact technical article: <a href="https://blog.convisoappsec.com/en/from-arbitrary-file-write-to-rce-in-restricted-rails-apps/" target="_blank">From Arbitrary File Write to RCE in Restricted Rails Apps</a>.</p>
-    <p>This research shows how RCE was achieved in a Docker-restricted environment. A powerful example of Brazilian research reaching global relevance.</p>
-    <p>🔗 Nominate it for <a href="https://portswigger.net/research/top-10-web-hacking-techniques-of-2024-nominations-open" target="_blank">PortSwigger's Top 10 Web Hacking Techniques 2024</a>.</p>
-  </div>
+    <div class="lang-section">
+      <h2>🇺🇸 English</h2>
+      <p><strong>🔎 International Highlight: Conviso Research Team</strong></p>
+      <p>The Conviso team published a high-impact technical article: <a href="https://blog.convisoappsec.com/en/from-arbitrary-file-write-to-rce-in-restricted-rails-apps/" target="_blank">From Arbitrary File Write to RCE in Restricted Rails Apps</a>.</p>
+      <p>This research shows how RCE was achieved in a Docker-restricted environment. A powerful example of Brazilian research reaching global relevance.</p>
+      <p>🔗 Nominate it for <a href="https://portswigger.net/research/top-10-web-hacking-techniques-of-2024-nominations-open" target="_blank">PortSwigger's Top 10 Web Hacking Techniques 2024</a>.</p>
+    </div>
 
-  <div class="lang-section">
-    <h2>🇪🇸 Español</h2>
-    <p><strong>🔎 Destacado Internacional: Conviso Research Team</strong></p>
-    <p>El equipo de Conviso publicó un artículo técnico destacado: <a href="https://blog.convisoappsec.com/en/from-arbitrary-file-write-to-rce-in-restricted-rails-apps/" target="_blank">De Escritura Arbitraria de Archivos a RCE en Apps Rails Restringidas</a>.</p>
-    <p>Demostraron cómo ejecutar código en un entorno Docker restringido. Un caso de estudio que muestra el nivel técnico de la investigación brasileña.</p>
-    <p>🔗 Nomina esta técnica para el <a href="https://portswigger.net/research/top-10-web-hacking-techniques-of-2024-nominations-open" target="_blank">Top 10 de Técnicas Web de PortSwigger</a>.</p>
+    <div class="lang-section">
+      <h2>🇪🇸 Español</h2>
+      <p><strong>🔎 Destacado Internacional: Conviso Research Team</strong></p>
+      <p>El equipo de Conviso publicó un artículo técnico destacado: <a href="https://blog.convisoappsec.com/en/from-arbitrary-file-write-to-rce-in-restricted-rails-apps/" target="_blank">De Escritura Arbitraria de Archivos a RCE en Apps Rails Restringidas</a>.</p>
+      <p>Demostraron cómo ejecutar código en un entorno Docker restringido. Un caso de estudio que muestra el nivel técnico de la investigación brasileña.</p>
+      <p>🔗 Nombra esta técnica para el <a href="https://portswigger.net/research/top-10-web-hacking-techniques-of-2024-nominations-open" target="_blank">Top 10 de Técnicas Web de PortSwigger</a>.</p>
+    </div>
   </div>
-
 </body>
 </html>
