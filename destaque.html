@@ -32,6 +32,10 @@
       height: 60px;
       margin: 0 1rem;
       vertical-align: middle;
+      transition: transform 0.3s ease;
+    }
+    .logo-bar img:hover {
+      transform: scale(1.1);
     }
     .content {
       max-width: 900px;
@@ -40,9 +44,20 @@
     }
     .lang-section {
       margin-bottom: 3rem;
+      background-color: #fff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+    .lang-section h2 img {
+      height: 20px;
+      margin-right: 8px;
+      vertical-align: middle;
     }
     h2 {
       margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
     }
     p {
       margin: 0.5rem 0;
@@ -53,6 +68,14 @@
     }
     a:hover {
       text-decoration: underline;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px solid #ddd;
+      margin-top: 2rem;
     }
   </style>
 </head>
@@ -72,7 +95,7 @@
 
   <div class="content">
     <div class="lang-section">
-      <h2>🇧🇷 Português</h2>
+      <h2><img src="https://flagcdn.com/w40/br.png" alt="BR">Português</h2>
       <p><strong>🔎 Destaque Internacional: Conviso Research Team</strong></p>
       <p>A equipe da Conviso publicou um estudo técnico de alto nível: <a href="https://blog.convisoappsec.com/en/from-arbitrary-file-write-to-rce-in-restricted-rails-apps/" target="_blank">De Escrita Arbitrária de Arquivo a RCE em Apps Rails Restritas</a>.</p>
       <p>O artigo mostra como uma vulnerabilidade foi explorada mesmo com restrições impostas por Docker. Essa pesquisa representa o Brasil com força na comunidade internacional.</p>
@@ -80,7 +103,7 @@
     </div>
 
     <div class="lang-section">
-      <h2>🇺🇸 English</h2>
+      <h2><img src="https://flagcdn.com/w40/us.png" alt="US">English</h2>
       <p><strong>🔎 International Highlight: Conviso Research Team</strong></p>
       <p>The Conviso team published a high-impact technical article: <a href="https://blog.convisoappsec.com/en/from-arbitrary-file-write-to-rce-in-restricted-rails-apps/" target="_blank">From Arbitrary File Write to RCE in Restricted Rails Apps</a>.</p>
       <p>This research shows how RCE was achieved in a Docker-restricted environment. A powerful example of Brazilian research reaching global relevance.</p>
@@ -88,12 +111,16 @@
     </div>
 
     <div class="lang-section">
-      <h2>🇪🇸 Español</h2>
+      <h2><img src="https://flagcdn.com/w40/es.png" alt="ES">Español</h2>
       <p><strong>🔎 Destacado Internacional: Conviso Research Team</strong></p>
       <p>El equipo de Conviso publicó un artículo técnico destacado: <a href="https://blog.convisoappsec.com/en/from-arbitrary-file-write-to-rce-in-restricted-rails-apps/" target="_blank">De Escritura Arbitraria de Archivos a RCE en Apps Rails Restringidas</a>.</p>
       <p>Demostraron cómo ejecutar código en un entorno Docker restringido. Un caso de estudio que muestra el nivel técnico de la investigación brasileña.</p>
       <p>🔗 Nombra esta técnica para el <a href="https://portswigger.net/research/top-10-web-hacking-techniques-of-2024-nominations-open" target="_blank">Top 10 de Técnicas Web de PortSwigger</a>.</p>
     </div>
   </div>
+
+  <footer>
+    © 2025 Hacktiba Pulse — Promovendo visibilidade para a pesquisa latino-americana em cibersegurança.
+  </footer>
 </body>
 </html>
