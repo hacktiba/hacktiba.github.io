@@ -160,12 +160,91 @@
     <li>OWASP Uruguay Chapter</li>
     <li>Chapéu de Palha Hacker Club</li>
     <li>CveHunters</li>
+    <li>BsidesRJ</li>
   </ul>
 </section>
 
 <div class="footer">
   &copy; 2025 Hacktiba Pulse. Todos os direitos reservados.
 </div>
+<script>
+  const rows = document.querySelectorAll("tbody tr");
 
+  const rankingPorPais = {};
+  const rankingPorPessoa = {};
+
+  rows.forEach(row => {
+    // Conta países (por bandeira)
+    const flags = Array.from(row.querySelectorAll(".flags img")).map(img => img.alt.trim());
+    flags.forEach(flag => {
+      rankingPorPais[flag] = (rankingPorPais[flag] || 0) + 1;
+    });
+
+    // Conta autores/pessoas a partir do campo "Tema"
+    const tema = row.children[1].textContent;
+    const match = tema.match(/([^)]+)/); // extrai texto entre parênteses
+    if (match && match[1]) {
+      const pessoa = match[1].trim();
+      rankingPorPessoa[pessoa] = (rankingPorPessoa[pessoa] || 0) + 1;
+    }
+  });
+
+  const sortedPaises = Object.entries(rankingPorPais).sort((a, b) => b[1] - a[1]);
+  const sortedPessoas = Object.entries(rankingPorPessoa).sort((a, b) => b[1] - a[1]);
+
+  // Cria container com dois rankings lado a lado
+  const container = document.createElement('section');
+  container.className = 'section';
+  container.style.display = 'flex';
+  container.style.flexWrap = 'wrap';
+  container.style.gap = '2rem';
+
+  // Ranking por país
+  const paisDiv = document.createElement('div');
+  paisDiv.style.flex = '1';
+  paisDiv.innerHTML = `
+    <h2>🏁 Ranking por País</h2>
+    <table>
+      <thead>
+        <tr><th>País</th><th>Pulses</th></tr>
+      </thead>
+      <tbody>
+        ${sortedPaises.map(([pais, count]) => `
+          <tr>
+            <td>${pais}</td>
+            <td>${count}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+
+  // Ranking por pessoa
+  const pessoaDiv = document.createElement('div');
+  pessoaDiv.style.flex = '1';
+  pessoaDiv.innerHTML = `
+    <h2>🧑‍💻 Ranking por Pesquisador</h2>
+    <table>
+      <thead>
+        <tr><th>Pesquisador</th><th>Pulses</th></tr>
+      </thead>
+      <tbody>
+        ${sortedPessoas.map(([nome, count]) => `
+          <tr>
+            <td>${nome}</td>
+            <td>${count}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+
+  container.appendChild(paisDiv);
+  container.appendChild(pessoaDiv);
+
+  // Insere antes do rodapé
+  const footer = document.querySelector('.footer');
+  document.body.insertBefore(container, footer);
+</script>
 </body>
 </html>
