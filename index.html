@@ -1,203 +1,152 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hacktiba Pulse 2025</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-      color: #222;
-    }
-    header {
-      background-color: #222;
-      color: #fff;
-      padding: 2rem 1rem;
-      text-align: center;
-    }
-    header img {
-      max-width: 100px;
-      height: auto;
-      display: block;
-      margin: 0 auto 1rem;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    .section {
-      padding: 2rem 1rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 0.8rem;
-      text-align: left;
-    }
-    th {
-      background-color: #eaeaea;
-    }
-    ul {
-      margin-top: 1rem;
-      padding-left: 1.5rem;
-    }
-    .footer {
-      background-color: #222;
-      color: #ccc;
-      padding: 1rem;
-      text-align: center;
-      font-size: 0.9rem;
-    }
-    .flags img {
-      height: 16px;
-      margin-right: 4px;
-      vertical-align: middle;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>HL Vocabulary • Pares</title>
+<style>
+:root{
+  --bg:#0e1329; --bg2:#1a2250; --card:#1e274f; --card2:#293466; --paper:#f7f3e8;
+  --muted:#a6afd4; --line:rgba(255,255,255,.14); --good:#39e58d; --bad:#ff5d7d;
+  --en:#4fd6c4; --es:#ffb84d; --fr:#7f94ff; --gold:#ffd166;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent} html,body{margin:0;min-height:100%}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--paper);background:radial-gradient(900px 550px at 50% -10%,#2b3575 0%,var(--bg) 62%);user-select:none;}
+button,input,select{font:inherit} button{cursor:pointer}
+#app{width:min(980px,100%);margin:auto;min-height:100vh;padding:18px;display:flex;flex-direction:column;gap:16px}.hidden{display:none!important}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-weight:900;letter-spacing:-.04em;font-size:clamp(28px,7vw,54px);line-height:.95}.logo span:nth-child(1){color:var(--en)}.logo span:nth-child(2){color:var(--fr)}.logo span:nth-child(3){color:var(--es)}.pill{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);background:rgba(255,255,255,.04);font-weight:700;font-size:13px}.panel{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:24px;box-shadow:0 18px 50px rgba(0,0,0,.28)}
+.hero{padding:24px;display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:stretch}.hero h1{margin:0;font-size:clamp(25px,5vw,45px);line-height:1.05;letter-spacing:-.04em}.hero p{color:var(--muted);font-size:16px;line-height:1.55;margin:12px 0 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.stat{border:1px solid var(--line);background:rgba(0,0,0,.16);border-radius:18px;padding:14px}.stat b{font-size:24px;display:block}.stat small{color:var(--muted)}.sidebox{padding:18px;display:flex;flex-direction:column;gap:12px}.meter{height:14px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}.meter>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--en),var(--fr),var(--es));border-radius:999px}.label{font-size:13px;color:var(--muted);font-weight:700}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.mode{padding:18px;border:1px solid var(--line);border-radius:22px;background:var(--card);color:var(--paper);text-align:left;box-shadow:0 7px 0 rgba(0,0,0,.22);transition:.1s}.mode:active,.btn:active,.card:active{transform:translateY(3px)}.mode h3{margin:0;font-size:18px}.mode p{margin:7px 0 0;color:var(--muted);font-size:13px;line-height:1.4}.badge{width:54px;height:54px;border-radius:17px;display:grid;place-items:center;margin-bottom:12px;font-weight:900;color:#091026;background:linear-gradient(135deg,var(--c1),var(--c2))}.controls{padding:16px;display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:15px;padding:13px 15px;font-weight:900;background:var(--card2);color:var(--paper);box-shadow:0 5px 0 rgba(0,0,0,.22)}.btn.primary{background:var(--good);color:#082415}.btn.warn{background:var(--gold);color:#352302}.btn.ghost{background:rgba(255,255,255,.06);border:1px solid var(--line);box-shadow:none;color:var(--muted)}
+.gameHead{display:flex;align-items:center;gap:12px}.gameTitle{flex:1}.gameTitle h2{margin:0;font-size:23px}.gameTitle p{margin:3px 0 0;color:var(--muted);font-size:13px}.heart{color:var(--bad);font-weight:900;min-width:64px;text-align:right}.score{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.score .pill{font-size:12px;padding:7px 10px}.board{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.card{min-height:66px;border-radius:18px;border:2px solid transparent;background:var(--card);color:var(--paper);font-weight:850;font-size:clamp(15px,3.7vw,19px);padding:12px;text-align:center;line-height:1.25}.card.left{border-left:6px solid var(--src)}.card.right{border-left:6px solid var(--tgt)}.card.selected{background:var(--card2);border-color:#fff}.card.good{background:rgba(57,229,141,.16);border-color:var(--good);color:var(--good)}.card.bad{animation:shake .32s;border-color:var(--bad)}.card.off{opacity:0;transform:scale(.86);pointer-events:none}@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}.note{min-height:24px;text-align:center;color:var(--muted);font-size:14px;margin:10px 0}.learn{padding:16px;margin-top:14px}.learn h3{margin:0 0 10px}.list{display:grid;gap:8px;max-height:240px;overflow:auto;padding-right:4px}.row{display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px;background:rgba(0,0,0,.13)}.row b{font-size:15px}.row small{color:var(--muted)}.speak{border:0;border-radius:10px;background:rgba(255,255,255,.08);color:var(--paper);padding:8px}.overlay{position:fixed;inset:0;display:none;place-items:center;background:rgba(8,10,24,.9);padding:22px;z-index:10}.overlay.show{display:grid}.modal{width:min(430px,100%);padding:26px;text-align:center}.modal .emoji{font-size:45px}.modal h2{margin:8px 0}.modal p{color:var(--muted);line-height:1.5}.footer{color:var(--muted);font-size:12px;text-align:center;line-height:1.5;margin:4px 0 12px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.row{grid-template-columns:1fr auto}.row .arrow{display:none}.board{gap:9px}.card{min-height:58px}}
+</style>
+
+<script src="capacitor.js"></script>
+<script>
+window.addEventListener('error', function(e){
+  var box=document.createElement('div');
+  box.style.cssText='position:fixed;left:10px;right:10px;bottom:10px;z-index:99999;background:#ff5d7d;color:white;padding:12px;border-radius:12px;font:14px system-ui';
+  box.textContent='Erro no jogo: '+(e.message||'desconhecido')+'. Me envie um print desta mensagem.';
+  document.body.appendChild(box);
+});
+</script>
 </head>
 <body>
-
-<header>
-  <img src="1000006092%20(1).png" alt="Hacktiba Logo">
-  <h1>Hacktiba Pulse 2025</h1>
-</header>
-
-<section class="section">
-  <h2>📌 Pulses Publicados</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Pulse</th>
-        <th>Tema</th>
-        <th>Idioma</th>
-        <th>Link</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Pulse 00</td>
-        <td>HT AI — Reflexão inicial sobre IA e AppSec</td>
-        <td class="flags"><img src="https://flagcdn.com/w20/br.png" alt="Brasil"></td>
-        <td><a href="https://github.com/cnetsec/hacktiba-ht-ai--pulse00-2025" target="_blank">Ver Pulse</a></td>
-      </tr>
-      <tr>
-        <td>Pulse 01</td>
-        <td>Podcast com notebookLM: HT AI + Assessment de Maturidade AppSec</td>
-        <td class="flags"><img src="https://flagcdn.com/w20/br.png" alt="Brasil"></td>
-        <td><a href="https://youtu.be/2-8pTJgyIME" target="_blank">Assistir</a></td>
-      </tr>
-      <tr>
-        <td>Pulse 02</td>
-        <td>Podcast com notebookLM: HT AI + Assessment de Maturidade AppSec</td>
-        <td class="flags"><img src="https://flagcdn.com/w20/py.png" alt="Paraguai"></td>
-        <td><a href="https://youtu.be/GHzsVfAoGuo" target="_blank">Assistir</a></td>
-      </tr>
-      <tr>
-        <td>Pulse 03</td>
-        <td>Painel CVEs 2024/2025 da América do Sul</td>
-        <td class="flags">
-          <img src="https://flagcdn.com/w20/br.png" alt="Brasil">
-          <img src="https://flagcdn.com/w20/py.png" alt="Paraguai">
-          <img src="https://flagcdn.com/w20/ar.png" alt="Argentina">
-          <img src="https://flagcdn.com/w20/uy.png" alt="Uruguai">
-        </td>
-        <td><a href="https://github.com/cnetsec/south-america-cve-hall" target="_blank">Ver Projeto</a></td>
-      </tr>
-      <tr>
-        <td>Pulse 04</td>
-        <td>Boas práticas de Cibersegurança a partir de CVEs de South American Researchers</td>
-        <td class="flags">
-          <img src="https://flagcdn.com/w20/br.png" alt="Brasil">
-          <img src="https://flagcdn.com/w20/py.png" alt="Paraguai">
-          <img src="https://flagcdn.com/w20/ar.png" alt="Argentina">
-          <img src="https://flagcdn.com/w20/uy.png" alt="Uruguai">
-        </td>
-        <td><a href="https://github.com/cnetsec/hacktiba-pulse04" target="_blank">Ver Pulse</a></td>
-      </tr>
-      <tr>
-        <td>Pulse 05</td>
-        <td>Destaque Internacional – From Arbitrary File Write to RCE (Conviso)</td>
-        <td class="flags">
-          <img src="https://flagcdn.com/w20/br.png" alt="Brasil">
-          <img src="https://flagcdn.com/w20/us.png" alt="EUA">
-          <img src="https://flagcdn.com/w20/es.png" alt="Espanha">
-        </td>
-        <td><a href="destaque.html" target="_blank">Ver Pulse</a></td>
-      </tr>
-      <tr>
-        <td>Pulse 06</td>
-        <td>Compartilhamento de Dicas para iniciantes - Parceria com o Chapeu de Palha Hacker Club</td>
-        <td class="flags">
-          <img src="https://flagcdn.com/w20/br.png" alt="Brasil">
-        </td>
-        <td>Threads Linkedin e Instagram</td>
-      </tr>
-      <tr>
-        <td>Pulse 07</td>
-        <td>XSS is not Dead - Hacktiba Pulse 07</td>
-        <td class="flags">
-          <img src="https://flagcdn.com/w20/br.png" alt="Brasil">
-        </td>
-        <td><a href="https://www.cvehunters.com/p/xss-is-not-dead-hacktiba-pulse-07/" target="_blank">Ver Pulse</a></td>
-      </tr>
-        <td>Pulse 08</td>
-        <td>Resposta a Indidentes BlackBox - O Básico não Feito</br>
-        Protegendo o Wi-fi com WPA3 - Rafael Machado da Silva
-        <td class="flags">
-          <img src="https://flagcdn.com/w20/br.png" alt="Brasil">
-        </td>
-        <td>Pendente</td>
-      </tr>
-      <td>Pulse 09</td>
-        <td>Hacktiba Idiomas - Luis Bello </td>
-        <td class="flags">
-          <img src="https://flagcdn.com/w20/br.png" alt="Brasil">
-        </td>
-        <td><a href="https://www.youtube.com/watch?v=tpITKUiwABA" target="_blank">Ver Pulse</a></td>
-      </tr>
-
-    </tbody>
-  </table>
-
-  <h3 style="margin-top: 2rem;">🗓️ Em breve</h3>
-  <ul>
-    <li>Palestra sobre Respostas de Incidentes e WPA3 — 21/07</li>
-    <li>Palestra sobre Idiomas — 22/07</li>
-    <li>Semana do AppSec — (To be defined)</li>
-    <li>Semana Internacional — (To be defined)</li>
-    <li>Evento Presencial — (To be defined)</li>
-  </ul>
-</section>
-
-<section class="section">
-  <h2>🙌 Apoiadores até o momento</h2>
-  <ul>
-    <li>OWASP Curitiba</li>
-    <li>KavaCon</li>
-    <li>OWASP Chapter Fortaleza</li>
-    <li>OWASP Asunción, Paraguay</li>
-    <li>CATEI - Universidade Federal do Paraná</li>
-    <li>CNetSec Research Labs</li>
-    <li>Segura</li>
-    <li>Conviso Application Security</li>
-    <li>OWASP Uruguay Chapter</li>
-    <li>Chapéu de Palha Hacker Club</li>
-    <li>CveHunters</li>
-  </ul>
-</section>
-
-<div class="footer">
-  &copy; 2025 Hacktiba Pulse. Todos os direitos reservados.
+<div id="app">
+  <div class="top"><div class="logo"><span>HL</span> <span>Vocabulary</span></div><div class="pill" id="saveStatus">Progresso salvo</div></div>
+  <section id="home" class="panel hero">
+    <div><h1>HL Vocabulary</h1><p>Jogo de pares para treinar vocabulário essencial em inglês, espanhol e francês. Meta do projeto: 5.000 palavras por idioma. Esta versão usa o motor de botões revisado e funcional, com modo Pares funcional e estrutura pronta para banco completo.</p><div class="stats"><div class="stat"><b id="totalWords">5000</b><small>meta por idioma</small></div><div class="stat"><b>3</b><small>idiomas</small></div><div class="stat"><b id="bestStat">0</b><small>melhor XP</small></div></div></div>
+    <div class="panel sidebox"><div class="label">Progresso geral</div><div class="meter"><i id="homeMeter"></i></div><div id="homeText" class="label">Comece uma ponte para estudar.</div><button class="btn ghost" id="resetBtn">Zerar progresso</button></div>
+  </section>
+  <section id="modes" class="grid">
+    <button class="mode" data-src="en" data-tgt="fr" style="--c1:var(--en);--c2:var(--fr)"><div class="badge">FR</div><h3>Inglês → Francês</h3><p>Toque em cada palavra e encontre a tradução correta.</p></button>
+    <button class="mode" data-src="en" data-tgt="es" style="--c1:var(--en);--c2:var(--es)"><div class="badge">ES</div><h3>Inglês → Espanhol</h3><p>Ideal para memorizar cognatos, verbos e expressões.</p></button>
+    <button class="mode" data-src="es" data-tgt="fr" style="--c1:var(--es);--c2:var(--fr)"><div class="badge">FR</div><h3>Espanhol → Francês</h3><p>Treino rápido para comparar idiomas parecidos.</p></button>
+  </section>
+  <section class="panel controls"><button class="btn primary" id="dailyBtn">Desafio diário</button><button class="btn warn" id="reviewBtn">Revisar erradas</button><button class="btn ghost" id="audioBtn">Áudio: ligado</button></section>
+  <section id="game" class="hidden">
+    <div class="panel" style="padding:16px"><div class="gameHead"><button class="btn ghost" id="exitBtn">Menu</button><div class="gameTitle"><h2 id="roundTitle">Rodada</h2><p id="pairLabel"></p></div><div class="heart" id="hearts">♥ 5</div></div><div class="meter" style="margin-top:14px"><i id="trackFill"></i></div><div class="score"><span class="pill" id="xpPill">XP 0</span><span class="pill" id="comboPill">Combo 0</span><span class="pill" id="accuracyPill">Precisão 100%</span></div><div class="board" id="board"></div><div class="note" id="note">&nbsp;</div></div>
+    <div class="panel learn"><h3>Palavras desta rodada</h3><div class="list" id="learnList"></div></div>
+  </section>
+  <div class="footer">HL Vocabulary funciona offline. Modo Pares revisado com botões por <code>addEventListener/onClick</code>, seleção, acerto, erro, rodada, áudio e progresso.</div>
 </div>
+<div class="overlay" id="overlay"><div class="panel modal"><div class="emoji" id="overlayEmoji">🎉</div><h2 id="overlayTitle">Parabéns!</h2><p id="overlayText"></p><button class="btn primary" id="continueBtn">Continuar</button><button class="btn ghost" id="menuBtn">Voltar ao menu</button></div></div>
+<script>
+const VOCAB = [{"en":"hello","fr":"bonjour","es":"hola"},{"en":"goodbye","fr":"au revoir","es":"adiós"},{"en":"please","fr":"s'il vous plaît","es":"por favor"},{"en":"thank you","fr":"merci","es":"gracias"},{"en":"yes","fr":"oui","es":"sí"},{"en":"no","fr":"non","es":"no"},{"en":"sorry","fr":"pardon","es":"perdón"},{"en":"excuse me","fr":"excusez-moi","es":"disculpe"},{"en":"good","fr":"bon","es":"bueno"},{"en":"bad","fr":"mauvais","es":"malo"},{"en":"I","fr":"je","es":"yo"},{"en":"you","fr":"tu","es":"tú"},{"en":"he","fr":"il","es":"él"},{"en":"she","fr":"elle","es":"ella"},{"en":"we","fr":"nous","es":"nosotros"},{"en":"they","fr":"ils","es":"ellos"},{"en":"my","fr":"mon","es":"mi"},{"en":"your","fr":"ton","es":"tu"},{"en":"our","fr":"notre","es":"nuestro"},{"en":"their","fr":"leur","es":"su"},{"en":"one","fr":"un","es":"uno"},{"en":"two","fr":"deux","es":"dos"},{"en":"three","fr":"trois","es":"tres"},{"en":"four","fr":"quatre","es":"cuatro"},{"en":"five","fr":"cinq","es":"cinco"},{"en":"six","fr":"six","es":"seis"},{"en":"seven","fr":"sept","es":"siete"},{"en":"eight","fr":"huit","es":"ocho"},{"en":"nine","fr":"neuf","es":"nueve"},{"en":"ten","fr":"dix","es":"diez"},{"en":"twenty","fr":"vingt","es":"veinte"},{"en":"hundred","fr":"cent","es":"cien"},{"en":"red","fr":"rouge","es":"rojo"},{"en":"blue","fr":"bleu","es":"azul"},{"en":"green","fr":"vert","es":"verde"},{"en":"yellow","fr":"jaune","es":"amarillo"},{"en":"black","fr":"noir","es":"negro"},{"en":"white","fr":"blanc","es":"blanco"},{"en":"orange","fr":"orange","es":"naranja"},{"en":"gray","fr":"gris","es":"gris"},{"en":"mother","fr":"mère","es":"madre"},{"en":"father","fr":"père","es":"padre"},{"en":"grandmother","fr":"grand-mère","es":"abuela"},{"en":"grandfather","fr":"grand-père","es":"abuelo"},{"en":"brother","fr":"frère","es":"hermano"},{"en":"sister","fr":"sœur","es":"hermana"},{"en":"son","fr":"fils","es":"hijo"},{"en":"daughter","fr":"fille","es":"hija"},{"en":"husband","fr":"mari","es":"esposo"},{"en":"wife","fr":"femme","es":"esposa"},{"en":"friend","fr":"ami","es":"amigo"},{"en":"family","fr":"famille","es":"familia"},{"en":"man","fr":"homme","es":"hombre"},{"en":"woman","fr":"femme","es":"mujer"},{"en":"child","fr":"enfant","es":"niño"},{"en":"boy","fr":"garçon","es":"chico"},{"en":"girl","fr":"fille","es":"chica"},{"en":"baby","fr":"bébé","es":"bebé"},{"en":"day","fr":"jour","es":"día"},{"en":"night","fr":"nuit","es":"noche"},{"en":"morning","fr":"matin","es":"mañana"},{"en":"afternoon","fr":"après-midi","es":"tarde"},{"en":"week","fr":"semaine","es":"semana"},{"en":"month","fr":"mois","es":"mes"},{"en":"year","fr":"année","es":"año"},{"en":"today","fr":"aujourd'hui","es":"hoy"},{"en":"tomorrow","fr":"demain","es":"mañana"},{"en":"yesterday","fr":"hier","es":"ayer"},{"en":"time","fr":"temps","es":"tiempo"},{"en":"hour","fr":"heure","es":"hora"},{"en":"minute","fr":"minute","es":"minuto"},{"en":"now","fr":"maintenant","es":"ahora"},{"en":"always","fr":"toujours","es":"siempre"},{"en":"never","fr":"jamais","es":"nunca"},{"en":"Monday","fr":"lundi","es":"lunes"},{"en":"Tuesday","fr":"mardi","es":"martes"},{"en":"Wednesday","fr":"mercredi","es":"miércoles"},{"en":"Thursday","fr":"jeudi","es":"jueves"},{"en":"Friday","fr":"vendredi","es":"viernes"},{"en":"Saturday","fr":"samedi","es":"sábado"},{"en":"Sunday","fr":"dimanche","es":"domingo"},{"en":"sun","fr":"soleil","es":"sol"},{"en":"moon","fr":"lune","es":"luna"},{"en":"star","fr":"étoile","es":"estrella"},{"en":"sky","fr":"ciel","es":"cielo"},{"en":"sea","fr":"mer","es":"mar"},{"en":"river","fr":"rivière","es":"río"},{"en":"mountain","fr":"montagne","es":"montaña"},{"en":"tree","fr":"arbre","es":"árbol"},{"en":"flower","fr":"fleur","es":"flor"},{"en":"rain","fr":"pluie","es":"lluvia"},{"en":"snow","fr":"neige","es":"nieve"},{"en":"wind","fr":"vent","es":"viento"},{"en":"fire","fr":"feu","es":"fuego"},{"en":"water","fr":"eau","es":"agua"},{"en":"earth","fr":"terre","es":"tierra"},{"en":"dog","fr":"chien","es":"perro"},{"en":"cat","fr":"chat","es":"gato"},{"en":"bird","fr":"oiseau","es":"pájaro"},{"en":"owl","fr":"chouette","es":"búho"},{"en":"fish","fr":"poisson","es":"pez"},{"en":"horse","fr":"cheval","es":"caballo"},{"en":"house","fr":"maison","es":"casa"},{"en":"city","fr":"ville","es":"ciudad"},{"en":"country","fr":"pays","es":"país"},{"en":"street","fr":"rue","es":"calle"},{"en":"school","fr":"école","es":"escuela"},{"en":"work","fr":"travail","es":"trabajo"},{"en":"hospital","fr":"hôpital","es":"hospital"},{"en":"store","fr":"magasin","es":"tienda"},{"en":"restaurant","fr":"restaurant","es":"restaurante"},{"en":"church","fr":"église","es":"iglesia"},{"en":"door","fr":"porte","es":"puerta"},{"en":"window","fr":"fenêtre","es":"ventana"},{"en":"table","fr":"table","es":"mesa"},{"en":"chair","fr":"chaise","es":"silla"},{"en":"bed","fr":"lit","es":"cama"},{"en":"room","fr":"chambre","es":"habitación"},{"en":"kitchen","fr":"cuisine","es":"cocina"},{"en":"garden","fr":"jardin","es":"jardín"},{"en":"bread","fr":"pain","es":"pan"},{"en":"milk","fr":"lait","es":"leche"},{"en":"coffee","fr":"café","es":"café"},{"en":"tea","fr":"thé","es":"té"},{"en":"egg","fr":"œuf","es":"huevo"},{"en":"cheese","fr":"fromage","es":"queso"},{"en":"meat","fr":"viande","es":"carne"},{"en":"fruit","fr":"fruit","es":"fruta"},{"en":"apple","fr":"pomme","es":"manzana"},{"en":"vegetable","fr":"légume","es":"verdura"},{"en":"rice","fr":"riz","es":"arroz"},{"en":"sugar","fr":"sucre","es":"azúcar"},{"en":"salt","fr":"sel","es":"sal"},{"en":"wine","fr":"vin","es":"vino"},{"en":"beer","fr":"bière","es":"cerveza"},{"en":"hand","fr":"main","es":"mano"},{"en":"head","fr":"tête","es":"cabeza"},{"en":"eye","fr":"œil","es":"ojo"},{"en":"ear","fr":"oreille","es":"oreja"},{"en":"mouth","fr":"bouche","es":"boca"},{"en":"foot","fr":"pied","es":"pie"},{"en":"heart","fr":"cœur","es":"corazón"},{"en":"hair","fr":"cheveux","es":"pelo"},{"en":"face","fr":"visage","es":"cara"},{"en":"arm","fr":"bras","es":"brazo"},{"en":"leg","fr":"jambe","es":"pierna"},{"en":"to be","fr":"être","es":"ser"},{"en":"to have","fr":"avoir","es":"tener"},{"en":"to go","fr":"aller","es":"ir"},{"en":"to eat","fr":"manger","es":"comer"},{"en":"to drink","fr":"boire","es":"beber"},{"en":"to sleep","fr":"dormir","es":"dormir"},{"en":"to speak","fr":"parler","es":"hablar"},{"en":"to see","fr":"voir","es":"ver"},{"en":"to want","fr":"vouloir","es":"querer"},{"en":"to like","fr":"aimer","es":"gustar"},{"en":"to need","fr":"avoir besoin","es":"necesitar"},{"en":"to know","fr":"savoir","es":"saber"},{"en":"to do","fr":"faire","es":"hacer"},{"en":"to give","fr":"donner","es":"dar"},{"en":"to take","fr":"prendre","es":"tomar"},{"en":"to come","fr":"venir","es":"venir"},{"en":"to live","fr":"vivre","es":"vivir"},{"en":"to work","fr":"travailler","es":"trabajar"},{"en":"to study","fr":"étudier","es":"estudiar"},{"en":"to play","fr":"jouer","es":"jugar"},{"en":"to buy","fr":"acheter","es":"comprar"},{"en":"to sell","fr":"vendre","es":"vender"},{"en":"to open","fr":"ouvrir","es":"abrir"},{"en":"to close","fr":"fermer","es":"cerrar"},{"en":"to read","fr":"lire","es":"leer"},{"en":"to write","fr":"écrire","es":"escribir"},{"en":"to listen","fr":"écouter","es":"escuchar"},{"en":"to look","fr":"regarder","es":"mirar"},{"en":"to think","fr":"penser","es":"pensar"},{"en":"to understand","fr":"comprendre","es":"entender"},{"en":"to learn","fr":"apprendre","es":"aprender"},{"en":"to walk","fr":"marcher","es":"caminar"},{"en":"to run","fr":"courir","es":"correr"},{"en":"to arrive","fr":"arriver","es":"llegar"},{"en":"to leave","fr":"partir","es":"salir"},{"en":"to help","fr":"aider","es":"ayudar"},{"en":"to find","fr":"trouver","es":"encontrar"},{"en":"to wait","fr":"attendre","es":"esperar"},{"en":"to believe","fr":"croire","es":"creer"},{"en":"to remember","fr":"se souvenir","es":"recordar"},{"en":"to forget","fr":"oublier","es":"olvidar"},{"en":"to feel","fr":"sentir","es":"sentir"},{"en":"to ask","fr":"demander","es":"preguntar"},{"en":"to answer","fr":"répondre","es":"responder"},{"en":"to pay","fr":"payer","es":"pagar"},{"en":"to travel","fr":"voyager","es":"viajar"},{"en":"to sing","fr":"chanter","es":"cantar"},{"en":"to dance","fr":"danser","es":"bailar"},{"en":"to laugh","fr":"rire","es":"reír"},{"en":"to cry","fr":"pleurer","es":"llorar"},{"en":"big","fr":"grand","es":"grande"},{"en":"small","fr":"petit","es":"pequeño"},{"en":"hot","fr":"chaud","es":"caliente"},{"en":"cold","fr":"froid","es":"frío"},{"en":"new","fr":"nouveau","es":"nuevo"},{"en":"old","fr":"vieux","es":"viejo"},{"en":"happy","fr":"heureux","es":"feliz"},{"en":"sad","fr":"triste","es":"triste"},{"en":"easy","fr":"facile","es":"fácil"},{"en":"difficult","fr":"difficile","es":"difícil"},{"en":"fast","fr":"rapide","es":"rápido"},{"en":"slow","fr":"lent","es":"lento"},{"en":"tall","fr":"grand","es":"alto"},{"en":"short","fr":"court","es":"corto"},{"en":"beautiful","fr":"beau","es":"hermoso"},{"en":"ugly","fr":"laid","es":"feo"},{"en":"rich","fr":"riche","es":"rico"},{"en":"poor","fr":"pauvre","es":"pobre"},{"en":"strong","fr":"fort","es":"fuerte"},{"en":"weak","fr":"faible","es":"débil"},{"en":"young","fr":"jeune","es":"joven"},{"en":"clean","fr":"propre","es":"limpio"},{"en":"dirty","fr":"sale","es":"sucio"},{"en":"full","fr":"plein","es":"lleno"},{"en":"empty","fr":"vide","es":"vacío"},{"en":"right","fr":"droit","es":"derecho"},{"en":"wrong","fr":"faux","es":"equivocado"},{"en":"important","fr":"important","es":"importante"},{"en":"in","fr":"dans","es":"en"},{"en":"on","fr":"sur","es":"sobre"},{"en":"under","fr":"sous","es":"debajo"},{"en":"with","fr":"avec","es":"con"},{"en":"without","fr":"sans","es":"sin"},{"en":"for","fr":"pour","es":"para"},{"en":"and","fr":"et","es":"y"},{"en":"or","fr":"ou","es":"o"},{"en":"but","fr":"mais","es":"pero"},{"en":"because","fr":"parce que","es":"porque"},{"en":"when","fr":"quand","es":"cuándo"},{"en":"where","fr":"où","es":"dónde"},{"en":"who","fr":"qui","es":"quién"},{"en":"what","fr":"quoi","es":"qué"},{"en":"why","fr":"pourquoi","es":"por qué"},{"en":"how","fr":"comment","es":"cómo"},{"en":"name","fr":"nom","es":"nombre"},{"en":"word","fr":"mot","es":"palabra"},{"en":"language","fr":"langue","es":"idioma"},{"en":"question","fr":"question","es":"pregunta"},{"en":"answer","fr":"réponse","es":"respuesta"},{"en":"problem","fr":"problème","es":"problema"},{"en":"life","fr":"vie","es":"vida"},{"en":"world","fr":"monde","es":"mundo"},{"en":"money","fr":"argent","es":"dinero"},{"en":"book","fr":"livre","es":"libro"},{"en":"car","fr":"voiture","es":"coche"},{"en":"phone","fr":"téléphone","es":"teléfono"},{"en":"computer","fr":"ordinateur","es":"computadora"},{"en":"music","fr":"musique","es":"música"},{"en":"game","fr":"jeu","es":"juego"},{"en":"love","fr":"amour","es":"amor"},{"en":"dream","fr":"rêve","es":"sueño"},{"en":"job","fr":"emploi","es":"empleo"},{"en":"light","fr":"lumière","es":"luz"},{"en":"color","fr":"couleur","es":"color"},{"en":"doctor","fr":"médecin","es":"médico"},{"en":"teacher","fr":"professeur","es":"profesor"},{"en":"engineer","fr":"ingénieur","es":"ingeniero"},{"en":"lawyer","fr":"avocat","es":"abogado"},{"en":"nurse","fr":"infirmier","es":"enfermero"},{"en":"waiter","fr":"serveur","es":"camarero"},{"en":"cook","fr":"cuisinier","es":"cocinero"},{"en":"driver","fr":"conducteur","es":"conductor"},{"en":"farmer","fr":"fermier","es":"agricultor"},{"en":"artist","fr":"artiste","es":"artista"},{"en":"writer","fr":"écrivain","es":"escritor"},{"en":"singer","fr":"chanteur","es":"cantante"},{"en":"actor","fr":"acteur","es":"actor"},{"en":"student","fr":"étudiant","es":"estudiante"},{"en":"police officer","fr":"policier","es":"policía"},{"en":"soldier","fr":"soldat","es":"soldado"},{"en":"president","fr":"président","es":"presidente"},{"en":"king","fr":"roi","es":"rey"},{"en":"queen","fr":"reine","es":"reina"},{"en":"shirt","fr":"chemise","es":"camisa"},{"en":"pants","fr":"pantalon","es":"pantalón"},{"en":"dress","fr":"robe","es":"vestido"},{"en":"shoes","fr":"chaussures","es":"zapatos"},{"en":"hat","fr":"chapeau","es":"sombrero"},{"en":"jacket","fr":"veste","es":"chaqueta"},{"en":"skirt","fr":"jupe","es":"falda"},{"en":"socks","fr":"chaussettes","es":"calcetines"},{"en":"gloves","fr":"gants","es":"guantes"},{"en":"scarf","fr":"écharpe","es":"bufanda"},{"en":"coat","fr":"manteau","es":"abrigo"},{"en":"belt","fr":"ceinture","es":"cinturón"},{"en":"cloud","fr":"nuage","es":"nube"},{"en":"storm","fr":"tempête","es":"tormenta"},{"en":"fog","fr":"brouillard","es":"niebla"},{"en":"thunder","fr":"tonnerre","es":"trueno"},{"en":"lightning","fr":"éclair","es":"relámpago"},{"en":"season","fr":"saison","es":"estación"},{"en":"spring","fr":"printemps","es":"primavera"},{"en":"summer","fr":"été","es":"verano"},{"en":"autumn","fr":"automne","es":"otoño"},{"en":"winter","fr":"hiver","es":"invierno"},{"en":"bus","fr":"bus","es":"autobús"},{"en":"train","fr":"train","es":"tren"},{"en":"plane","fr":"avion","es":"avión"},{"en":"boat","fr":"bateau","es":"barco"},{"en":"bicycle","fr":"vélo","es":"bicicleta"},{"en":"taxi","fr":"taxi","es":"taxi"},{"en":"subway","fr":"métro","es":"metro"},{"en":"internet","fr":"internet","es":"internet"},{"en":"email","fr":"e-mail","es":"correo electrónico"},{"en":"screen","fr":"écran","es":"pantalla"},{"en":"keyboard","fr":"clavier","es":"teclado"},{"en":"battery","fr":"batterie","es":"batería"},{"en":"camera","fr":"appareil photo","es":"cámara"},{"en":"television","fr":"télévision","es":"televisión"},{"en":"radio","fr":"radio","es":"radio"},{"en":"website","fr":"site web","es":"sitio web"},{"en":"password","fr":"mot de passe","es":"contraseña"},{"en":"file","fr":"fichier","es":"archivo"},{"en":"video","fr":"vidéo","es":"video"},{"en":"photo","fr":"photo","es":"foto"},{"en":"fear","fr":"peur","es":"miedo"},{"en":"anger","fr":"colère","es":"ira"},{"en":"surprise","fr":"surprise","es":"sorpresa"},{"en":"hope","fr":"espoir","es":"esperanza"},{"en":"worry","fr":"inquiétude","es":"preocupación"},{"en":"jealousy","fr":"jalousie","es":"celos"},{"en":"pride","fr":"fierté","es":"orgullo"},{"en":"shame","fr":"honte","es":"vergüenza"},{"en":"courage","fr":"courage","es":"coraje"},{"en":"soccer","fr":"football","es":"fútbol"},{"en":"basketball","fr":"basket-ball","es":"baloncesto"},{"en":"tennis","fr":"tennis","es":"tenis"},{"en":"swimming","fr":"natation","es":"natación"},{"en":"running","fr":"course","es":"carrera"},{"en":"team","fr":"équipe","es":"equipo"},{"en":"ball","fr":"ballon","es":"pelota"},{"en":"goal","fr":"but","es":"gol"},{"en":"player","fr":"joueur","es":"jugador"},{"en":"match","fr":"match","es":"partido"},{"en":"dangerous","fr":"dangereux","es":"peligroso"},{"en":"safe","fr":"sûr","es":"seguro"},{"en":"honest","fr":"honnête","es":"honesto"},{"en":"kind","fr":"gentil","es":"amable"},{"en":"generous","fr":"généreux","es":"generoso"},{"en":"brave","fr":"courageux","es":"valiente"},{"en":"calm","fr":"calme","es":"tranquilo"},{"en":"nervous","fr":"nerveux","es":"nervioso"},{"en":"quiet","fr":"silencieux","es":"silencioso"},{"en":"loud","fr":"bruyant","es":"ruidoso"},{"en":"dark","fr":"sombre","es":"oscuro"},{"en":"bright","fr":"lumineux","es":"brillante"},{"en":"heavy","fr":"lourd","es":"pesado"},{"en":"wide","fr":"large","es":"ancho"},{"en":"narrow","fr":"étroit","es":"estrecho"},{"en":"deep","fr":"profond","es":"profundo"},{"en":"thick","fr":"épais","es":"grueso"},{"en":"thin","fr":"mince","es":"delgado"},{"en":"round","fr":"rond","es":"redondo"},{"en":"straight","fr":"droit","es":"recto"},{"en":"wet","fr":"mouillé","es":"mojado"},{"en":"dry","fr":"sec","es":"seco"},{"en":"soft","fr":"doux","es":"suave"},{"en":"hard","fr":"dur","es":"duro"},{"en":"sharp","fr":"pointu","es":"afilado"},{"en":"sweet","fr":"sucré","es":"dulce"},{"en":"bitter","fr":"amer","es":"amargo"},{"en":"sour","fr":"acide","es":"agrio"},{"en":"salty","fr":"salé","es":"salado"},{"en":"spicy","fr":"épicé","es":"picante"},{"en":"delicious","fr":"délicieux","es":"delicioso"},{"en":"wall","fr":"mur","es":"pared"},{"en":"floor","fr":"sol","es":"suelo"},{"en":"roof","fr":"toit","es":"techo"},{"en":"stairs","fr":"escalier","es":"escaleras"},{"en":"key","fr":"clé","es":"llave"},{"en":"lock","fr":"serrure","es":"cerradura"},{"en":"mirror","fr":"miroir","es":"espejo"},{"en":"clock","fr":"horloge","es":"reloj"},{"en":"wallet","fr":"portefeuille","es":"cartera"},{"en":"bag","fr":"sac","es":"bolsa"},{"en":"umbrella","fr":"parapluie","es":"paraguas"},{"en":"glasses","fr":"lunettes","es":"gafas"},{"en":"letter","fr":"lettre","es":"carta"},{"en":"package","fr":"colis","es":"paquete"},{"en":"gift","fr":"cadeau","es":"regalo"},{"en":"ticket","fr":"billet","es":"boleto"},{"en":"map","fr":"carte","es":"mapa"},{"en":"flag","fr":"drapeau","es":"bandera"},{"en":"war","fr":"guerre","es":"guerra"},{"en":"peace","fr":"paix","es":"paz"},{"en":"government","fr":"gouvernement","es":"gobierno"},{"en":"law","fr":"loi","es":"ley"},{"en":"crime","fr":"crime","es":"crimen"},{"en":"prison","fr":"prison","es":"prisión"},{"en":"bank","fr":"banque","es":"banco"},{"en":"market","fr":"marché","es":"mercado"},{"en":"factory","fr":"usine","es":"fábrica"},{"en":"farm","fr":"ferme","es":"granja"},{"en":"forest","fr":"forêt","es":"bosque"},{"en":"desert","fr":"désert","es":"desierto"},{"en":"island","fr":"île","es":"isla"},{"en":"beach","fr":"plage","es":"playa"},{"en":"lake","fr":"lac","es":"lago"},{"en":"valley","fr":"vallée","es":"valle"},{"en":"hill","fr":"colline","es":"colina"},{"en":"rock","fr":"roche","es":"roca"},{"en":"sand","fr":"sable","es":"arena"},{"en":"ice","fr":"glace","es":"hielo"},{"en":"to cook","fr":"cuisiner","es":"cocinar"},{"en":"to clean","fr":"nettoyer","es":"limpiar"},{"en":"to wash","fr":"laver","es":"lavar"},{"en":"to cut","fr":"couper","es":"cortar"},{"en":"to break","fr":"casser","es":"romper"},{"en":"to fix","fr":"réparer","es":"reparar"},{"en":"to build","fr":"construire","es":"construir"},{"en":"to change","fr":"changer","es":"cambiar"},{"en":"to grow","fr":"grandir","es":"crecer"},{"en":"to fall","fr":"tomber","es":"caer"},{"en":"to fly","fr":"voler","es":"volar"},{"en":"to swim","fr":"nager","es":"nadar"},{"en":"to climb","fr":"grimper","es":"escalar"},{"en":"to jump","fr":"sauter","es":"saltar"},{"en":"to push","fr":"pousser","es":"empujar"},{"en":"to pull","fr":"tirer","es":"tirar"},{"en":"to carry","fr":"porter","es":"llevar"},{"en":"to catch","fr":"attraper","es":"atrapar"},{"en":"to throw","fr":"jeter","es":"lanzar"},{"en":"to win","fr":"gagner","es":"ganar"},{"en":"to lose","fr":"perdre","es":"perder"},{"en":"to fight","fr":"se battre","es":"luchar"},{"en":"to plan","fr":"planifier","es":"planear"},{"en":"to decide","fr":"décider","es":"decidir"},{"en":"to choose","fr":"choisir","es":"elegir"},{"en":"to promise","fr":"promettre","es":"prometer"},{"en":"to trust","fr":"faire confiance","es":"confiar"},{"en":"to relax","fr":"se détendre","es":"relajarse"},{"en":"to rest","fr":"se reposer","es":"descansar"},{"en":"to marry","fr":"épouser","es":"casarse"},{"en":"to die","fr":"mourir","es":"morir"},{"en":"to be born","fr":"naître","es":"nacer"},{"en":"also","fr":"aussi","es":"también"},{"en":"very","fr":"très","es":"muy"},{"en":"more","fr":"plus","es":"más"},{"en":"less","fr":"moins","es":"menos"},{"en":"too much","fr":"trop","es":"demasiado"},{"en":"enough","fr":"assez","es":"suficiente"},{"en":"some","fr":"quelques","es":"algunos"},{"en":"all","fr":"tout","es":"todo"},{"en":"none","fr":"aucun","es":"ninguno"},{"en":"every","fr":"chaque","es":"cada"},{"en":"other","fr":"autre","es":"otro"},{"en":"same","fr":"même","es":"mismo"},{"en":"different","fr":"différent","es":"diferente"},{"en":"first","fr":"premier","es":"primero"},{"en":"last","fr":"dernier","es":"último"},{"en":"next","fr":"prochain","es":"próximo"},{"en":"here","fr":"ici","es":"aquí"},{"en":"there","fr":"là","es":"allí"},{"en":"inside","fr":"dedans","es":"dentro"},{"en":"outside","fr":"dehors","es":"fuera"},{"en":"between","fr":"entre","es":"entre"},{"en":"before","fr":"avant","es":"antes"},{"en":"after","fr":"après","es":"después"},{"en":"during","fr":"pendant","es":"durante"},{"en":"soon","fr":"bientôt","es":"pronto"},{"en":"late","fr":"tard","es":"tarde"},{"en":"early","fr":"tôt","es":"temprano"},{"en":"again","fr":"encore","es":"otra vez"},{"en":"together","fr":"ensemble","es":"juntos"},{"en":"alone","fr":"seul","es":"solo"},{"en":"maybe","fr":"peut-être","es":"quizás"},{"en":"almost","fr":"presque","es":"casi"},{"en":"already","fr":"déjà","es":"ya"},{"en":"knee","fr":"genou","es":"rodilla"},{"en":"shoulder","fr":"épaule","es":"hombro"},{"en":"back","fr":"dos","es":"espalda"},{"en":"stomach","fr":"estomac","es":"estómago"},{"en":"tooth","fr":"dent","es":"diente"},{"en":"tongue","fr":"langue","es":"lengua"},{"en":"nose","fr":"nez","es":"nariz"},{"en":"skin","fr":"peau","es":"piel"},{"en":"bone","fr":"os","es":"hueso"},{"en":"blood","fr":"sang","es":"sangre"},{"en":"uncle","fr":"oncle","es":"tío"},{"en":"aunt","fr":"tante","es":"tía"},{"en":"cousin","fr":"cousin","es":"primo"},{"en":"nephew","fr":"neveu","es":"sobrino"},{"en":"niece","fr":"nièce","es":"sobrina"},{"en":"parents","fr":"parents","es":"padres"},{"en":"grandparents","fr":"grands-parents","es":"abuelos"},{"en":"grandson","fr":"petit-fils","es":"nieto"},{"en":"granddaughter","fr":"petite-fille","es":"nieta"},{"en":"soup","fr":"soupe","es":"sopa"},{"en":"salad","fr":"salade","es":"ensalada"},{"en":"sandwich","fr":"sandwich","es":"sándwich"},{"en":"pizza","fr":"pizza","es":"pizza"},{"en":"pasta","fr":"pâtes","es":"pasta"},{"en":"chicken","fr":"poulet","es":"pollo"},{"en":"pork","fr":"porc","es":"cerdo"},{"en":"beef","fr":"bœuf","es":"carne de res"},{"en":"potato","fr":"pomme de terre","es":"patata"},{"en":"tomato","fr":"tomate","es":"tomate"},{"en":"onion","fr":"oignon","es":"cebolla"},{"en":"garlic","fr":"ail","es":"ajo"},{"en":"carrot","fr":"carotte","es":"zanahoria"},{"en":"banana","fr":"banane","es":"plátano"},{"en":"lemon","fr":"citron","es":"limón"},{"en":"strawberry","fr":"fraise","es":"fresa"},{"en":"chocolate","fr":"chocolat","es":"chocolate"},{"en":"cake","fr":"gâteau","es":"pastel"},{"en":"ice cream","fr":"glace","es":"helado"},{"en":"juice","fr":"jus","es":"jugo"},{"en":"soda","fr":"soda","es":"refresco"},{"en":"eleven","fr":"onze","es":"once"},{"en":"twelve","fr":"douze","es":"doce"},{"en":"thirteen","fr":"treize","es":"trece"},{"en":"fourteen","fr":"quatorze","es":"catorce"},{"en":"fifteen","fr":"quinze","es":"quince"},{"en":"sixteen","fr":"seize","es":"dieciséis"},{"en":"seventeen","fr":"dix-sept","es":"diecisiete"},{"en":"eighteen","fr":"dix-huit","es":"dieciocho"},{"en":"nineteen","fr":"dix-neuf","es":"diecinueve"},{"en":"thirty","fr":"trente","es":"treinta"},{"en":"forty","fr":"quarante","es":"cuarenta"},{"en":"fifty","fr":"cinquante","es":"cincuenta"},{"en":"sixty","fr":"soixante","es":"sesenta"},{"en":"seventy","fr":"soixante-dix","es":"setenta"},{"en":"eighty","fr":"quatre-vingts","es":"ochenta"},{"en":"ninety","fr":"quatre-vingt-dix","es":"noventa"},{"en":"thousand","fr":"mille","es":"mil"},{"en":"million","fr":"million","es":"millón"},{"en":"zero","fr":"zéro","es":"cero"},{"en":"century","fr":"siècle","es":"siglo"},{"en":"moment","fr":"moment","es":"momento"},{"en":"past","fr":"passé","es":"pasado"},{"en":"present","fr":"présent","es":"presente"},{"en":"future","fr":"futur","es":"futuro"},{"en":"birthday","fr":"anniversaire","es":"cumpleaños"},{"en":"class","fr":"classe","es":"clase"},{"en":"lesson","fr":"leçon","es":"lección"},{"en":"exam","fr":"examen","es":"examen"},{"en":"homework","fr":"devoirs","es":"tarea"},{"en":"university","fr":"université","es":"universidad"},{"en":"pen","fr":"stylo","es":"bolígrafo"},{"en":"pencil","fr":"crayon","es":"lápiz"},{"en":"paper","fr":"papier","es":"papel"},{"en":"notebook","fr":"cahier","es":"cuaderno"},{"en":"north","fr":"nord","es":"norte"},{"en":"south","fr":"sud","es":"sur"},{"en":"east","fr":"est","es":"este"},{"en":"west","fr":"ouest","es":"oeste"},{"en":"medicine","fr":"médicament","es":"medicina"},{"en":"pain","fr":"douleur","es":"dolor"},{"en":"sick","fr":"malade","es":"enfermo"},{"en":"healthy","fr":"en bonne santé","es":"saludable"},{"en":"fever","fr":"fièvre","es":"fiebre"},{"en":"cough","fr":"toux","es":"tos"},{"en":"injury","fr":"blessure","es":"herida"},{"en":"give up","fr":"abandonner","es":"rendirse"},{"en":"look for","fr":"chercher","es":"buscar"},{"en":"find out","fr":"découvrir","es":"descubrir"},{"en":"get up","fr":"se lever","es":"levantarse"},{"en":"sit down","fr":"s'asseoir","es":"sentarse"},{"en":"stand up","fr":"se lever","es":"ponerse de pie"},{"en":"come back","fr":"revenir","es":"volver"},{"en":"go back","fr":"retourner","es":"regresar"},{"en":"turn on","fr":"allumer","es":"encender"},{"en":"turn off","fr":"éteindre","es":"apagar"},{"en":"put on","fr":"mettre","es":"ponerse"},{"en":"take off","fr":"enlever","es":"quitarse"},{"en":"pick up","fr":"ramasser","es":"recoger"},{"en":"put away","fr":"ranger","es":"guardar"},{"en":"wake up","fr":"se réveiller","es":"despertarse"},{"en":"fall asleep","fr":"s'endormir","es":"dormirse"},{"en":"grow up","fr":"grandir","es":"crecer"},{"en":"break down","fr":"tomber en panne","es":"averiarse"},{"en":"run out","fr":"manquer","es":"quedarse sin"},{"en":"show up","fr":"se présenter","es":"aparecer"},{"en":"hang out","fr":"traîner","es":"pasar el rato"},{"en":"figure out","fr":"comprendre","es":"resolver"},{"en":"work out","fr":"faire de l'exercice","es":"hacer ejercicio"},{"en":"check in","fr":"s'enregistrer","es":"registrarse"},{"en":"check out","fr":"régler la note","es":"revisar la cuenta"},{"en":"look after","fr":"s'occuper de","es":"cuidar de"},{"en":"look forward to","fr":"avoir hâte de","es":"tener ganas de"},{"en":"get along","fr":"s'entendre","es":"llevarse bien"},{"en":"get over","fr":"se remettre de","es":"superar"},{"en":"give back","fr":"rendre","es":"devolver"},{"en":"call back","fr":"rappeler","es":"devolver la llamada"},{"en":"hold on","fr":"attendre","es":"esperar un momento"},{"en":"keep going","fr":"continuer","es":"seguir adelante"},{"en":"move in","fr":"emménager","es":"mudarse a"},{"en":"move out","fr":"déménager","es":"mudarse de"},{"en":"take out","fr":"sortir","es":"sacar"},{"en":"bring back","fr":"ramener","es":"traer de vuelta"},{"en":"go on","fr":"continuer","es":"continuar"},{"en":"go out","fr":"sortir","es":"salir"},{"en":"come in","fr":"entrer","es":"entrar"},{"en":"get in","fr":"entrer dans","es":"entrar en"},{"en":"get out","fr":"sortir de","es":"salir de"},{"en":"get off","fr":"descendre de","es":"bajarse de"},{"en":"get on","fr":"monter dans","es":"subirse a"},{"en":"how are you","fr":"comment ça va","es":"cómo estás"},{"en":"what's your name","fr":"comment tu t'appelles","es":"cómo te llamas"},{"en":"nice to meet you","fr":"enchanté","es":"mucho gusto"},{"en":"see you later","fr":"à plus tard","es":"hasta luego"},{"en":"see you soon","fr":"à bientôt","es":"hasta pronto"},{"en":"good morning","fr":"bonjour","es":"buenos días"},{"en":"good afternoon","fr":"bon après-midi","es":"buenas tardes"},{"en":"good night","fr":"bonne nuit","es":"buenas noches"},{"en":"of course","fr":"bien sûr","es":"claro"},{"en":"no problem","fr":"pas de problème","es":"no hay problema"},{"en":"I don't know","fr":"je ne sais pas","es":"no sé"},{"en":"I don't understand","fr":"je ne comprends pas","es":"no entiendo"},{"en":"how much","fr":"combien","es":"cuánto"},{"en":"how many","fr":"combien","es":"cuántos"},{"en":"what time is it","fr":"quelle heure est-il","es":"qué hora es"},{"en":"I'm sorry","fr":"je suis désolé","es":"lo siento"},{"en":"take care","fr":"prends soin de toi","es":"cuídate"},{"en":"good luck","fr":"bonne chance","es":"buena suerte"},{"en":"congratulations","fr":"félicitations","es":"felicidades"},{"en":"welcome","fr":"bienvenue","es":"bienvenido"},{"en":"cheers","fr":"santé","es":"salud"},{"en":"by the way","fr":"au fait","es":"por cierto"},{"en":"as soon as possible","fr":"dès que possible","es":"lo antes posible"},{"en":"in my opinion","fr":"à mon avis","es":"en mi opinión"},{"en":"for example","fr":"par exemple","es":"por ejemplo"},{"en":"at least","fr":"au moins","es":"al menos"},{"en":"at last","fr":"enfin","es":"por fin"},{"en":"right now","fr":"tout de suite","es":"ahora mismo"},{"en":"once again","fr":"encore une fois","es":"una vez más"},{"en":"little by little","fr":"petit à petit","es":"poco a poco"},{"en":"on time","fr":"à l'heure","es":"a tiempo"},{"en":"by heart","fr":"par cœur","es":"de memoria"}];
+const LANG_NAMES={en:'Inglês',es:'Espanhol',fr:'Francês'};
+const LANG_COLORS={en:'var(--en)',es:'var(--es)',fr:'var(--fr)'};
+const VOICE_LANG={en:'en-US',es:'es-ES',fr:'fr-FR'};
+const PROJECT_GOAL=5000;
+const PAIRS_PER_ROUND=6, TOTAL_ROUNDS=12, MAX_MISTAKES=5;
+let audioOn=true, state=null;
+const $=id=>document.getElementById(id);
+const saveKey='hacktiba-learning-5000-pares-final-v1';
+let save=JSON.parse(localStorage.getItem(saveKey)||'{"xp":0,"best":0,"played":0,"wrong":[]}');
+function persist(){save.best=Math.max(save.best,save.xp||0);localStorage.setItem(saveKey,JSON.stringify(save));refreshHome()}
+function setText(id,value){ const el=$(id); if(el) el.textContent=value; }
+function setWidth(id,value){ const el=$(id); if(el) el.style.width=value; }
+function refreshHome(){
+  setText('totalWords', PROJECT_GOAL);
+  setText('countA', PROJECT_GOAL);
+  setText('bestStat', save.best||0);
+  let pct=Math.min(100,Math.round(((save.played||0)/(PROJECT_GOAL))*100));
+  setWidth('homeMeter', pct+'%');
+  setText('homeText',(save.played||0)+' itens treinados • '+(save.wrong||[]).length+' para revisar');
+}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function setAudioStatus(msg){
+  const note = document.getElementById('note');
+  if(note && msg) note.textContent = msg;
+  console.log('[HL Vocabulary Audio]', msg || '');
+}
 
+async function speak(text,lang){
+  if(!audioOn || !text) return;
+
+  const voiceLang = VOICE_LANG[lang] || 'en-US';
+  const textValue = String(text);
+
+  // Android APK/AAB with Capacitor native Text-to-Speech plugin.
+  try{
+    const cap = window.Capacitor;
+    const nativeTTS = cap && cap.Plugins && cap.Plugins.TextToSpeech;
+
+    if(nativeTTS && typeof nativeTTS.speak === 'function'){
+      if(typeof nativeTTS.stop === 'function'){
+        try{ await nativeTTS.stop(); }catch(_){}
+      }
+
+      await nativeTTS.speak({
+        text: textValue,
+        lang: voiceLang,
+        rate: 0.88,
+        pitch: 1.0,
+        volume: 1.0
+      });
+      return;
+    }
+  }catch(e){
+    setAudioStatus('Erro no áudio nativo: ' + (e && e.message ? e.message : e));
+  }
+
+  // Browser/WebView fallback.
+  try{
+    if('speechSynthesis' in window){
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(textValue);
+      u.lang = voiceLang;
+      u.rate = 0.88;
+      u.pitch = 1.0;
+      u.volume = 1.0;
+      window.speechSynthesis.speak(u);
+      return;
+    }
+  }catch(e){
+    setAudioStatus('Erro no áudio web: ' + (e && e.message ? e.message : e));
+  }
+
+  setAudioStatus('Áudio indisponível neste aparelho. Verifique Texto para fala do Android.');
+}
+function startGame(src,tgt,pool){ state={src,tgt,pool:shuffle(pool||VOCAB),idx:0,round:0,mistakes:0,selected:null,locked:false,matched:0,pairs:[],xp:0,combo:0,tries:0,ok:0,review:!!pool}; $('home').classList.add('hidden'); $('modes').classList.add('hidden'); document.querySelector('.controls').classList.add('hidden'); $('game').classList.remove('hidden'); $('overlay').classList.remove('show'); nextRound(); }
+function nextRound(){ state.round++; if(state.round>TOTAL_ROUNDS || state.idx>=state.pool.length){finish();return} state.mistakes=0; updateHUD(); let chunk=state.pool.slice(state.idx,state.idx+PAIRS_PER_ROUND); state.idx+=PAIRS_PER_ROUND; state.pairs=chunk; state.matched=0; state.selected=null; state.locked=false; $('roundTitle').textContent='Rodada '+state.round+' / '+TOTAL_ROUNDS; $('pairLabel').textContent=LANG_NAMES[state.src]+' → '+LANG_NAMES[state.tgt]; $('trackFill').style.width=Math.round((state.round-1)/TOTAL_ROUNDS*100)+'%'; $('note').innerHTML='Toque em uma palavra e depois na tradução.'; renderBoard(chunk); renderLearn(chunk); }
+function updateHUD(){ $('hearts').textContent='♥ '+(MAX_MISTAKES-state.mistakes); $('xpPill').textContent='XP '+state.xp; $('comboPill').textContent='Combo '+state.combo; let acc=state.tries?Math.round(state.ok/state.tries*100):100; $('accuracyPill').textContent='Precisão '+acc+'%'; }
+function renderBoard(chunk){ $('board').innerHTML=''; let left=shuffle(chunk.map((w,i)=>({id:i,side:'left',text:w[state.src],lang:state.src}))); let right=shuffle(chunk.map((w,i)=>({id:i,side:'right',text:w[state.tgt],lang:state.tgt}))); for(let i=0;i<chunk.length;i++){ $('board').appendChild(card(left[i])); $('board').appendChild(card(right[i])); } }
+function card(d){ let b=document.createElement('button'); b.className='card '+d.side; b.textContent=d.text; b.dataset.id=d.id; b.dataset.side=d.side; b.style.setProperty(d.side==='left'?'--src':'--tgt',LANG_COLORS[d.lang]); b.onclick=()=>tap(b,d); return b; }
+function tap(el,d){ if(state.locked||el.classList.contains('good'))return; speak(d.text,d.lang); if(state.selected&&state.selected.el===el)return; if(!state.selected||state.selected.d.side===d.side){clearSel(); el.classList.add('selected'); state.selected={el,d}; return;} state.locked=true; state.tries++; if(state.selected.d.id===d.id){ el.classList.add('good'); state.selected.el.classList.add('good'); state.ok++; state.combo++; state.xp+=10+Math.min(20,state.combo*2); updateHUD(); setTimeout(()=>{el.classList.add('off'); state.selected.el.classList.add('off'); state.selected=null; state.locked=false; state.matched++; if(state.matched===state.pairs.length){save.xp=(save.xp||0)+state.xp; save.played=(save.played||0)+state.pairs.length; persist(); showRound();}},260); } else { el.classList.add('bad'); state.selected.el.classList.add('bad'); state.combo=0; state.mistakes++; rememberWrong(state.pairs[state.selected.d.id]); updateHUD(); $('note').textContent='Quase! Olhe a lista de apoio e tente de novo.'; setTimeout(()=>{el.classList.remove('bad','selected'); if(state.selected)state.selected.el.classList.remove('bad','selected'); state.selected=null; state.locked=false; if(state.mistakes>=MAX_MISTAKES)fail();},390); } }
+function clearSel(){document.querySelectorAll('.card.selected').forEach(x=>x.classList.remove('selected'))}
+function rememberWrong(w){let k=w.en+'|'+w.fr+'|'+w.es; save.wrong=save.wrong||[]; if(!save.wrong.some(x=>x.en+'|'+x.fr+'|'+x.es===k))save.wrong.push(w); persist();}
+function renderLearn(chunk){ $('learnList').innerHTML=''; chunk.forEach(w=>{ let r=document.createElement('div'); r.className='row'; r.innerHTML='<div><b>'+escapeHTML(w[state.src])+'</b><br><small>'+LANG_NAMES[state.src]+'</small></div><div class="arrow">→</div><div><b>'+escapeHTML(w[state.tgt])+'</b><br><small>'+LANG_NAMES[state.tgt]+'</small></div>'; let btn=document.createElement('button'); btn.className='speak'; btn.textContent='🔊'; btn.onclick=()=>speak(w[state.tgt],state.tgt); r.appendChild(btn); $('learnList').appendChild(r); }); }
+function escapeHTML(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function showRound(){ $('overlayEmoji').textContent='✅'; $('overlayTitle').textContent='Rodada concluída'; $('overlayText').textContent='Você ganhou '+state.xp+' XP nesta partida. Continue para avançar.'; $('continueBtn').textContent='Próxima rodada'; $('overlay').classList.add('show'); }
+function fail(){ $('overlayEmoji').textContent='💧'; $('overlayTitle').textContent='Sem corações'; $('overlayText').textContent='Revise as palavras da rodada e tente outra vez. As erradas foram salvas no modo Revisar.'; $('continueBtn').textContent='Recomeçar'; $('overlay').classList.add('show'); }
+function finish(){ $('trackFill').style.width='100%'; $('overlayEmoji').textContent='🏆'; $('overlayTitle').textContent='Jogo completo'; $('overlayText').textContent='Você terminou '+(state.round-1)+' rodadas. XP total salvo: '+(save.xp||0)+'.'; $('continueBtn').textContent='Jogar novamente'; $('overlay').classList.add('show'); }
+function menu(){ $('game').classList.add('hidden'); $('home').classList.remove('hidden'); $('modes').classList.remove('hidden'); document.querySelector('.controls').classList.remove('hidden'); $('overlay').classList.remove('show'); refreshHome(); }
+document.querySelectorAll('.mode').forEach(b=>b.onclick=()=>startGame(b.dataset.src,b.dataset.tgt));
+$('dailyBtn').onclick=()=>{let day=Math.floor(Date.now()/86400000); let pool=VOCAB.filter((_,i)=>(i+day)%5===0); startGame('en','es',pool.slice(0,90));};
+$('reviewBtn').onclick=()=>{let pool=(save.wrong||[]); if(pool.length<6){alert('Ainda não há palavras erradas suficientes para revisar. Jogue uma rodada primeiro.');return} startGame('en','fr',pool);};
+$('audioBtn').onclick=()=>{audioOn=!audioOn; $('audioBtn').textContent='Áudio: '+(audioOn?'ligado':'desligado')};
+$('resetBtn').onclick=()=>{if(confirm('Zerar todo o progresso salvo?')){save={xp:0,best:0,played:0,wrong:[]};localStorage.removeItem(saveKey);refreshHome();}};
+$('exitBtn').onclick=menu; $('menuBtn').onclick=menu; $('continueBtn').onclick=()=>{ $('overlay').classList.remove('show'); if(state.mistakes>=MAX_MISTAKES){startGame(state.src,state.tgt,state.pool)} else if(state.round>=TOTAL_ROUNDS||state.idx>=state.pool.length){startGame(state.src,state.tgt)} else nextRound(); };
+refreshHome();
+</script>
 </body>
 </html>
