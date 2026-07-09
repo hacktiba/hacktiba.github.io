@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HL Vocabulary</title>
+<style>
+:root{
+  --bg:#0e1329; --card:#1e274f; --paper:#f7f3e8;
+  --muted:#a6afd4; --line:rgba(255,255,255,.14);
+  --en:#4fd6c4; --fr:#7f94ff; --es:#ffb84d; --pt:#39e58d; --de:#facc15;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;padding:18px;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color:var(--paper);
+  background:radial-gradient(900px 550px at 50% -10%,#2b3575 0%,var(--bg) 62%);
+}
+#app{width:min(980px,100%);margin:auto;display:flex;flex-direction:column;gap:16px}
+.logo{font-weight:900;letter-spacing:-.04em;font-size:clamp(34px,8vw,58px)}
+.logo span:nth-child(1){color:var(--en)}
+.logo span:nth-child(2){color:var(--fr)}
+.hero,.card{
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
+  border:1px solid var(--line);
+  border-radius:24px;
+  box-shadow:0 18px 50px rgba(0,0,0,.28);
+}
+.hero{padding:24px}
+.hero h1{margin:0;font-size:clamp(28px,6vw,46px);line-height:1.05}
+.hero p{color:var(--muted);line-height:1.55;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{
+  display:block;text-decoration:none;color:var(--paper);
+  padding:20px;min-height:190px;
+  background:#1e274f;
+}
+.badge{
+  width:58px;height:58px;border-radius:18px;
+  display:grid;place-items:center;
+  font-weight:900;color:#091026;margin-bottom:14px;
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+}
+.card h2{margin:0 0 10px;font-size:21px}
+.card p{margin:0;color:var(--muted);line-height:1.45;font-size:14px}
+.card:active{transform:translateY(3px)}
+.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:6px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.card{min-height:auto}}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="logo"><span>HL</span> <span>Vocabulary</span></div>
+
+  <section class="hero">
+    <h1>HL Vocabulary</h1>
+    <p>Escolha uma versão para treinar vocabulário com jogo de pares, progresso salvo, áudio e revisão de palavras erradas.</p>
+  </section>
+
+  <section class="grid">
+    <a class="card" href="home.html" style="--c1:var(--en);--c2:var(--fr)">
+      <div class="badge">DEMO</div>
+      <h2>HL Vocabulary Demo</h2>
+      <p>Versão demonstrativa com Inglês, Espanhol e Francês. Ideal para mostrar o funcionamento geral do app.</p>
+    </a>
+
+    <a class="card" href="ptbr.html" style="--c1:var(--pt);--c2:var(--es)">
+      <div class="badge">PT</div>
+      <h2>PT-BR → EN • ES • FR</h2>
+      <p>Treino de pares com português brasileiro como base para Inglês, Espanhol e Francês.</p>
+    </a>
+
+    <a class="card" href="ptbr-it-ger.html" style="--c1:var(--pt);--c2:var(--de)">
+      <div class="badge">IT/DE</div>
+      <h2>PT-BR → Italiano • Alemão</h2>
+      <p>Versão focada apenas nos pares Português Brasileiro para Italiano e Alemão.</p>
+    </a>
+  </section>
+
+  <div class="footer">HL Vocabulary funciona offline pelo GitHub Pages.</div>
+
+</div>
+</body>
+</html>
