@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Hacktiba Learning 5000 • PT-BR Italiano Alemão</title>
+<style>
+:root{
+  --bg:#0e1329; --bg2:#1a2250; --card:#1e274f; --card2:#293466; --paper:#f7f3e8;
+  --muted:#a6afd4; --line:rgba(255,255,255,.14); --good:#39e58d; --bad:#ff5d7d;
+  --pt:#39e58d; --it:#6ee7b7; --de:#facc15; --gold:#ffd166;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent} html,body{margin:0;min-height:100%}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--paper);background:radial-gradient(900px 550px at 50% -10%,#2b3575 0%,var(--bg) 62%);user-select:none;}
+button,input,select{font:inherit} button{cursor:pointer}
+#app{width:min(980px,100%);margin:auto;min-height:100vh;padding:18px;display:flex;flex-direction:column;gap:16px}.hidden{display:none!important}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.logo{font-weight:900;letter-spacing:-.04em;font-size:clamp(28px,7vw,54px);line-height:.95}.logo span:nth-child(1){color:var(--it)}.logo span:nth-child(2){color:var(--de)}.logo span:nth-child(3){color:var(--pt)}.pill{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);background:rgba(255,255,255,.04);font-weight:700;font-size:13px}.panel{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:24px;box-shadow:0 18px 50px rgba(0,0,0,.28)}
+.hero{padding:24px;display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:stretch}.hero h1{margin:0;font-size:clamp(25px,5vw,45px);line-height:1.05;letter-spacing:-.04em}.hero p{color:var(--muted);font-size:16px;line-height:1.55;margin:12px 0 0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.stat{border:1px solid var(--line);background:rgba(0,0,0,.16);border-radius:18px;padding:14px}.stat b{font-size:24px;display:block}.stat small{color:var(--muted)}.sidebox{padding:18px;display:flex;flex-direction:column;gap:12px}.meter{height:14px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}.meter>i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--pt),var(--it),var(--de));border-radius:999px}.label{font-size:13px;color:var(--muted);font-weight:700}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.mode{padding:18px;border:1px solid var(--line);border-radius:22px;background:var(--card);color:var(--paper);text-align:left;box-shadow:0 7px 0 rgba(0,0,0,.22);transition:.1s}.mode:active,.btn:active,.card:active{transform:translateY(3px)}.mode h3{margin:0;font-size:18px}.mode p{margin:7px 0 0;color:var(--muted);font-size:13px;line-height:1.4}.badge{width:54px;height:54px;border-radius:17px;display:grid;place-items:center;margin-bottom:12px;font-weight:900;color:#091026;background:linear-gradient(135deg,var(--c1),var(--c2))}.controls{padding:16px;display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:15px;padding:13px 15px;font-weight:900;background:var(--card2);color:var(--paper);box-shadow:0 5px 0 rgba(0,0,0,.22)}.btn.primary{background:var(--good);color:#082415}.btn.warn{background:var(--gold);color:#352302}.btn.ghost{background:rgba(255,255,255,.06);border:1px solid var(--line);box-shadow:none;color:var(--muted)}
+.gameHead{display:flex;align-items:center;gap:12px}.gameTitle{flex:1}.gameTitle h2{margin:0;font-size:23px}.gameTitle p{margin:3px 0 0;color:var(--muted);font-size:13px}.heart{color:var(--bad);font-weight:900;min-width:64px;text-align:right}.score{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.score .pill{font-size:12px;padding:7px 10px}.board{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.card{min-height:66px;border-radius:18px;border:2px solid transparent;background:var(--card);color:var(--paper);font-weight:850;font-size:clamp(15px,3.7vw,19px);padding:12px;text-align:center;line-height:1.25}.card.left{border-left:6px solid var(--src)}.card.right{border-left:6px solid var(--tgt)}.card.selected{background:var(--card2);border-color:#fff}.card.good{background:rgba(57,229,141,.16);border-color:var(--good);color:var(--good)}.card.bad{animation:shake .32s;border-color:var(--bad)}.card.off{opacity:0;transform:scale(.86);pointer-events:none}@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}.note{min-height:24px;text-align:center;color:var(--muted);font-size:14px;margin:10px 0}.learn{padding:16px;margin-top:14px}.learn h3{margin:0 0 10px}.list{display:grid;gap:8px;max-height:240px;overflow:auto;padding-right:4px}.row{display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:10px;background:rgba(0,0,0,.13)}.row b{font-size:15px}.row small{color:var(--muted)}.speak{border:0;border-radius:10px;background:rgba(255,255,255,.08);color:var(--paper);padding:8px}.overlay{position:fixed;inset:0;display:none;place-items:center;background:rgba(8,10,24,.9);padding:22px;z-index:10}.overlay.show{display:grid}.modal{width:min(430px,100%);padding:26px;text-align:center}.modal .emoji{font-size:45px}.modal h2{margin:8px 0}.modal p{color:var(--muted);line-height:1.5}.footer{color:var(--muted);font-size:12px;text-align:center;line-height:1.5;margin:4px 0 12px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.row{grid-template-columns:1fr auto}.row .arrow{display:none}.board{gap:9px}.card{min-height:58px}}
+</style>
+<script>
+window.addEventListener('error', function(e){
+  var box=document.createElement('div');
+  box.style.cssText='position:fixed;left:10px;right:10px;bottom:10px;z-index:99999;background:#ff5d7d;color:white;padding:12px;border-radius:12px;font:14px system-ui';
+  box.textContent='Erro no jogo: '+(e.message||'desconhecido')+'. Me envie um print desta mensagem.';
+  document.body.appendChild(box);
+});
+</script>
+</head>
+<body>
+<div id="app">
+  <div class="top">
+    <div class="logo"><span>HL</span> <span>5000</span> <span>BR</span></div>
+    <div class="pill" id="saveStatus">Progresso salvo</div>
+  </div>
+
+  <section id="home" class="panel hero">
+    <div>
+      <h1>Hacktiba Learning 5000</h1>
+      <p>Jogo de pares focado apenas em português brasileiro como base para Italiano e Alemão. Escolha uma ponte e combine cada palavra em PT-BR com a tradução correta.</p>
+      <div class="stats">
+        <div class="stat"><b id="totalWords">5000</b><small>meta por idioma</small></div>
+        <div class="stat"><b>2</b><small>idiomas</small></div>
+        <div class="stat"><b id="bestStat">0</b><small>melhor XP</small></div>
+      </div>
+    </div>
+    <div class="panel sidebox">
+      <div class="label">Progresso geral</div>
+      <div class="meter"><i id="homeMeter"></i></div>
+      <div id="homeText" class="label">Comece uma ponte para estudar.</div>
+      <button class="btn ghost" id="resetBtn">Zerar progresso</button>
+    </div>
+  </section>
+
+  <section id="modes" class="grid">
+    <button class="mode" type="button" data-src="pt" data-tgt="it" style="--c1:var(--pt);--c2:var(--it)">
+      <div class="badge">IT</div>
+      <h3>Português BR → Italiano</h3>
+      <p>Exemplo: casa → casa. Treino direto de pares PT-BR e Italiano.</p>
+    </button>
+    <button class="mode" type="button" data-src="pt" data-tgt="de" style="--c1:var(--pt);--c2:var(--de)">
+      <div class="badge">DE</div>
+      <h3>Português BR → Alemão</h3>
+      <p>Exemplo: casa → Haus. Treino direto de pares PT-BR e Alemão.</p>
+    </button>
+  </section>
+
+  <section class="panel controls">
+    <button class="btn primary" id="dailyBtn">Desafio diário</button>
+    <button class="btn warn" id="reviewBtn">Revisar erradas</button>
+    <button class="btn ghost" id="audioBtn">Áudio: ligado</button>
+  </section>
+
+  <section id="game" class="hidden">
+    <div class="panel" style="padding:16px">
+      <div class="gameHead">
+        <button class="btn ghost" id="exitBtn">Menu</button>
+        <div class="gameTitle"><h2 id="roundTitle">Rodada</h2><p id="pairLabel"></p></div>
+        <div class="heart" id="hearts">♥ 5</div>
+      </div>
+      <div class="meter" style="margin-top:14px"><i id="trackFill"></i></div>
+      <div class="score">
+        <span class="pill" id="xpPill">XP 0</span>
+        <span class="pill" id="comboPill">Combo 0</span>
+        <span class="pill" id="accuracyPill">Precisão 100%</span>
+      </div>
+      <div class="board" id="board"></div>
+      <div class="note" id="note">&nbsp;</div>
+    </div>
+    <div class="panel learn">
+      <h3>Palavras desta rodada</h3>
+      <div class="list" id="learnList"></div>
+    </div>
+  </section>
+
+  <div class="footer">Hacktiba Learning 5000 funciona offline. Versão focada apenas em PT-BR → Italiano e PT-BR → Alemão.</div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="panel modal">
+    <div class="emoji" id="overlayEmoji">🎉</div>
+    <h2 id="overlayTitle">Parabéns!</h2>
+    <p id="overlayText"></p>
+    <button class="btn primary" id="continueBtn">Continuar</button>
+    <button class="btn ghost" id="menuBtn">Voltar ao menu</button>
+  </div>
+</div>
+
+<script>
+const VOCAB = [
+  {"pt":"olá","it":"ciao","de":"hallo"},
+  {"pt":"adeus","it":"addio","de":"auf Wiedersehen"},
+  {"pt":"por favor","it":"per favore","de":"bitte"},
+  {"pt":"obrigado","it":"grazie","de":"danke"},
+  {"pt":"sim","it":"sì","de":"ja"},
+  {"pt":"não","it":"no","de":"nein"},
+  {"pt":"desculpa","it":"scusa","de":"entschuldigung"},
+  {"pt":"com licença","it":"permesso","de":"entschuldigen Sie"},
+  {"pt":"bom","it":"buono","de":"gut"},
+  {"pt":"ruim","it":"cattivo","de":"schlecht"},
+  {"pt":"eu","it":"io","de":"ich"},
+  {"pt":"você","it":"tu","de":"du"},
+  {"pt":"ele","it":"lui","de":"er"},
+  {"pt":"ela","it":"lei","de":"sie"},
+  {"pt":"nós","it":"noi","de":"wir"},
+  {"pt":"eles","it":"loro","de":"sie"},
+  {"pt":"meu","it":"mio","de":"mein"},
+  {"pt":"seu","it":"tuo","de":"dein"},
+  {"pt":"nosso","it":"nostro","de":"unser"},
+  {"pt":"um","it":"uno","de":"eins"},
+  {"pt":"dois","it":"due","de":"zwei"},
+  {"pt":"três","it":"tre","de":"drei"},
+  {"pt":"quatro","it":"quattro","de":"vier"},
+  {"pt":"cinco","it":"cinque","de":"fünf"},
+  {"pt":"seis","it":"sei","de":"sechs"},
+  {"pt":"sete","it":"sette","de":"sieben"},
+  {"pt":"oito","it":"otto","de":"acht"},
+  {"pt":"nove","it":"nove","de":"neun"},
+  {"pt":"dez","it":"dieci","de":"zehn"},
+  {"pt":"vermelho","it":"rosso","de":"rot"},
+  {"pt":"azul","it":"blu","de":"blau"},
+  {"pt":"verde","it":"verde","de":"grün"},
+  {"pt":"amarelo","it":"giallo","de":"gelb"},
+  {"pt":"preto","it":"nero","de":"schwarz"},
+  {"pt":"branco","it":"bianco","de":"weiß"},
+  {"pt":"mãe","it":"madre","de":"Mutter"},
+  {"pt":"pai","it":"padre","de":"Vater"},
+  {"pt":"irmão","it":"fratello","de":"Bruder"},
+  {"pt":"irmã","it":"sorella","de":"Schwester"},
+  {"pt":"filho","it":"figlio","de":"Sohn"},
+  {"pt":"filha","it":"figlia","de":"Tochter"},
+  {"pt":"amigo","it":"amico","de":"Freund"},
+  {"pt":"família","it":"famiglia","de":"Familie"},
+  {"pt":"homem","it":"uomo","de":"Mann"},
+  {"pt":"mulher","it":"donna","de":"Frau"},
+  {"pt":"criança","it":"bambino","de":"Kind"},
+  {"pt":"dia","it":"giorno","de":"Tag"},
+  {"pt":"noite","it":"notte","de":"Nacht"},
+  {"pt":"manhã","it":"mattina","de":"Morgen"},
+  {"pt":"tarde","it":"pomeriggio","de":"Nachmittag"},
+  {"pt":"semana","it":"settimana","de":"Woche"},
+  {"pt":"mês","it":"mese","de":"Monat"},
+  {"pt":"ano","it":"anno","de":"Jahr"},
+  {"pt":"hoje","it":"oggi","de":"heute"},
+  {"pt":"amanhã","it":"domani","de":"morgen"},
+  {"pt":"ontem","it":"ieri","de":"gestern"},
+  {"pt":"agora","it":"adesso","de":"jetzt"},
+  {"pt":"sempre","it":"sempre","de":"immer"},
+  {"pt":"nunca","it":"mai","de":"nie"},
+  {"pt":"casa","it":"casa","de":"Haus"},
+  {"pt":"cidade","it":"città","de":"Stadt"},
+  {"pt":"país","it":"paese","de":"Land"},
+  {"pt":"rua","it":"strada","de":"Straße"},
+  {"pt":"escola","it":"scuola","de":"Schule"},
+  {"pt":"trabalho","it":"lavoro","de":"Arbeit"},
+  {"pt":"hospital","it":"ospedale","de":"Krankenhaus"},
+  {"pt":"loja","it":"negozio","de":"Geschäft"},
+  {"pt":"restaurante","it":"ristorante","de":"Restaurant"},
+  {"pt":"porta","it":"porta","de":"Tür"},
+  {"pt":"janela","it":"finestra","de":"Fenster"},
+  {"pt":"mesa","it":"tavolo","de":"Tisch"},
+  {"pt":"cadeira","it":"sedia","de":"Stuhl"},
+  {"pt":"cama","it":"letto","de":"Bett"},
+  {"pt":"quarto","it":"camera","de":"Zimmer"},
+  {"pt":"cozinha","it":"cucina","de":"Küche"},
+  {"pt":"jardim","it":"giardino","de":"Garten"},
+  {"pt":"sol","it":"sole","de":"Sonne"},
+  {"pt":"lua","it":"luna","de":"Mond"},
+  {"pt":"estrela","it":"stella","de":"Stern"},
+  {"pt":"céu","it":"cielo","de":"Himmel"},
+  {"pt":"mar","it":"mare","de":"Meer"},
+  {"pt":"rio","it":"fiume","de":"Fluss"},
+  {"pt":"montanha","it":"montagna","de":"Berg"},
+  {"pt":"árvore","it":"albero","de":"Baum"},
+  {"pt":"flor","it":"fiore","de":"Blume"},
+  {"pt":"chuva","it":"pioggia","de":"Regen"},
+  {"pt":"neve","it":"neve","de":"Schnee"},
+  {"pt":"vento","it":"vento","de":"Wind"},
+  {"pt":"fogo","it":"fuoco","de":"Feuer"},
+  {"pt":"água","it":"acqua","de":"Wasser"},
+  {"pt":"cachorro","it":"cane","de":"Hund"},
+  {"pt":"gato","it":"gatto","de":"Katze"},
+  {"pt":"pássaro","it":"uccello","de":"Vogel"},
+  {"pt":"peixe","it":"pesce","de":"Fisch"},
+  {"pt":"cavalo","it":"cavallo","de":"Pferd"},
+  {"pt":"pão","it":"pane","de":"Brot"},
+  {"pt":"leite","it":"latte","de":"Milch"},
+  {"pt":"café","it":"caffè","de":"Kaffee"},
+  {"pt":"chá","it":"tè","de":"Tee"},
+  {"pt":"ovo","it":"uovo","de":"Ei"},
+  {"pt":"queijo","it":"formaggio","de":"Käse"},
+  {"pt":"carne","it":"carne","de":"Fleisch"},
+  {"pt":"fruta","it":"frutta","de":"Obst"},
+  {"pt":"maçã","it":"mela","de":"Apfel"},
+  {"pt":"arroz","it":"riso","de":"Reis"},
+  {"pt":"açúcar","it":"zucchero","de":"Zucker"},
+  {"pt":"sal","it":"sale","de":"Salz"},
+  {"pt":"mão","it":"mano","de":"Hand"},
+  {"pt":"cabeça","it":"testa","de":"Kopf"},
+  {"pt":"olho","it":"occhio","de":"Auge"},
+  {"pt":"orelha","it":"orecchio","de":"Ohr"},
+  {"pt":"boca","it":"bocca","de":"Mund"},
+  {"pt":"pé","it":"piede","de":"Fuß"},
+  {"pt":"coração","it":"cuore","de":"Herz"},
+  {"pt":"cabelo","it":"capelli","de":"Haar"},
+  {"pt":"braço","it":"braccio","de":"Arm"},
+  {"pt":"perna","it":"gamba","de":"Bein"},
+  {"pt":"ser","it":"essere","de":"sein"},
+  {"pt":"ter","it":"avere","de":"haben"},
+  {"pt":"ir","it":"andare","de":"gehen"},
+  {"pt":"comer","it":"mangiare","de":"essen"},
+  {"pt":"beber","it":"bere","de":"trinken"},
+  {"pt":"dormir","it":"dormire","de":"schlafen"},
+  {"pt":"falar","it":"parlare","de":"sprechen"},
+  {"pt":"ver","it":"vedere","de":"sehen"},
+  {"pt":"querer","it":"volere","de":"wollen"},
+  {"pt":"gostar","it":"piacere","de":"mögen"},
+  {"pt":"precisar","it":"avere bisogno","de":"brauchen"},
+  {"pt":"saber","it":"sapere","de":"wissen"},
+  {"pt":"fazer","it":"fare","de":"machen"},
+  {"pt":"dar","it":"dare","de":"geben"},
+  {"pt":"vir","it":"venire","de":"kommen"},
+  {"pt":"viver","it":"vivere","de":"leben"},
+  {"pt":"trabalhar","it":"lavorare","de":"arbeiten"},
+  {"pt":"estudar","it":"studiare","de":"lernen"},
+  {"pt":"jogar","it":"giocare","de":"spielen"},
+  {"pt":"comprar","it":"comprare","de":"kaufen"},
+  {"pt":"vender","it":"vendere","de":"verkaufen"},
+  {"pt":"abrir","it":"aprire","de":"öffnen"},
+  {"pt":"fechar","it":"chiudere","de":"schließen"},
+  {"pt":"ler","it":"leggere","de":"lesen"},
+  {"pt":"escrever","it":"scrivere","de":"schreiben"},
+  {"pt":"escutar","it":"ascoltare","de":"hören"},
+  {"pt":"pensar","it":"pensare","de":"denken"},
+  {"pt":"entender","it":"capire","de":"verstehen"},
+  {"pt":"aprender","it":"imparare","de":"lernen"},
+  {"pt":"caminhar","it":"camminare","de":"gehen"},
+  {"pt":"correr","it":"correre","de":"laufen"},
+  {"pt":"chegar","it":"arrivare","de":"ankommen"},
+  {"pt":"sair","it":"uscire","de":"ausgehen"},
+  {"pt":"ajudar","it":"aiutare","de":"helfen"},
+  {"pt":"grande","it":"grande","de":"groß"},
+  {"pt":"pequeno","it":"piccolo","de":"klein"},
+  {"pt":"quente","it":"caldo","de":"heiß"},
+  {"pt":"frio","it":"freddo","de":"kalt"},
+  {"pt":"novo","it":"nuovo","de":"neu"},
+  {"pt":"velho","it":"vecchio","de":"alt"},
+  {"pt":"feliz","it":"felice","de":"glücklich"},
+  {"pt":"triste","it":"triste","de":"traurig"},
+  {"pt":"fácil","it":"facile","de":"einfach"},
+  {"pt":"difícil","it":"difficile","de":"schwierig"},
+  {"pt":"rápido","it":"veloce","de":"schnell"},
+  {"pt":"lento","it":"lento","de":"langsam"},
+  {"pt":"bonito","it":"bello","de":"schön"},
+  {"pt":"feio","it":"brutto","de":"hässlich"},
+  {"pt":"forte","it":"forte","de":"stark"},
+  {"pt":"fraco","it":"debole","de":"schwach"},
+  {"pt":"limpo","it":"pulito","de":"sauber"},
+  {"pt":"sujo","it":"sporco","de":"schmutzig"},
+  {"pt":"cheio","it":"pieno","de":"voll"},
+  {"pt":"vazio","it":"vuoto","de":"leer"},
+  {"pt":"importante","it":"importante","de":"wichtig"},
+  {"pt":"em","it":"in","de":"in"},
+  {"pt":"sobre","it":"su","de":"auf"},
+  {"pt":"embaixo","it":"sotto","de":"unter"},
+  {"pt":"com","it":"con","de":"mit"},
+  {"pt":"sem","it":"senza","de":"ohne"},
+  {"pt":"para","it":"per","de":"für"},
+  {"pt":"e","it":"e","de":"und"},
+  {"pt":"ou","it":"o","de":"oder"},
+  {"pt":"mas","it":"ma","de":"aber"},
+  {"pt":"porque","it":"perché","de":"weil"},
+  {"pt":"quando","it":"quando","de":"wann"},
+  {"pt":"onde","it":"dove","de":"wo"},
+  {"pt":"quem","it":"chi","de":"wer"},
+  {"pt":"o que","it":"che cosa","de":"was"},
+  {"pt":"por quê","it":"perché","de":"warum"},
+  {"pt":"como","it":"come","de":"wie"},
+  {"pt":"nome","it":"nome","de":"Name"},
+  {"pt":"palavra","it":"parola","de":"Wort"},
+  {"pt":"idioma","it":"lingua","de":"Sprache"},
+  {"pt":"pergunta","it":"domanda","de":"Frage"},
+  {"pt":"resposta","it":"risposta","de":"Antwort"},
+  {"pt":"problema","it":"problema","de":"Problem"},
+  {"pt":"vida","it":"vita","de":"Leben"},
+  {"pt":"mundo","it":"mondo","de":"Welt"},
+  {"pt":"dinheiro","it":"denaro","de":"Geld"},
+  {"pt":"livro","it":"libro","de":"Buch"},
+  {"pt":"carro","it":"auto","de":"Auto"},
+  {"pt":"telefone","it":"telefono","de":"Telefon"},
+  {"pt":"computador","it":"computer","de":"Computer"},
+  {"pt":"música","it":"musica","de":"Musik"},
+  {"pt":"jogo","it":"gioco","de":"Spiel"},
+  {"pt":"sonho","it":"sogno","de":"Traum"},
+  {"pt":"emprego","it":"lavoro","de":"Job"},
+  {"pt":"luz","it":"luce","de":"Licht"},
+  {"pt":"cor","it":"colore","de":"Farbe"},
+  {"pt":"bom dia","it":"buongiorno","de":"guten Morgen"},
+  {"pt":"boa tarde","it":"buon pomeriggio","de":"guten Nachmittag"},
+  {"pt":"boa noite","it":"buona notte","de":"gute Nacht"},
+  {"pt":"como você está","it":"come stai","de":"wie geht es dir"},
+  {"pt":"qual é o seu nome","it":"come ti chiami","de":"wie heißt du"},
+  {"pt":"prazer em conhecer","it":"piacere di conoscerti","de":"freut mich"},
+  {"pt":"até mais tarde","it":"a più tardi","de":"bis später"},
+  {"pt":"até breve","it":"a presto","de":"bis bald"},
+  {"pt":"claro","it":"certo","de":"natürlich"},
+  {"pt":"sem problema","it":"nessun problema","de":"kein Problem"},
+  {"pt":"não sei","it":"non lo so","de":"ich weiß nicht"},
+  {"pt":"não entendo","it":"non capisco","de":"ich verstehe nicht"},
+  {"pt":"que horas são","it":"che ore sono","de":"wie spät ist es"},
+  {"pt":"sinto muito","it":"mi dispiace","de":"es tut mir leid"},
+  {"pt":"cuide-se","it":"abbi cura di te","de":"pass auf dich auf"},
+  {"pt":"boa sorte","it":"buona fortuna","de":"viel Glück"},
+  {"pt":"parabéns","it":"congratulazioni","de":"Glückwunsch"},
+  {"pt":"bem-vindo","it":"benvenuto","de":"willkommen"}
+];
+
+const LANG_NAMES={pt:'Português BR',it:'Italiano',de:'Alemão'};
+const LANG_COLORS={pt:'var(--pt)',it:'var(--it)',de:'var(--de)'};
+const VOICE_LANG={pt:'pt-BR',it:'it-IT',de:'de-DE'};
+const PROJECT_GOAL=5000;
+const PAIRS_PER_ROUND=6, TOTAL_ROUNDS=12, MAX_MISTAKES=5;
+let audioOn=true, state=null;
+const $=id=>document.getElementById(id);
+const saveKey='hacktiba-learning-5000-pares-pt-it-de-v1';
+let save;
+try{ save=JSON.parse(localStorage.getItem(saveKey)||'{"xp":0,"best":0,"played":0,"wrong":[]}'); }
+catch(e){ save={xp:0,best:0,played:0,wrong:[]}; localStorage.removeItem(saveKey); }
+
+function persist(){save.best=Math.max(save.best,save.xp||0);localStorage.setItem(saveKey,JSON.stringify(save));refreshHome()}
+function setText(id,value){ const el=$(id); if(el) el.textContent=value; }
+function setWidth(id,value){ const el=$(id); if(el) el.style.width=value; }
+function refreshHome(){
+  setText('totalWords', PROJECT_GOAL);
+  setText('bestStat', save.best||0);
+  let pct=Math.min(100,Math.round(((save.played||0)/(PROJECT_GOAL))*100));
+  setWidth('homeMeter', pct+'%');
+  setText('homeText',(save.played||0)+' itens treinados • '+(save.wrong||[]).length+' para revisar');
+}
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function speak(text,lang){
+  if(!audioOn||!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  let u=new SpeechSynthesisUtterance(text);
+  u.lang=VOICE_LANG[lang]||'pt-BR';
+  u.rate=.88;
+  speechSynthesis.speak(u);
+}
+function startGame(src,tgt,pool){
+  state={src,tgt,pool:shuffle(pool||VOCAB),idx:0,round:0,mistakes:0,selected:null,locked:false,matched:0,pairs:[],xp:0,combo:0,tries:0,ok:0,review:!!pool};
+  $('home').classList.add('hidden');
+  $('modes').classList.add('hidden');
+  document.querySelector('.controls').classList.add('hidden');
+  $('game').classList.remove('hidden');
+  $('overlay').classList.remove('show');
+  nextRound();
+}
+function nextRound(){
+  state.round++;
+  if(state.round>TOTAL_ROUNDS || state.idx>=state.pool.length){finish();return}
+  state.mistakes=0; updateHUD();
+  let chunk=state.pool.slice(state.idx,state.idx+PAIRS_PER_ROUND);
+  state.idx+=PAIRS_PER_ROUND; state.pairs=chunk; state.matched=0; state.selected=null; state.locked=false;
+  $('roundTitle').textContent='Rodada '+state.round+' / '+TOTAL_ROUNDS;
+  $('pairLabel').textContent=LANG_NAMES[state.src]+' → '+LANG_NAMES[state.tgt];
+  $('trackFill').style.width=Math.round((state.round-1)/TOTAL_ROUNDS*100)+'%';
+  $('note').innerHTML='Toque em uma palavra e depois na tradução.';
+  renderBoard(chunk); renderLearn(chunk);
+}
+function updateHUD(){
+  $('hearts').textContent='♥ '+(MAX_MISTAKES-state.mistakes);
+  $('xpPill').textContent='XP '+state.xp;
+  $('comboPill').textContent='Combo '+state.combo;
+  let acc=state.tries?Math.round(state.ok/state.tries*100):100;
+  $('accuracyPill').textContent='Precisão '+acc+'%';
+}
+function renderBoard(chunk){
+  $('board').innerHTML='';
+  let left=shuffle(chunk.map((w,i)=>({id:i,side:'left',text:w[state.src],lang:state.src})));
+  let right=shuffle(chunk.map((w,i)=>({id:i,side:'right',text:w[state.tgt],lang:state.tgt})));
+  for(let i=0;i<chunk.length;i++){
+    $('board').appendChild(card(left[i]));
+    $('board').appendChild(card(right[i]));
+  }
+}
+function card(d){
+  let b=document.createElement('button');
+  b.type='button';
+  b.className='card '+d.side;
+  b.textContent=d.text||'';
+  b.dataset.id=d.id;
+  b.dataset.side=d.side;
+  b.style.setProperty(d.side==='left'?'--src':'--tgt',LANG_COLORS[d.lang]);
+  b.addEventListener('click',()=>tap(b,d));
+  return b;
+}
+function tap(el,d){
+  if(state.locked||el.classList.contains('good'))return;
+  speak(d.text,d.lang);
+  if(state.selected&&state.selected.el===el)return;
+  if(!state.selected||state.selected.d.side===d.side){
+    clearSel(); el.classList.add('selected'); state.selected={el,d}; return;
+  }
+  state.locked=true; state.tries++;
+  if(state.selected.d.id===d.id){
+    el.classList.add('good'); state.selected.el.classList.add('good');
+    state.ok++; state.combo++; state.xp+=10+Math.min(20,state.combo*2); updateHUD();
+    setTimeout(()=>{
+      el.classList.add('off'); state.selected.el.classList.add('off');
+      state.selected=null; state.locked=false; state.matched++;
+      if(state.matched===state.pairs.length){
+        save.xp=(save.xp||0)+state.xp;
+        save.played=(save.played||0)+state.pairs.length;
+        persist(); showRound();
+      }
+    },260);
+  } else {
+    el.classList.add('bad'); state.selected.el.classList.add('bad');
+    state.combo=0; state.mistakes++;
+    rememberWrong(state.pairs[state.selected.d.id]);
+    updateHUD();
+    $('note').textContent='Quase! Olhe a lista de apoio e tente de novo.';
+    setTimeout(()=>{
+      el.classList.remove('bad','selected');
+      if(state.selected)state.selected.el.classList.remove('bad','selected');
+      state.selected=null; state.locked=false;
+      if(state.mistakes>=MAX_MISTAKES)fail();
+    },390);
+  }
+}
+function clearSel(){document.querySelectorAll('.card.selected').forEach(x=>x.classList.remove('selected'))}
+function rememberWrong(w){
+  let k=w.pt+'|'+w.it+'|'+w.de;
+  save.wrong=save.wrong||[];
+  if(!save.wrong.some(x=>x.pt+'|'+x.it+'|'+x.de===k))save.wrong.push(w);
+  persist();
+}
+function renderLearn(chunk){
+  $('learnList').innerHTML='';
+  chunk.forEach(w=>{
+    let r=document.createElement('div');
+    r.className='row';
+    r.innerHTML='<div><b>'+escapeHTML(w[state.src])+'</b><br><small>'+LANG_NAMES[state.src]+'</small></div><div class="arrow">→</div><div><b>'+escapeHTML(w[state.tgt])+'</b><br><small>'+LANG_NAMES[state.tgt]+'</small></div>';
+    let btn=document.createElement('button');
+    btn.className='speak';
+    btn.textContent='🔊';
+    btn.onclick=()=>speak(w[state.tgt],state.tgt);
+    r.appendChild(btn);
+    $('learnList').appendChild(r);
+  });
+}
+function escapeHTML(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function showRound(){
+  $('overlayEmoji').textContent='✅';
+  $('overlayTitle').textContent='Rodada concluída';
+  $('overlayText').textContent='Você ganhou '+state.xp+' XP nesta partida. Continue para avançar.';
+  $('continueBtn').textContent='Próxima rodada';
+  $('overlay').classList.add('show');
+}
+function fail(){
+  $('overlayEmoji').textContent='💧';
+  $('overlayTitle').textContent='Sem corações';
+  $('overlayText').textContent='Revise as palavras da rodada e tente outra vez. As erradas foram salvas no modo Revisar.';
+  $('continueBtn').textContent='Recomeçar';
+  $('overlay').classList.add('show');
+}
+function finish(){
+  $('trackFill').style.width='100%';
+  $('overlayEmoji').textContent='🏆';
+  $('overlayTitle').textContent='Jogo completo';
+  $('overlayText').textContent='Você terminou '+(state.round-1)+' rodadas. XP total salvo: '+(save.xp||0)+'.';
+  $('continueBtn').textContent='Jogar novamente';
+  $('overlay').classList.add('show');
+}
+function menu(){
+  $('game').classList.add('hidden');
+  $('home').classList.remove('hidden');
+  $('modes').classList.remove('hidden');
+  document.querySelector('.controls').classList.remove('hidden');
+  $('overlay').classList.remove('show');
+  refreshHome();
+}
+function initButtons(){
+  document.querySelectorAll('.mode').forEach(b=>{
+    b.onclick=()=>startGame(b.dataset.src,b.dataset.tgt);
+  });
+  $('dailyBtn').onclick=()=>{
+    let day=Math.floor(Date.now()/86400000);
+    let targets=['it','de'];
+    let tgt=targets[day%targets.length];
+    let pool=VOCAB.filter((_,i)=>(i+day)%5===0);
+    startGame('pt',tgt,pool.slice(0,90));
+  };
+  $('reviewBtn').onclick=()=>{
+    let pool=(save.wrong||[]).filter(w=>w&&w.pt&&w.it&&w.de);
+    if(pool.length<6){alert('Ainda não há palavras erradas suficientes para revisar. Jogue uma rodada primeiro.');return}
+    startGame('pt','it',pool);
+  };
+  $('audioBtn').onclick=()=>{
+    audioOn=!audioOn;
+    $('audioBtn').textContent='Áudio: '+(audioOn?'ligado':'desligado');
+  };
+  $('resetBtn').onclick=()=>{
+    if(confirm('Zerar todo o progresso salvo?')){
+      save={xp:0,best:0,played:0,wrong:[]};
+      localStorage.removeItem(saveKey);
+      refreshHome();
+    }
+  };
+  $('exitBtn').onclick=menu;
+  $('menuBtn').onclick=menu;
+  $('continueBtn').onclick=()=>{
+    $('overlay').classList.remove('show');
+    if(state&&state.mistakes>=MAX_MISTAKES){
+      startGame(state.src,state.tgt,state.pool);
+    } else if(state&&(state.round>=TOTAL_ROUNDS||state.idx>=state.pool.length)){
+      startGame(state.src,state.tgt);
+    } else nextRound();
+  };
+  refreshHome();
+}
+initButtons();
+</script>
+</body>
+</html>
