@@ -6,6 +6,36 @@
 <title>HL Vocabulary Flag</title>
 <style>
 :root{--primary:#4f46e5;--dark:#17143e;--muted:#6b7280;--bg1:#4f46e5;--bg2:#06b6d4;--ok:#16a34a;--bad:#dc2626;--card:#fff;--soft:#eef2ff;--line:#e5e7eb}*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center;padding:16px;color:#111827}.app{width:min(680px,100%);background:var(--card);border-radius:28px;padding:22px;box-shadow:0 18px 40px rgba(0,0,0,.22);text-align:center}.title{font-size:clamp(32px,7vw,52px);font-weight:900;color:var(--primary);margin:8px 0 4px;line-height:1.05}.subtitle{font-size:clamp(16px,4vw,24px);color:var(--muted);margin-bottom:18px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}.stat{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:18px;padding:12px;font-size:clamp(22px,5vw,30px);font-weight:900}.progressWrap{height:12px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:12px 0 20px}.progressBar{height:100%;width:0;background:var(--primary);transition:.25s}.wordBox{background:var(--soft);border:2px solid #c7d2fe;border-radius:24px;padding:30px 12px;margin-bottom:18px}.word{font-size:clamp(44px,11vw,70px);font-weight:1000;color:var(--dark);word-break:break-word}.hint{font-size:clamp(18px,4.5vw,28px);color:var(--muted);margin-top:10px}.flags{display:grid;grid-template-columns:1fr;gap:12px}.flagBtn,.mainBtn{border:2px solid var(--line);background:#fff;border-radius:18px;padding:16px;font-size:clamp(20px,5vw,28px);font-weight:900;cursor:pointer;transition:.15s}.flagBtn:active,.mainBtn:active{transform:scale(.98)}.flagBtn:disabled{opacity:.55;cursor:not-allowed}.message{margin-top:16px;border-radius:18px;padding:16px;font-size:clamp(18px,4.5vw,26px);font-weight:900;min-height:0}.message.ok{background:#dcfce7;color:#166534}.message.bad{background:#fee2e2;color:#991b1b}.actions{display:flex;gap:12px;margin-top:14px}.mainBtn{flex:1;background:var(--primary);color:white;border-color:var(--primary)}.secondary{background:#e5e7eb;color:#111827;border-color:#e5e7eb}.startPanel{display:block}.gamePanel{display:none}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}.select{width:100%;font-size:20px;font-weight:800;padding:14px;border-radius:16px;border:2px solid var(--line);background:#fff}.label{font-weight:900;text-align:left;margin-bottom:6px}.small{font-size:14px;color:var(--muted);margin-top:10px}.hidden{display:none!important}@media(min-width:580px){.flags{grid-template-columns:1fr 1fr}.flags button:last-child{grid-column:1/3}.stats{grid-template-columns:repeat(3,1fr)}}
+
+/* Ajuste mobile: menos rolagem e botão Próxima sempre acessível */
+.flags.afterAnswer{display:none!important}
+@media(max-width:760px){
+  body{align-items:flex-start;padding:8px 6px;min-height:100svh}
+  .app{width:min(640px,100%);border-radius:22px;padding:14px;margin:0 auto}
+  .title{font-size:clamp(27px,8vw,38px);margin:4px 0 2px;line-height:1}
+  .subtitle{font-size:clamp(14px,4vw,18px);margin-bottom:10px;line-height:1.15}
+  .stats{grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+  .stat{border-radius:14px;padding:8px 6px;font-size:clamp(17px,5vw,23px)}
+  .progressWrap{height:9px;margin:8px 0 12px}
+  .wordBox{border-radius:18px;padding:18px 8px;margin-bottom:10px}
+  .word{font-size:clamp(36px,10vw,54px);line-height:1.05}
+  .hint{font-size:clamp(14px,4vw,19px);margin-top:8px;line-height:1.15}
+  .flags{grid-template-columns:1fr 1fr;gap:8px}
+  .flags button:last-child{grid-column:1/3}
+  .flagBtn,.mainBtn{border-radius:14px;padding:10px 8px;font-size:clamp(16px,4.5vw,21px);min-height:48px}
+  .message{margin-top:10px;border-radius:14px;padding:10px 8px;font-size:clamp(15px,4.2vw,20px);line-height:1.2}
+  .actions{gap:8px;margin-top:10px}
+  .row{gap:8px;margin:10px 0}
+  .select{font-size:16px;padding:10px;border-radius:13px}
+}
+@media(max-width:380px){
+  .app{padding:10px;border-radius:18px}
+  .title{font-size:26px}
+  .wordBox{padding:14px 6px}
+  .word{font-size:34px}
+  .flagBtn,.mainBtn{padding:8px 6px;min-height:44px}
+}
+
 </style>
 </head><body><main class="app"><section id="start" class="startPanel"><h1 class="title">🌍 HL Vocabulary Flag</h1><div class="subtitle">HTML único • base revisada • palavras</div><div class="row"><div><div class="label">Quantidade</div><select id="amount" class="select"><option value="20">20 palavras</option><option value="50">50 palavras</option><option value="100">100 palavras</option><option value="250">250 palavras</option><option value="1000">1000 palavras</option></select></div><div><div class="label">Modo</div><select id="mode" class="select"><option value="normal">Normal</option><option value="hard">Difícil</option></select></div></div><button class="mainBtn" id="startBtn">Começar jogo ▶</button><div class="small" id="status">Carregando base embutida...</div></section><section id="game" class="gamePanel"><h1 class="title">🌍 HL Vocabulary Flag</h1><div class="subtitle">Escolha o idioma pela bandeira.</div><div class="stats"><div class="stat">⭐ <span id="score">0</span></div><div class="stat">❤️ <span id="chances">3</span></div><div class="stat">📘 <span id="prog">0/0</span></div></div><div class="progressWrap"><div class="progressBar" id="bar"></div></div><div class="wordBox"><div class="word" id="word">Pronto</div><div class="hint" id="hint">Qual bandeira combina com esta palavra?</div></div><div class="flags" id="buttons"></div><div id="msg" class="message hidden"></div><div class="actions"><button id="next" class="mainBtn hidden">Próxima ➜</button><button id="end" class="mainBtn secondary">Encerrar</button></div></section></main><script>
 'use strict';
@@ -20,10 +50,10 @@ function init(){try{const {v,problems}=validate(); if(problems.length){$('status
 function makeButtons(){const box=$('buttons'); box.innerHTML=''; LANGS.forEach(L=>{const b=document.createElement('button'); b.className='flagBtn'; b.textContent=L.flag+' '+L.name; b.onclick=()=>choose(L.id); box.appendChild(b);});}
 function startGame(){const amount=Number($('amount').value)||20; DECK=shuffle(BANK.slice()).slice(0, Math.min(amount,BANK.length)); i=0;score=0;chances=3;answered=false;$('start').style.display='none';$('game').style.display='block';makeButtons();show();}
 function current(){return DECK[i];}
-function show(){const c=current(); answered=false; chances=3; $('score').textContent=score; $('chances').textContent=chances; $('prog').textContent=(i+1)+'/'+DECK.length; $('bar').style.width=((i)/DECK.length*100)+'%'; $('word').textContent=c.word; $('hint').textContent='Qual bandeira combina com esta palavra?'; $('msg').className='message hidden'; $('next').classList.add('hidden'); document.querySelectorAll('.flagBtn').forEach(b=>b.disabled=false);}
+function show(){const c=current(); answered=false; chances=3; $('buttons').classList.remove('afterAnswer'); $('score').textContent=score; $('chances').textContent=chances; $('prog').textContent=(i+1)+'/'+DECK.length; $('bar').style.width=((i)/DECK.length*100)+'%'; $('word').textContent=c.word; $('hint').textContent='Qual bandeira combina com esta palavra?'; $('msg').className='message hidden'; $('next').classList.add('hidden'); document.querySelectorAll('.flagBtn').forEach(b=>b.disabled=false);}
 function langNames(ids){return LANGS.filter(L=>ids.includes(L.id)).map(L=>L.flag+' '+L.name).join(' ou ')}
 function choose(id){if(answered)return; const c=current(); if(c.languages.includes(id)){answered=true; score += chances*10; $('score').textContent=score; $('msg').innerHTML='✅ Correto!<br>"'+escapeHtml(c.word)+'" significa "'+escapeHtml(c.translation)+'".'; $('msg').className='message ok'; finishRound();} else {chances--; $('chances').textContent=chances; if(chances>0){$('msg').innerHTML='❌ Não é esse idioma. Você ainda tem '+chances+' chance(s).'; $('msg').className='message bad';} else {answered=true; $('msg').innerHTML='❌ Acabaram as chances!<br>Era '+langNames(c.languages)+'.<br>"'+escapeHtml(c.word)+'" significa "'+escapeHtml(c.translation)+'".'; $('msg').className='message bad'; finishRound();}}}
-function finishRound(){document.querySelectorAll('.flagBtn').forEach(b=>b.disabled=true); $('bar').style.width=((i+1)/DECK.length*100)+'%'; $('next').classList.remove('hidden');}
+function finishRound(){document.querySelectorAll('.flagBtn').forEach(b=>b.disabled=true); $('buttons').classList.add('afterAnswer'); $('bar').style.width=((i+1)/DECK.length*100)+'%'; $('next').classList.remove('hidden');}
 function next(){i++; if(i>=DECK.length){$('word').textContent='Fim!'; $('hint').textContent='Pontuação final: '+score; $('prog').textContent=DECK.length+'/'+DECK.length; $('buttons').innerHTML=''; $('msg').className='message ok'; $('msg').textContent='🏆 Você terminou o jogo.'; $('next').classList.add('hidden');} else show();}
 function endGame(){location.reload();}
 function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
