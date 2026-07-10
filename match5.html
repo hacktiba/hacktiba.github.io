@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>HL Match 5</title>
+<style>
+:root{--primary:#4f46e5;--bg1:#4f46e5;--bg2:#06b6d4;--card:#fff;--soft:#eef2ff;--line:#e5e7eb;--ok:#16a34a;--bad:#dc2626;--dark:#17143e;--muted:#6b7280}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center;padding:10px;color:#111827}
+.app{width:min(760px,100%);background:var(--card);border-radius:22px;padding:14px;box-shadow:0 14px 34px rgba(0,0,0,.22);text-align:center}
+.top{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:6px}
+.menu{background:#e5e7eb;color:#111827;text-decoration:none;border-radius:12px;padding:9px 12px;font-weight:900;font-size:14px}
+.title{font-size:clamp(24px,6vw,40px);font-weight:1000;color:var(--primary);margin:4px 0;line-height:1}
+.subtitle{font-size:clamp(13px,3.5vw,18px);color:var(--muted);margin:0 0 8px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+.stat{background:#f3f4f6;border:1px solid var(--line);border-radius:14px;padding:8px;font-size:clamp(16px,4vw,22px);font-weight:900}
+.card{background:var(--soft);border:2px solid #c7d2fe;border-radius:18px;padding:10px;margin:8px 0}
+.prompt{font-size:clamp(17px,4.5vw,24px);font-weight:1000;color:var(--dark)}
+.relation{font-size:13px;color:var(--muted);margin-top:4px;font-weight:800}
+.columns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.colTitle{font-weight:1000;color:var(--dark);margin-bottom:6px;font-size:14px}
+.item{width:100%;border:2px solid var(--line);background:#fff;border-radius:14px;padding:11px 6px;margin-bottom:8px;font-size:clamp(17px,4.6vw,23px);font-weight:1000;cursor:pointer;min-height:48px}
+.item.selected{outline:3px solid var(--primary);background:#eef2ff}
+.item.done{background:#dcfce7;border-color:#86efac;color:#166534;cursor:default;opacity:.8}
+.item.wrong{animation:shake .2s linear 2;background:#fee2e2;border-color:#fecaca}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.msg{min-height:34px;border-radius:14px;padding:10px;margin-top:8px;font-size:clamp(15px,4vw,20px);font-weight:900}
+.ok{background:#dcfce7;color:#166534}.bad{background:#fee2e2;color:#991b1b}.hidden{display:none!important}
+.actions{display:flex;gap:8px;margin-top:8px}
+.btn{flex:1;border:none;border-radius:14px;padding:12px;background:var(--primary);color:white;font-size:clamp(16px,4vw,22px);font-weight:1000;cursor:pointer}
+.btn.secondary{background:#e5e7eb;color:#111827}
+.startPanel p{margin:8px 0;color:var(--muted);font-weight:700}
+select{width:100%;border:2px solid var(--line);border-radius:14px;padding:12px;font-size:17px;font-weight:900;background:white;margin:10px 0}
+@media(max-height:720px){.title{font-size:24px}.subtitle{display:none}.stat{padding:6px;font-size:16px}.card{padding:8px;margin:6px 0}.item{padding:8px 4px;margin-bottom:6px;min-height:42px;font-size:17px}.msg{padding:8px;min-height:28px}}
+@media(max-width:380px){body{padding:6px}.app{padding:10px;border-radius:18px}.columns{gap:7px}.item{font-size:16px}}
+</style>
+</head>
+<body>
+<main class="app">
+  <section id="startPanel" class="startPanel">
+    <div class="top"><a class="menu" href="flags.html">🏠 Menu</a><span></span></div>
+    <h1 class="title">🔗 HL Match 5</h1>
+    <div class="subtitle">Ligue 5 palavras similares/iguais aos 5 idiomas.</div>
+    <p>Toque em uma palavra da coluna A e depois na bandeira correta da coluna B.</p>
+    <select id="roundCount">
+      <option value="10">10 rodadas</option>
+      <option value="20" selected>20 rodadas</option>
+      <option value="40">40 rodadas</option>
+      <option value="80">Todas as relações</option>
+    </select>
+    <button class="btn" id="startBtn">Começar ▶</button>
+  </section>
+
+  <section id="gamePanel" class="hidden">
+    <div class="top"><a class="menu" href="flags.html">🏠 Menu</a><button class="menu" id="restartBtn" type="button">🔁 Reiniciar</button></div>
+    <h1 class="title">🔗 HL Match 5</h1>
+    <div class="stats">
+      <div class="stat">⭐ <span id="score">0</span></div>
+      <div class="stat">✅ <span id="hits">0</span>/5</div>
+      <div class="stat">📘 <span id="prog">0/0</span></div>
+    </div>
+    <div class="card">
+      <div class="prompt" id="prompt">Ligue cada palavra à bandeira correta</div>
+      <div class="relation" id="relation">Relação</div>
+    </div>
+    <div class="columns">
+      <div>
+        <div class="colTitle">Coluna A — Palavras</div>
+        <div id="wordsCol"></div>
+      </div>
+      <div>
+        <div class="colTitle">Coluna B — Idiomas</div>
+        <div id="flagsCol"></div>
+      </div>
+    </div>
+    <div id="msg" class="msg hidden"></div>
+    <div class="actions">
+      <button class="btn hidden" id="nextBtn">Próxima ➜</button>
+      <button class="btn secondary" id="endBtn">Encerrar</button>
+    </div>
+  </section>
+</main>
+
+<script>
+'use strict';
+const RELATIONS = [["hotel", "hotel", "hotel", "hotel", "hôtel", "Hotel", "iguais/similares"], ["animal", "animal", "animal", "animale", "animal", "Tier", "iguais/similares"], ["banana", "banana", "banana", "banana", "banane", "Banane", "iguais/similares"], ["radio", "radio", "radio", "radio", "radio", "Radio", "iguais/similares"], ["taxi", "taxi", "taxi", "taxi", "taxi", "Taxi", "iguais/similares"], ["menu", "menu", "menú", "menù", "menu", "Menü", "iguais/similares"], ["piano", "piano", "piano", "piano", "piano", "Klavier", "iguais/similares"], ["chocolate", "chocolate", "chocolate", "cioccolato", "chocolat", "Schokolade", "iguais/similares"], ["café", "coffee", "café", "caffè", "café", "Kaffee", "iguais/similares"], ["hospital", "hospital", "hospital", "ospedale", "hôpital", "Krankenhaus", "iguais/similares"], ["relação", "relation", "relación", "relazione", "relation", "Relation", "-tion/-ción/-zione/-tion"], ["nação", "nation", "nación", "nazione", "nation", "Nation", "-tion/-ción/-zione/-tion"], ["informação", "information", "información", "informazione", "information", "Information", "-tion/-ción/-zione/-tion"], ["educação", "education", "educación", "educazione", "éducation", "Bildung", "-tion/-ción/-zione/-tion"], ["organização", "organization", "organización", "organizzazione", "organisation", "Organisation", "-tion/-ción/-zione/-tion"], ["comunicação", "communication", "comunicación", "comunicazione", "communication", "Kommunikation", "-tion/-ción/-zione/-tion"], ["situação", "situation", "situación", "situazione", "situation", "Situation", "-tion/-ción/-zione/-tion"], ["tradição", "tradition", "tradición", "tradizione", "tradition", "Tradition", "-tion/-ción/-zione/-tion"], ["solução", "solution", "solución", "soluzione", "solution", "Lösung", "-tion/-ción/-zione/-tion"], ["proteção", "protection", "protección", "protezione", "protection", "Schutz", "-tion/-ción/-zione/-tion"], ["qualidade", "quality", "calidad", "qualità", "qualité", "Qualität", "-ity/-idad/-ità/-ité/-ität"], ["universidade", "university", "universidad", "università", "université", "Universität", "-ity/-idad/-ità/-ité/-ität"], ["cidade", "city", "ciudad", "città", "ville", "Stadt", "-ity/-idad/-ità/-ité/-ität"], ["curiosidade", "curiosity", "curiosidad", "curiosità", "curiosité", "Neugier", "-ity/-idad/-ità/-ité/-ität"], ["realidade", "reality", "realidad", "realtà", "réalité", "Realität", "-ity/-idad/-ità/-ité/-ität"], ["atividade", "activity", "actividad", "attività", "activité", "Aktivität", "-ity/-idad/-ità/-ité/-ität"], ["identidade", "identity", "identidad", "identità", "identité", "Identität", "-ity/-idad/-ità/-ité/-ität"], ["possibilidade", "possibility", "posibilidad", "possibilità", "possibilité", "Möglichkeit", "-ity/-idad/-ità/-ité/-ität"], ["responsabilidade", "responsibility", "responsabilidad", "responsabilità", "responsabilité", "Verantwortung", "-ity/-idad/-ità/-ité/-ität"], ["eletricidade", "electricity", "electricidad", "elettricità", "électricité", "Elektrizität", "-ity/-idad/-ità/-ité/-ität"], ["natural", "natural", "natural", "naturale", "naturel", "natürlich", "-al/-ale"], ["normal", "normal", "normal", "normale", "normal", "normal", "-al/-ale"], ["central", "central", "central", "centrale", "central", "zentral", "-al/-ale"], ["cultural", "cultural", "cultural", "culturale", "culturel", "kulturell", "-al/-ale"], ["social", "social", "social", "sociale", "social", "sozial", "-al/-ale"], ["musical", "musical", "musical", "musicale", "musical", "musikalisch", "-al/-ale"], ["final", "final", "final", "finale", "final", "final", "-al/-ale"], ["local", "local", "local", "locale", "local", "lokal", "-al/-ale"], ["político", "political", "político", "politico", "politique", "politisch", "-ic/-ico/-ique/-isch"], ["médico", "medical", "médico", "medico", "médical", "medizinisch", "-ic/-ico/-ique/-isch"], ["histórico", "historic", "histórico", "storico", "historique", "historisch", "-ic/-ico/-ique/-isch"], ["técnico", "technical", "técnico", "tecnico", "technique", "technisch", "-ic/-ico/-ique/-isch"], ["clássico", "classic", "clásico", "classico", "classique", "klassisch", "-ic/-ico/-ique/-isch"], ["econômico", "economic", "económico", "economico", "économique", "wirtschaftlich", "-ic/-ico/-ique/-isch"], ["turismo", "tourism", "turismo", "turismo", "tourisme", "Tourismus", "-ism/-ismo/-isme"], ["otimismo", "optimism", "optimismo", "ottimismo", "optimisme", "Optimismus", "-ism/-ismo/-isme"], ["realismo", "realism", "realismo", "realismo", "réalisme", "Realismus", "-ism/-ismo/-isme"], ["artista", "artist", "artista", "artista", "artiste", "Künstler", "-ist/-ista/-iste"], ["turista", "tourist", "turista", "turista", "touriste", "Tourist", "-ist/-ista/-iste"], ["pianista", "pianist", "pianista", "pianista", "pianiste", "Pianist", "-ist/-ista/-iste"], ["momento", "moment", "momento", "momento", "moment", "Moment", "-ment/-mento"], ["movimento", "movement", "movimiento", "movimento", "mouvement", "Bewegung", "-ment/-mento"], ["documento", "document", "documento", "documento", "document", "Dokument", "-ment/-mento"], ["argumento", "argument", "argumento", "argomento", "argument", "Argument", "-ment/-mento"], ["possível", "possible", "posible", "possibile", "possible", "möglich", "-ble/-bile"], ["visível", "visible", "visible", "visibile", "visible", "sichtbar", "-ble/-bile"], ["terrível", "terrible", "terrible", "terribile", "terrible", "schrecklich", "-ble/-bile"], ["responsável", "responsible", "responsable", "responsabile", "responsable", "verantwortlich", "-ble/-bile"], ["ator", "actor", "actor", "attore", "acteur", "Schauspieler", "-or/-eur/-ore"], ["autor", "author", "autor", "autore", "auteur", "Autor", "-or/-eur/-ore"], ["diretor", "director", "director", "direttore", "directeur", "Direktor", "-or/-eur/-ore"], ["motor", "motor", "motor", "motore", "moteur", "Motor", "-or/-eur/-ore"], ["atual", "current", "actual", "attuale", "actuel", "aktuell", "falsos amigos/similares"], ["livraria", "bookstore", "librería", "libreria", "librairie", "Buchhandlung", "falsos amigos/similares"], ["pasta", "folder", "carpeta", "cartella", "dossier", "Ordner", "falsos amigos/similares"], ["sucesso", "success", "éxito", "successo", "succès", "Erfolg", "falsos amigos/similares"], ["assistir", "watch", "ver", "guardare", "regarder", "sehen", "diferentes"], ["casa", "house", "casa", "casa", "maison", "Haus", "iguais/parcialmente iguais"], ["amigo", "friend", "amigo", "amico", "ami", "Freund", "similares"], ["família", "family", "familia", "famiglia", "famille", "Familie", "similares"], ["música", "music", "música", "musica", "musique", "Musik", "similares"], ["telefone", "phone", "teléfono", "telefono", "téléphone", "Telefon", "similares"], ["computador", "computer", "computadora", "computer", "ordinateur", "Computer", "similares"], ["professor", "teacher", "profesor", "professore", "professeur", "Lehrer", "similares"], ["estudante", "student", "estudiante", "studente", "étudiant", "Student", "similares"], ["importante", "important", "importante", "importante", "important", "wichtig", "similares"], ["diferente", "different", "diferente", "diverso", "différent", "anders", "similares"], ["rápido", "fast", "rápido", "rapido", "rapide", "schnell", "similares"], ["difícil", "difficult", "difícil", "difficile", "difficile", "schwierig", "similares"], ["fácil", "easy", "fácil", "facile", "facile", "einfach", "similares"]];
+const LANGS = [
+  {id:'en', name:'Inglês', flag:'🇺🇸', pos:1},
+  {id:'es', name:'Espanhol', flag:'🇪🇸', pos:2},
+  {id:'it', name:'Italiano', flag:'🇮🇹', pos:3},
+  {id:'fr', name:'Francês', flag:'🇫🇷', pos:4},
+  {id:'de', name:'Alemão', flag:'🇩🇪', pos:5}
+];
+const $=id=>document.getElementById(id);
+let deck=[], round=0, score=0, selectedWord=null, hits=0, currentWords=[], currentFlags=[];
+
+function norm(s){return String(s||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+
+function buildRound(row, idx){
+  const [pt,en,es,it,fr,de,type]=row;
+  const vals={en,es,it,fr,de};
+  const words = LANGS.map(L=>({
+    uid:'w'+idx+'_'+L.id,
+    lang:L.id,
+    label:vals[L.id],
+    pt,
+    // importante: palavras iguais na mesma rodada aceitam todos os idiomas iguais
+    acceptable:[]
+  }));
+  words.forEach(w=>{
+    w.acceptable = words.filter(x=>norm(x.label)===norm(w.label)).map(x=>x.lang);
+  });
+  const flags = LANGS.map(L=>({uid:'f'+idx+'_'+L.id, lang:L.id, label:L.flag+' '+L.name}));
+  return {pt,type,words:shuffle(words),flags:shuffle(flags)};
+}
+
+function start(){
+  const amount = Number($('roundCount').value);
+  deck = shuffle(RELATIONS.map(buildRound)).slice(0, Math.min(amount, RELATIONS.length));
+  round=0; score=0;
+  $('startPanel').classList.add('hidden');
+  $('gamePanel').classList.remove('hidden');
+  showRound();
+}
+
+function showRound(){
+  selectedWord=null; hits=0;
+  const r=deck[round];
+  currentWords = r.words.map(x=>({...x,done:false}));
+  currentFlags = r.flags.map(x=>({...x,done:false}));
+  $('score').textContent=score;
+  $('hits').textContent='0';
+  $('prog').textContent=(round+1)+'/'+deck.length;
+  $('prompt').textContent='Significado: '+r.pt;
+  $('relation').textContent='Relação: '+r.type;
+  $('msg').className='msg hidden';
+  $('nextBtn').classList.add('hidden');
+  render();
+}
+
+function render(){
+  const wc=$('wordsCol'), fc=$('flagsCol');
+  wc.innerHTML=''; fc.innerHTML='';
+  currentWords.forEach(w=>{
+    const b=document.createElement('button');
+    b.className='item'+(w.done?' done':'')+(selectedWord&&selectedWord.uid===w.uid?' selected':'');
+    b.textContent=w.label;
+    b.disabled=w.done;
+    b.onclick=()=>selectWord(w.uid);
+    wc.appendChild(b);
+  });
+  currentFlags.forEach(f=>{
+    const b=document.createElement('button');
+    b.className='item'+(f.done?' done':'');
+    b.textContent=f.label;
+    b.disabled=f.done;
+    b.onclick=()=>selectFlag(f.lang, b);
+    fc.appendChild(b);
+  });
+}
+
+function selectWord(uid){
+  const w=currentWords.find(x=>x.uid===uid && !x.done);
+  if(!w) return;
+  selectedWord=w;
+  $('msg').className='msg hidden';
+  render();
+}
+
+function selectFlag(lang, btn){
+  if(!selectedWord){
+    $('msg').textContent='Escolha uma palavra primeiro.';
+    $('msg').className='msg bad';
+    return;
+  }
+  const flag=currentFlags.find(f=>f.lang===lang && !f.done);
+  if(!flag) return;
+
+  if(selectedWord.acceptable.includes(lang)){
+    selectedWord.done=true; flag.done=true; hits++; score+=20;
+    $('score').textContent=score; $('hits').textContent=hits;
+    $('msg').textContent='✅ Ligação correta!';
+    $('msg').className='msg ok';
+    selectedWord=null;
+    if(hits>=5){
+      $('msg').textContent='🏆 Rodada completa!';
+      $('nextBtn').classList.remove('hidden');
+    }
+    render();
+  } else {
+    score=Math.max(0, score-5);
+    $('score').textContent=score;
+    $('msg').textContent='❌ Não combina. Tente outra bandeira.';
+    $('msg').className='msg bad';
+    btn.classList.add('wrong');
+    setTimeout(()=>btn.classList.remove('wrong'),450);
+  }
+}
+
+function next(){
+  round++;
+  if(round>=deck.length){
+    $('prompt').textContent='Fim do jogo!';
+    $('relation').textContent='Pontuação final: '+score;
+    $('wordsCol').innerHTML='';
+    $('flagsCol').innerHTML='';
+    $('msg').textContent='🏆 Você completou todas as relações.';
+    $('msg').className='msg ok';
+    $('nextBtn').classList.add('hidden');
+  } else showRound();
+}
+
+$('startBtn').onclick=start;
+$('nextBtn').onclick=next;
+$('restartBtn').onclick=()=>location.reload();
+$('endBtn').onclick=()=>location.reload();
+</script>
+</body>
+</html>
