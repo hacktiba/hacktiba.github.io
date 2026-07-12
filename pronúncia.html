@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<title>HL Pronúncia — 5 Idiomas</title>
+<style>
+:root{
+  --primary:#4f46e5;--primary2:#2563eb;--bg:#eef2ff;--card:#fff;
+  --text:#17143e;--muted:#667085;--line:#dfe3eb;--ok:#15803d;--bad:#b91c1c;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:linear-gradient(145deg,#4f46e5,#06b6d4);padding:12px}
+button,select{font:inherit}
+button{touch-action:manipulation}
+.app{width:min(900px,100%);margin:auto;background:var(--card);border-radius:26px;box-shadow:0 18px 45px rgba(0,0,0,.22);overflow:hidden}
+header{padding:18px 18px 12px;text-align:center}
+h1{font-size:clamp(28px,6vw,48px);line-height:1.05;margin:0;color:var(--primary);font-weight:950}
+.sub{margin:8px 0 0;color:var(--muted);font-size:clamp(15px,3.6vw,20px)}
+.topbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px 14px}
+.tab{border:0;border-radius:14px;padding:12px 8px;font-weight:900;background:#eef2ff;color:#3730a3;cursor:pointer}
+.tab.active{background:var(--primary);color:#fff}
+.panel{display:none;padding:0 16px 20px}
+.panel.active{display:block}
+.langTabs{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:12px}
+.langBtn{border:2px solid var(--line);background:#fff;border-radius:12px;padding:9px 4px;font-weight:900;cursor:pointer;min-height:54px}
+.langBtn.active{border-color:var(--primary);background:#eef2ff;color:#3730a3}
+.langName{font-size:12px;display:block;margin-top:2px}
+.info{background:#f8fafc;border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:12px;text-align:left}
+.info strong{font-size:20px}
+.note{color:var(--muted);font-size:14px;line-height:1.45;margin-top:6px}
+.alphabet{display:grid;grid-template-columns:repeat(auto-fit,minmax(42px,1fr));gap:7px;margin:10px 0 16px}
+.letter{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 4px;font-weight:900;cursor:pointer;color:#111827}
+.letter:active{transform:scale(.97)}
+.sectionTitle{font-size:21px;margin:16px 0 10px;text-align:left}
+.soundGrid{display:grid;grid-template-columns:1fr;gap:10px}
+.soundCard{border:1px solid var(--line);border-radius:16px;padding:13px;background:#fff;text-align:left;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+.symbol{min-width:62px;text-align:center;background:#eef2ff;border-radius:13px;padding:12px 8px;font-size:24px;font-weight:950;color:#312e81}
+.soundMain b{font-size:18px}
+.meta{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.35}
+.speak{border:0;border-radius:12px;background:var(--primary);color:#fff;padding:11px 12px;font-weight:900;cursor:pointer}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.controlBox{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:10px;text-align:left}
+.controlBox label{display:block;font-weight:900;margin-bottom:5px}
+select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;background:white;font-weight:800}
+.gameCard{background:var(--bg);border:2px solid #c7d2fe;border-radius:20px;padding:18px;text-align:center}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:9px 5px;font-weight:950}
+.listenBtn{border:0;border-radius:18px;background:linear-gradient(135deg,var(--primary),var(--primary2));color:white;width:100%;padding:22px 12px;font-size:clamp(24px,6vw,34px);font-weight:950;cursor:pointer}
+.translation{font-size:18px;color:var(--muted);margin:12px 0 0}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.answer{border:2px solid var(--line);background:#fff;border-radius:14px;padding:14px 8px;font-size:17px;font-weight:900;cursor:pointer}
+.answer:last-child{grid-column:1/3}
+.answer:disabled{opacity:.62}
+.feedback{display:none;border-radius:14px;padding:13px;margin-top:12px;font-weight:850;line-height:1.45}
+.feedback.ok{display:block;background:#dcfce7;color:#166534}
+.feedback.bad{display:block;background:#fee2e2;color:#991b1b}
+.nextBtn{display:none;width:100%;border:0;border-radius:14px;padding:14px;background:var(--primary);color:#fff;font-weight:950;margin-top:10px;cursor:pointer}
+.nextBtn.show{display:block}
+.statusLine{font-size:14px;color:var(--muted);margin-top:10px}
+.footerNote{padding:0 18px 18px;text-align:center;color:#64748b;font-size:12px}
+
+.audioTools{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 0 10px}
+.audioTool{border:0;border-radius:14px;padding:13px 8px;background:#312e81;color:#fff;font-weight:950;cursor:pointer}
+.audioTool.secondaryAudio{background:#0f766e}
+.audioStatus{border:1px solid #bae6fd;background:#f0f9ff;color:#075985;border-radius:12px;padding:10px;margin-bottom:12px;font-size:13px;font-weight:750;text-align:left;line-height:1.35}
+.audioBtns{display:flex;gap:6px;align-items:center}
+.speakSlow{border:0;border-radius:12px;background:#0f766e;color:#fff;padding:11px 10px;font-weight:900;cursor:pointer}
+.listenGrid{display:grid;grid-template-columns:2fr 1fr;gap:8px}
+.slowListenBtn{border:0;border-radius:18px;background:#0f766e;color:#fff;padding:16px 8px;font-size:18px;font-weight:950;cursor:pointer}
+@media(max-width:520px){
+  .audioTools{grid-template-columns:1fr 1fr}
+  .audioTool{font-size:14px;padding:11px 6px}
+  .audioBtns{flex-direction:column;gap:5px}
+  .speak,.speakSlow{padding:9px 8px;width:44px}
+  .listenGrid{grid-template-columns:1fr 112px}
+  .slowListenBtn{font-size:15px}
+}
+
+@media(min-width:720px){
+  .soundGrid{grid-template-columns:1fr 1fr}
+  .soundCard{min-height:110px}
+}
+@media(max-width:520px){
+  body{padding:0}
+  .app{border-radius:0;min-height:100vh}
+  header{padding-top:14px}
+  .topbar{grid-template-columns:1fr 1fr}
+  .langName{display:none}
+  .soundCard{grid-template-columns:58px 1fr auto;padding:10px;gap:9px}
+  .symbol{min-width:54px;font-size:21px;padding:10px 4px}
+  .speak{padding:10px}
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <header>
+    <h1>🔊 HL Pronúncia</h1>
+    <p class="sub">Ouça letras, palavras e sons em 5 idiomas.</p>
+  </header>
+
+  <nav class="topbar" aria-label="Navegação principal">
+    <button class="tab active" data-panel="explore">Explorar</button>
+    <button class="tab" data-panel="game">Jogar</button>
+  </nav>
+
+  <section id="explore" class="panel active">
+    <div class="langTabs" id="langTabs"></div>
+    <div class="info">
+      <strong id="langTitle"></strong>
+      <div class="note" id="langNote"></div>
+    </div>
+    <div class="audioTools">
+      <button class="audioTool" id="testAudio" type="button">🔊 Testar voz</button>
+      <button class="audioTool secondaryAudio" id="alphabetAudio" type="button">🔤 Ouvir alfabeto</button>
+    </div>
+    <div class="audioStatus" id="audioStatus" role="status">Toque em “Testar voz” para liberar e verificar o áudio.</div>
+    <h2 class="sectionTitle">Alfabeto</h2>
+    <div class="alphabet" id="alphabet"></div>
+    <h2 class="sectionTitle">Sons importantes</h2>
+    <div class="soundGrid" id="soundGrid"></div>
+  </section>
+
+  <section id="game" class="panel">
+    <div class="controls">
+      <div class="controlBox">
+        <label for="rounds">Rodadas</label>
+        <select id="rounds"><option>10</option><option selected>20</option><option>40</option></select>
+      </div>
+      <div class="controlBox">
+        <label for="difficulty">Modo</label>
+        <select id="difficulty"><option value="normal">Normal</option><option value="hard">Difícil</option></select>
+      </div>
+    </div>
+
+    <div class="gameCard">
+      <div class="stats">
+        <div class="stat">⭐ <span id="score">0</span></div>
+        <div class="stat">🔥 <span id="streak">0</span></div>
+        <div class="stat">📘 <span id="progress">0/0</span></div>
+      </div>
+      <div class="listenGrid"><button class="listenBtn" id="listenBtn">🔊 Ouvir palavra</button><button class="slowListenBtn" id="slowListenBtn">🐢 Devagar</button></div>
+      <p class="translation" id="translation">Toque para ouvir e escolha o idioma.</p>
+      <div class="answers" id="answers"></div>
+      <div class="feedback" id="feedback"></div>
+      <button class="nextBtn" id="nextBtn">Próxima ➜</button>
+      <div class="statusLine" id="gameAudioStatus">Toque em um botão de áudio para ouvir.</div>
+    </div>
+  </section>
+
+  <div class="footerNote">O áudio é gerado pelas vozes do navegador e do aparelho. Use o volume de mídia e retire o celular do silencioso.</div>
+</main>
+<script>
+'use strict';
+const LANGS = {
+  en:{name:'Inglês',flag:'🇺🇸',code:'en-US',alphabet:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),note:'Usa 26 letras. A escrita e a pronúncia nem sempre seguem uma relação direta; grupos como TH, SH e CH são essenciais.',sounds:[
+    ['TH','/θ/','think','pensar','Som sem voz, com a língua entre os dentes.'],
+    ['TH','/ð/','this','isto','Som com voz, com a língua entre os dentes.'],
+    ['SH','/ʃ/','ship','navio','Parecido com “x” em “xícara”.'],
+    ['CH','/tʃ/','chair','cadeira','Parecido com “tch”.'],
+    ['PH','/f/','phone','telefone','Normalmente tem som de F.'],
+    ['EE','/iː/','green','verde','Som longo de I.'],
+    ['OO','/uː/','moon','lua','Som longo de U.'],
+    ['OO','/ʊ/','book','livro','Som curto, entre U e Ô.'],
+    ['J','/dʒ/','jam','geleia','Som parecido com “dj”.'],
+    ['W','/w/','water','água','Lábios arredondados no início.'],
+    ['R','/ɹ/','red','vermelho','R sem vibrar a ponta da língua.'],
+    ['EA','/iː/','team','equipe','Frequentemente soa como I longo.']
+  ]},
+  es:{name:'Espanhol',flag:'🇪🇸',code:'es-ES',alphabet:'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split(''),note:'Usa 27 letras, incluindo Ñ. A pronúncia costuma ser mais regular que no inglês.',sounds:[
+    ['Ñ','/ɲ/','niño','menino','Parecido com NH em português.'],
+    ['J','/x/','jamón','presunto','Som forte na garganta.'],
+    ['LL','/ʝ/','llave','chave','Varia por região; pode soar como I, J ou CH.'],
+    ['RR','/r/','perro','cachorro','R vibrante forte.'],
+    ['R','/ɾ/','caro','caro','Uma batida rápida da língua.'],
+    ['H','∅','hola','olá','Normalmente não é pronunciado.'],
+    ['C + E/I','/s/ ou /θ/','cine','cinema','Na Espanha pode soar como TH; na América, S.'],
+    ['QU','/k/','queso','queijo','O U normalmente não é pronunciado.'],
+    ['CH','/tʃ/','chico','menino','Som de TCH.'],
+    ['B/V','/b~β/','vivir','viver','B e V têm sons muito próximos.'],
+    ['Z','/s/ ou /θ/','zapato','sapato','Varia entre América e Espanha.'],
+    ['G + E/I','/x/','gente','gente','Som semelhante ao J espanhol.']
+  ]},
+  it:{name:'Italiano',flag:'🇮🇹',code:'it-IT',alphabet:'ABCDEFGHILMNOPQRSTUVZ'.split(''),note:'O alfabeto tradicional tem 21 letras. J, K, W, X e Y aparecem sobretudo em palavras estrangeiras.',sounds:[
+    ['GN','/ɲ/','gnocchi','nhoque','Parecido com NH.'],
+    ['GLI','/ʎ/','famiglia','família','Som semelhante a LH.'],
+    ['SC + E/I','/ʃ/','scena','cena','Som de X.'],
+    ['CH + E/I','/k/','che','que','O H mantém o som forte de K.'],
+    ['GH + E/I','/g/','spaghetti','espaguete','O H mantém o G forte.'],
+    ['C + E/I','/tʃ/','cena','jantar','Som de TCH.'],
+    ['G + E/I','/dʒ/','gelato','sorvete','Som parecido com DJ.'],
+    ['Z','/ts/ ou /dz/','pizza','pizza','Pode ter som de TS ou DZ.'],
+    ['Consoante dupla','forte','notte','noite','A consoante é alongada.'],
+    ['R','/r/','Roma','Roma','R vibrante.'],
+    ['QU','/kw/','quattro','quatro','O U é pronunciado.'],
+    ['S + consoante','/s/','stella','estrela','S inicial claro antes de consoante.']
+  ]},
+  fr:{name:'Francês',flag:'🇫🇷',code:'fr-FR',alphabet:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),note:'Usa 26 letras, muitos acentos e a ligadura Œ. Sons nasais e letras finais mudas são muito importantes.',sounds:[
+    ['CH','/ʃ/','chat','gato','Som de X.'],
+    ['GN','/ɲ/','montagne','montanha','Parecido com NH.'],
+    ['OU','/u/','rouge','vermelho','Som de U.'],
+    ['U','/y/','lune','lua','U frontal; não existe igual em português.'],
+    ['OI','/wa/','moi','eu/mim','Soa aproximadamente “uá”.'],
+    ['EAU/AU','/o/','eau','água','Som fechado de O.'],
+    ['ON','/ɔ̃/','bon','bom','Vogal nasal.'],
+    ['AN/EN','/ɑ̃/','sans','sem','Vogal nasal aberta.'],
+    ['IN/AIN','/ɛ̃/','pain','pão','Vogal nasal frontal.'],
+    ['Ç','/s/','garçon','garoto','Cedilha dá som de S.'],
+    ['R','/ʁ/','rouge','vermelho','R produzido na garganta.'],
+    ['Final muda','—','petit','pequeno','Muitas consoantes finais não são pronunciadas.']
+  ]},
+  de:{name:'Alemão',flag:'🇩🇪',code:'de-DE',alphabet:'ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜẞ'.split(''),note:'Usa 26 letras mais Ä, Ö, Ü e ß. A leitura é relativamente regular depois que os grupos principais são aprendidos.',sounds:[
+    ['SCH','/ʃ/','Schule','escola','Som de X.'],
+    ['CH (ich)','/ç/','ich','eu','Som suave, produzido mais à frente.'],
+    ['CH (ach)','/x/','Bach','riacho','Som forte na garganta.'],
+    ['Z','/ts/','Zeit','tempo','Som de TS.'],
+    ['W','/v/','Wasser','água','W tem som de V.'],
+    ['V','/f/','Vater','pai','Muitas vezes tem som de F.'],
+    ['J','/j/','Jahr','ano','Som de I consonantal.'],
+    ['EI','/aɪ/','mein','meu','Soa aproximadamente “ai”.'],
+    ['IE','/iː/','Liebe','amor','Som longo de I.'],
+    ['EU/ÄU','/ɔʏ/','heute','hoje','Som semelhante a “ói”.'],
+    ['SP/ST inicial','/ʃp/ /ʃt/','Straße','rua','No início, S soa como X.'],
+    ['Ö/Ü','/ø/ /y/','schön','bonito','Vogais frontais com lábios arredondados.']
+  ]}
+};
+
+const $ = id => document.getElementById(id);
+const allItems = Object.entries(LANGS).flatMap(([id,l]) => l.sounds.map((s,idx)=>({id,lang:l,index:idx,symbol:s[0],ipa:s[1],word:s[2],translation:s[3],tip:s[4]})));
+let currentLang='en', deck=[], round=0, score=0, streak=0, answered=false, currentItem=null;
+
+let VOICES=[];
+let audioRun=0;
+const TEST_WORDS={en:'Hello',es:'Hola',it:'Ciao',fr:'Bonjour',de:'Hallo'};
+function refreshVoices(){
+  if(!('speechSynthesis' in window)) return [];
+  VOICES=window.speechSynthesis.getVoices()||[];
+  return VOICES;
+}
+function languageBase(code){return String(code||'').toLowerCase().split('-')[0];}
+function findVoice(langCode){
+  refreshVoices();
+  const full=String(langCode||'').toLowerCase();
+  const base=languageBase(full);
+  return VOICES.find(v=>String(v.lang).toLowerCase()===full)
+      || VOICES.find(v=>String(v.lang).toLowerCase().startsWith(base+'-'))
+      || VOICES.find(v=>languageBase(v.lang)===base)
+      || null;
+}
+function setAudioStatus(message,isError=false){
+  const explore=$('audioStatus');
+  const game=$('gameAudioStatus');
+  [explore,game].forEach(el=>{if(el){el.textContent=message;el.style.color=isError?'#991b1b':'';el.style.background=isError?'#fee2e2':'';}});
+}
+function voiceDescription(langCode){
+  const voice=findVoice(langCode);
+  if(voice) return `Áudio pronto: ${voice.name} (${voice.lang}).`;
+  return 'Nenhuma voz específica foi encontrada. O navegador tentará usar a voz padrão do aparelho.';
+}
+function speak(text,langCode,rate=.82){
+  if(!('speechSynthesis' in window)){
+    setAudioStatus('Este navegador não oferece leitura em voz alta.',true);
+    alert('Este navegador não oferece leitura em voz alta. Tente o Chrome, Edge ou Safari atualizado.');
+    return false;
+  }
+  const token=++audioRun;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.resume();
+  const u=new SpeechSynthesisUtterance(String(text));
+  u.lang=langCode;u.rate=rate;u.pitch=1;u.volume=1;
+  const voice=findVoice(langCode); if(voice)u.voice=voice;
+  u.onstart=()=>{if(token===audioRun)setAudioStatus(`🔊 Reproduzindo: ${text}`);};
+  u.onend=()=>{if(token===audioRun)setAudioStatus(`✅ Áudio concluído. ${voiceDescription(langCode)}`);};
+  u.onerror=e=>{if(token===audioRun)setAudioStatus(`Não foi possível reproduzir o áudio (${e.error||'erro desconhecido'}).`,true);};
+  setTimeout(()=>{if(token===audioRun){window.speechSynthesis.resume();window.speechSynthesis.speak(u);}},35);
+  return true;
+}
+function speakSequence(items,langCode,rate=.7){
+  if(!('speechSynthesis' in window)) return speak('',langCode,rate);
+  const token=++audioRun;
+  window.speechSynthesis.cancel();window.speechSynthesis.resume();
+  const voice=findVoice(langCode);let index=0;
+  setAudioStatus('🔤 Reproduzindo o alfabeto...');
+  function next(){
+    if(token!==audioRun)return;
+    if(index>=items.length){setAudioStatus(`✅ Alfabeto concluído. ${voiceDescription(langCode)}`);return;}
+    const u=new SpeechSynthesisUtterance(String(items[index++]));
+    u.lang=langCode;u.rate=rate;u.pitch=1;u.volume=1;if(voice)u.voice=voice;
+    u.onend=next;u.onerror=next;
+    window.speechSynthesis.resume();window.speechSynthesis.speak(u);
+  }
+  next();
+  return true;
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+
+function renderLangTabs(){
+  $('langTabs').innerHTML=Object.entries(LANGS).map(([id,l])=>`<button class="langBtn ${id===currentLang?'active':''}" data-lang="${id}">${l.flag}<span class="langName">${l.name}</span></button>`).join('');
+  document.querySelectorAll('.langBtn').forEach(b=>b.onclick=()=>{currentLang=b.dataset.lang;renderExplore();});
+}
+function renderExplore(){
+  renderLangTabs();
+  const l=LANGS[currentLang];
+  $('langTitle').textContent=`${l.flag} ${l.name}`;
+  $('langNote').textContent=l.note;
+  $('alphabet').innerHTML=l.alphabet.map(ch=>`<button class="letter" data-letter="${esc(ch)}">${esc(ch)}</button>`).join('');
+  document.querySelectorAll('.letter').forEach(b=>b.onclick=()=>speak(b.dataset.letter,l.code,.72));
+  $('soundGrid').innerHTML=l.sounds.map((s,i)=>`<article class="soundCard"><div class="symbol">${esc(s[0])}</div><div class="soundMain"><b>${esc(s[2])}</b> · ${esc(s[3])}<div class="meta">${esc(s[1])} — ${esc(s[4])}</div></div><div class="audioBtns"><button class="speak" data-index="${i}" aria-label="Ouvir ${esc(s[2])}">🔊</button><button class="speakSlow" data-index="${i}" aria-label="Ouvir devagar ${esc(s[2])}">🐢</button></div></article>`).join('');
+  document.querySelectorAll('.soundCard .speak').forEach(b=>b.onclick=()=>{const s=l.sounds[Number(b.dataset.index)];speak(s[2],l.code,.82);});
+  document.querySelectorAll('.soundCard .speakSlow').forEach(b=>b.onclick=()=>{const s=l.sounds[Number(b.dataset.index)];speak(s[2],l.code,.56);});
+  setAudioStatus(voiceDescription(l.code));
+}
+
+function renderAnswers(){
+  $('answers').innerHTML=Object.entries(LANGS).map(([id,l])=>`<button class="answer" data-id="${id}">${l.flag} ${l.name}</button>`).join('');
+  document.querySelectorAll('.answer').forEach(b=>b.onclick=()=>choose(b.dataset.id));
+}
+function startGame(){
+  const count=Number($('rounds').value)||20;
+  deck=shuffle(allItems.slice()).slice(0,Math.min(count,allItems.length));
+  round=0;score=0;streak=0;answered=false;
+  renderAnswers();showRound();
+}
+function showRound(){
+  if(round>=deck.length){
+    $('listenBtn').textContent='🏆 Jogo concluído';
+    $('listenBtn').disabled=true;$('slowListenBtn').disabled=true;
+    $('translation').textContent=`Pontuação final: ${score}`;
+    $('feedback').className='feedback ok';
+    $('feedback').innerHTML='Você concluiu todas as rodadas. Troque a quantidade ou jogue novamente.';
+    $('nextBtn').classList.add('show');$('nextBtn').textContent='Jogar novamente';
+    $('nextBtn').onclick=startGame;return;
+  }
+  currentItem=deck[round];answered=false;
+  $('score').textContent=score;$('streak').textContent=streak;$('progress').textContent=`${round+1}/${deck.length}`;
+  $('listenBtn').disabled=false;$('slowListenBtn').disabled=false;$('listenBtn').textContent='🔊 Ouvir palavra';
+  $('translation').textContent=$('difficulty').value==='hard'?'Escolha o idioma apenas pelo som.':`Significado: ${currentItem.translation}`;
+  $('feedback').className='feedback';$('feedback').textContent='';
+  $('nextBtn').classList.remove('show');$('nextBtn').textContent='Próxima ➜';$('nextBtn').onclick=nextRound;
+  document.querySelectorAll('.answer').forEach(b=>{b.disabled=false;b.style.borderColor='';b.style.background='';});
+}
+function choose(id){
+  if(answered)return;answered=true;
+  const correct=id===currentItem.id;
+  document.querySelectorAll('.answer').forEach(b=>{b.disabled=true;if(b.dataset.id===currentItem.id){b.style.borderColor='#16a34a';b.style.background='#dcfce7';}});
+  if(correct){score+=10+Math.min(streak,5)*2;streak++;$('feedback').className='feedback ok';$('feedback').innerHTML=`✅ Correto! <b>${esc(currentItem.lang.flag+' '+currentItem.lang.name)}</b><br><b>${esc(currentItem.word)}</b> · ${esc(currentItem.translation)} · ${esc(currentItem.symbol)} ${esc(currentItem.ipa)}`;}
+  else{streak=0;$('feedback').className='feedback bad';$('feedback').innerHTML=`❌ Era <b>${esc(currentItem.lang.flag+' '+currentItem.lang.name)}</b>.<br><b>${esc(currentItem.word)}</b> · ${esc(currentItem.translation)} · ${esc(currentItem.symbol)} ${esc(currentItem.ipa)}`;}
+  $('score').textContent=score;$('streak').textContent=streak;$('nextBtn').classList.add('show');
+}
+function nextRound(){round++;showRound();}
+
+$('testAudio').onclick=()=>{
+  const l=LANGS[currentLang];
+  speak(TEST_WORDS[currentLang],l.code,.78);
+};
+$('alphabetAudio').onclick=()=>{
+  const l=LANGS[currentLang];
+  speakSequence(l.alphabet,l.code,.62);
+};
+$('listenBtn').onclick=()=>{if(currentItem)speak(currentItem.word,currentItem.lang.code,.82);};
+$('slowListenBtn').onclick=()=>{if(currentItem)speak(currentItem.word,currentItem.lang.code,.52);};
+$('nextBtn').onclick=nextRound;
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===b));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===b.dataset.panel));
+  if(b.dataset.panel==='game' && !deck.length)startGame();
+});
+$('rounds').onchange=()=>{if($('game').classList.contains('active'))startGame();};
+$('difficulty').onchange=()=>{if(deck.length)showRound();};
+refreshVoices();
+if('speechSynthesis' in window){
+  window.speechSynthesis.onvoiceschanged=()=>{refreshVoices();if(LANGS[currentLang])setAudioStatus(voiceDescription(LANGS[currentLang].code));};
+}
+renderExplore();
+</script>
+</body>
+</html>
