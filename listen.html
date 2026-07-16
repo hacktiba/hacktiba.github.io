@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<title>HL Listen & Match</title>
+<style>
+:root{--p:#4f46e5;--pd:#3730a3;--bg1:#4f46e5;--bg2:#06b6d4;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--soft:#eef2ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100dvh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(145deg,var(--bg1),var(--bg2));color:var(--text);padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+.app{width:min(860px,100%);margin:auto;background:#fff;border-radius:26px;padding:clamp(13px,3vw,24px);box-shadow:0 18px 44px rgba(15,23,42,.23)}
+h1{margin:0;text-align:center;color:var(--p);font-size:clamp(28px,7vw,48px);line-height:1.05}
+.sub{text-align:center;color:var(--muted);margin:8px 0 15px;font-size:clamp(14px,3.7vw,18px)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:11px}
+.stat{background:#f3f4f6;border:1px solid var(--line);border-radius:15px;padding:9px 5px;text-align:center;font-weight:900;font-size:clamp(15px,4vw,21px)}
+.progress{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-bottom:13px}
+.bar{height:100%;width:0;background:var(--p);transition:.2s}
+.tip{background:#f9fafb;border:1px solid var(--line);border-radius:15px;padding:10px 12px;margin-bottom:11px;text-align:center;color:#374151;font-weight:750;font-size:14px}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-items:start}
+.col h2{font-size:16px;margin:0 0 7px;text-align:center;color:var(--pd)}
+.items{display:grid;gap:8px}
+.audioBtn,.wordBtn{width:100%;min-height:62px;border:2px solid var(--line);border-radius:16px;background:#fff;padding:9px;cursor:pointer;font:inherit;font-weight:850;transition:.15s;-webkit-tap-highlight-color:transparent}
+.audioBtn{font-size:18px;background:#f8fafc}
+.wordBtn{font-size:clamp(14px,3.7vw,20px);line-height:1.15}
+.wordBtn small{display:block;margin-top:5px;color:var(--muted);font-size:12px;font-weight:700}
+.audioBtn:active,.wordBtn:active{transform:scale(.985)}
+.selected{border-color:var(--p)!important;background:var(--soft)!important;box-shadow:0 0 0 3px rgba(79,70,229,.13)}
+.matched{border-color:#86efac!important;background:#dcfce7!important;color:#166534!important;cursor:default}
+.wrong{border-color:#fca5a5!important;background:#fee2e2!important;animation:shake .25s}
+@keyframes shake{25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-3px)}}
+.feedback{margin-top:11px;border-radius:15px;padding:11px;text-align:center;font-weight:850}
+.feedback.ok{background:#dcfce7;color:#166534} .feedback.bad{background:#fee2e2;color:#991b1b}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+.btn{border:0;border-radius:15px;padding:13px;font:inherit;font-weight:900;cursor:pointer}
+.primary{background:var(--p);color:#fff} .secondary{background:#e5e7eb;color:#111827}
+.hidden{display:none!important}
+.setup{text-align:center;padding:6px 0}
+.setupGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+label{display:block;text-align:left;font-weight:850;margin-bottom:5px}
+select{width:100%;padding:12px;border:2px solid var(--line);border-radius:14px;background:#fff;font:inherit;font-weight:800}
+.note{margin-top:12px;color:var(--muted);font-size:13px;line-height:1.45}
+.warn{display:none;margin-top:10px;padding:9px;border-radius:13px;background:#fef3c7;border:1px solid #fde68a;color:#92400e;font-size:13px}
+@media(max-width:560px){.app{border-radius:20px;padding:11px}.board{gap:6px}.audioBtn,.wordBtn{min-height:57px;padding:7px}.stats{gap:5px}}
+@media(max-width:390px){.audioBtn{font-size:15px}.wordBtn{font-size:13px}}
+</style>
+</head>
+<body>
+<main class="app">
+<section id="setup" class="setup">
+<h1>🎧 HL Listen & Match</h1>
+<p class="sub">Ligue 5 áudios às 5 escritas corretas.</p>
+<div class="setupGrid">
+<div><label for="rounds">Rodadas</label><select id="rounds"><option value="10">10</option><option value="20" selected>20</option><option value="30">30</option><option value="50">Todas (50)</option></select></div>
+<div><label for="level">Nível</label><select id="level"><option value="easy">Fácil</option><option value="normal" selected>Normal</option><option value="hard">Difícil</option></select></div>
+</div>
+<button id="start" class="btn primary" style="width:100%">Começar jogo ▶</button>
+<div id="warn" class="warn">Algumas vozes podem não estar instaladas. O navegador usará a voz mais próxima disponível.</div>
+<p class="note">Base embutida: 250 itens de áudio/escrita. O som usa as vozes do navegador.</p>
+</section>
+
+<section id="game" class="hidden">
+<h1>🎧 HL Listen & Match</h1>
+<p class="sub">Toque em um áudio e depois escolha sua escrita.</p>
+<div class="stats"><div class="stat">⭐ <span id="score">0</span></div><div class="stat">🔥 <span id="streak">0</span></div><div class="stat">📘 <span id="prog">1/20</span></div></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="tip" id="tip">A tradução aparece depois do acerto.</div>
+<div class="board">
+<section class="col"><h2>🔊 Áudios</h2><div class="items" id="audios"></div></section>
+<section class="col"><h2>✍️ Escritas</h2><div class="items" id="words"></div></section>
+</div>
+<div id="feedback" class="feedback hidden"></div>
+<div class="actions">
+<button id="replay" class="btn secondary">🔁 Repetir áudio</button>
+<button id="next" class="btn primary hidden">Próxima rodada ➜</button>
+</div>
+</section>
+
+<section id="endScreen" class="setup hidden">
+<h1>🏆 Resultado</h1>
+<p class="sub" id="result"></p>
+<button class="btn primary" style="width:100%" onclick="location.reload()">Jogar novamente</button>
+</section>
+</main>
+
+<script>
+"use strict";
+const DATA=[{"id":"en-1","concept":0,"pt":"aceitar","word":"accept","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-1","concept":0,"pt":"aceitar","word":"aceptar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-1","concept":0,"pt":"aceitar","word":"accettare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-1","concept":0,"pt":"aceitar","word":"accepter","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-1","concept":0,"pt":"aceitar","word":"akzeptieren","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-2","concept":1,"pt":"adicionar","word":"add","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-2","concept":1,"pt":"adicionar","word":"añadir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-2","concept":1,"pt":"adicionar","word":"aggiungere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-2","concept":1,"pt":"adicionar","word":"ajouter","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-2","concept":1,"pt":"adicionar","word":"hinzufügen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-3","concept":2,"pt":"permitir","word":"allow","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-3","concept":2,"pt":"permitir","word":"permitir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-3","concept":2,"pt":"permitir","word":"permettere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-3","concept":2,"pt":"permitir","word":"permettre","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-3","concept":2,"pt":"permitir","word":"erlauben","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-4","concept":3,"pt":"responder","word":"answer","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-4","concept":3,"pt":"responder","word":"responder","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-4","concept":3,"pt":"responder","word":"rispondere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-4","concept":3,"pt":"responder","word":"répondre","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-4","concept":3,"pt":"responder","word":"antworten","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-5","concept":4,"pt":"aparecer","word":"appear","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-5","concept":4,"pt":"aparecer","word":"aparecer","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-5","concept":4,"pt":"aparecer","word":"apparire","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-5","concept":4,"pt":"aparecer","word":"apparaître","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-5","concept":4,"pt":"aparecer","word":"erscheinen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-6","concept":5,"pt":"chegar","word":"arrive","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-6","concept":5,"pt":"chegar","word":"llegar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-6","concept":5,"pt":"chegar","word":"arrivare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-6","concept":5,"pt":"chegar","word":"arriver","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-6","concept":5,"pt":"chegar","word":"ankommen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-7","concept":6,"pt":"evitar","word":"avoid","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-7","concept":6,"pt":"evitar","word":"evitar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-7","concept":6,"pt":"evitar","word":"evitare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-7","concept":6,"pt":"evitar","word":"éviter","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-7","concept":6,"pt":"evitar","word":"vermeiden","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-8","concept":7,"pt":"acreditar","word":"believe","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-8","concept":7,"pt":"acreditar","word":"creer","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-8","concept":7,"pt":"acreditar","word":"credere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-8","concept":7,"pt":"acreditar","word":"croire","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-8","concept":7,"pt":"acreditar","word":"glauben","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-9","concept":8,"pt":"emprestar","word":"borrow","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-9","concept":8,"pt":"emprestar","word":"pedir prestado","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-9","concept":8,"pt":"emprestar","word":"prendere in prestito","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-9","concept":8,"pt":"emprestar","word":"emprunter","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-9","concept":8,"pt":"emprestar","word":"ausleihen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-10","concept":9,"pt":"carregar","word":"carry","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-10","concept":9,"pt":"carregar","word":"llevar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-10","concept":9,"pt":"carregar","word":"portare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-10","concept":9,"pt":"carregar","word":"porter","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-10","concept":9,"pt":"carregar","word":"tragen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-11","concept":10,"pt":"mudar","word":"change","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-11","concept":10,"pt":"mudar","word":"cambiar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-11","concept":10,"pt":"mudar","word":"cambiare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-11","concept":10,"pt":"mudar","word":"changer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-11","concept":10,"pt":"mudar","word":"ändern","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-12","concept":11,"pt":"escolher","word":"choose","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-12","concept":11,"pt":"escolher","word":"elegir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-12","concept":11,"pt":"escolher","word":"scegliere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-12","concept":11,"pt":"escolher","word":"choisir","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-12","concept":11,"pt":"escolher","word":"wählen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-13","concept":12,"pt":"fechar","word":"close","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-13","concept":12,"pt":"fechar","word":"cerrar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-13","concept":12,"pt":"fechar","word":"chiudere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-13","concept":12,"pt":"fechar","word":"fermer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-13","concept":12,"pt":"fechar","word":"schließen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-14","concept":13,"pt":"continuar","word":"continue","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-14","concept":13,"pt":"continuar","word":"continuar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-14","concept":13,"pt":"continuar","word":"continuare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-14","concept":13,"pt":"continuar","word":"continuer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-14","concept":13,"pt":"continuar","word":"fortsetzen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-15","concept":14,"pt":"decidir","word":"decide","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-15","concept":14,"pt":"decidir","word":"decidir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-15","concept":14,"pt":"decidir","word":"decidere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-15","concept":14,"pt":"decidir","word":"décider","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-15","concept":14,"pt":"decidir","word":"entscheiden","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-16","concept":15,"pt":"descrever","word":"describe","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-16","concept":15,"pt":"descrever","word":"describir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-16","concept":15,"pt":"descrever","word":"descrivere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-16","concept":15,"pt":"descrever","word":"décrire","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-16","concept":15,"pt":"descrever","word":"beschreiben","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-17","concept":16,"pt":"desenvolver","word":"develop","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-17","concept":16,"pt":"desenvolver","word":"desarrollar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-17","concept":16,"pt":"desenvolver","word":"sviluppare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-17","concept":16,"pt":"desenvolver","word":"développer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-17","concept":16,"pt":"desenvolver","word":"entwickeln","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-18","concept":17,"pt":"descobrir","word":"discover","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-18","concept":17,"pt":"descobrir","word":"descubrir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-18","concept":17,"pt":"descobrir","word":"scoprire","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-18","concept":17,"pt":"descobrir","word":"découvrir","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-18","concept":17,"pt":"descobrir","word":"entdecken","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-19","concept":18,"pt":"desenhar","word":"draw","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-19","concept":18,"pt":"desenhar","word":"dibujar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-19","concept":18,"pt":"desenhar","word":"disegnare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-19","concept":18,"pt":"desenhar","word":"dessiner","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-19","concept":18,"pt":"desenhar","word":"zeichnen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-20","concept":19,"pt":"dirigir","word":"drive","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-20","concept":19,"pt":"dirigir","word":"conducir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-20","concept":19,"pt":"dirigir","word":"guidare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-20","concept":19,"pt":"dirigir","word":"conduire","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-20","concept":19,"pt":"dirigir","word":"fahren","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-21","concept":20,"pt":"explicar","word":"explain","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-21","concept":20,"pt":"explicar","word":"explicar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-21","concept":20,"pt":"explicar","word":"spiegare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-21","concept":20,"pt":"explicar","word":"expliquer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-21","concept":20,"pt":"explicar","word":"erklären","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-22","concept":21,"pt":"sentir","word":"feel","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-22","concept":21,"pt":"sentir","word":"sentir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-22","concept":21,"pt":"sentir","word":"sentire","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-22","concept":21,"pt":"sentir","word":"sentir","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-22","concept":21,"pt":"sentir","word":"fühlen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-23","concept":22,"pt":"seguir","word":"follow","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-23","concept":22,"pt":"seguir","word":"seguir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-23","concept":22,"pt":"seguir","word":"seguire","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-23","concept":22,"pt":"seguir","word":"suivre","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-23","concept":22,"pt":"seguir","word":"folgen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-24","concept":23,"pt":"acontecer","word":"happen","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-24","concept":23,"pt":"acontecer","word":"suceder","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-24","concept":23,"pt":"acontecer","word":"succedere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-24","concept":23,"pt":"acontecer","word":"arriver","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-24","concept":23,"pt":"acontecer","word":"passieren","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-25","concept":24,"pt":"esperar","word":"hope","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-25","concept":24,"pt":"esperar","word":"esperar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-25","concept":24,"pt":"esperar","word":"sperare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-25","concept":24,"pt":"esperar","word":"espérer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-25","concept":24,"pt":"esperar","word":"hoffen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-26","concept":25,"pt":"melhorar","word":"improve","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-26","concept":25,"pt":"melhorar","word":"mejorar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-26","concept":25,"pt":"melhorar","word":"migliorare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-26","concept":25,"pt":"melhorar","word":"améliorer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-26","concept":25,"pt":"melhorar","word":"verbessern","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-27","concept":26,"pt":"incluir","word":"include","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-27","concept":26,"pt":"incluir","word":"incluir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-27","concept":26,"pt":"incluir","word":"includere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-27","concept":26,"pt":"incluir","word":"inclure","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-27","concept":26,"pt":"incluir","word":"einschließen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-28","concept":27,"pt":"manter","word":"keep","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-28","concept":27,"pt":"manter","word":"mantener","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-28","concept":27,"pt":"manter","word":"mantenere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-28","concept":27,"pt":"manter","word":"garder","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-28","concept":27,"pt":"manter","word":"behalten","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-29","concept":28,"pt":"sair","word":"leave","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-29","concept":28,"pt":"sair","word":"salir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-29","concept":28,"pt":"sair","word":"partire","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-29","concept":28,"pt":"sair","word":"partir","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-29","concept":28,"pt":"sair","word":"verlassen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-30","concept":29,"pt":"perder","word":"lose","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-30","concept":29,"pt":"perder","word":"perder","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-30","concept":29,"pt":"perder","word":"perdere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-30","concept":29,"pt":"perder","word":"perdre","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-30","concept":29,"pt":"perder","word":"verlieren","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-31","concept":30,"pt":"significar","word":"mean","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-31","concept":30,"pt":"significar","word":"significar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-31","concept":30,"pt":"significar","word":"significare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-31","concept":30,"pt":"significar","word":"signifier","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-31","concept":30,"pt":"significar","word":"bedeuten","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-32","concept":31,"pt":"oferecer","word":"offer","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-32","concept":31,"pt":"oferecer","word":"ofrecer","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-32","concept":31,"pt":"oferecer","word":"offrire","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-32","concept":31,"pt":"oferecer","word":"offrir","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-32","concept":31,"pt":"oferecer","word":"anbieten","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-33","concept":32,"pt":"abrir","word":"open","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-33","concept":32,"pt":"abrir","word":"abrir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-33","concept":32,"pt":"abrir","word":"aprire","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-33","concept":32,"pt":"abrir","word":"ouvrir","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-33","concept":32,"pt":"abrir","word":"öffnen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-34","concept":33,"pt":"pagar","word":"pay","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-34","concept":33,"pt":"pagar","word":"pagar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-34","concept":33,"pt":"pagar","word":"pagare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-34","concept":33,"pt":"pagar","word":"payer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-34","concept":33,"pt":"pagar","word":"bezahlen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-35","concept":34,"pt":"receber","word":"receive","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-35","concept":34,"pt":"receber","word":"recibir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-35","concept":34,"pt":"receber","word":"ricevere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-35","concept":34,"pt":"receber","word":"recevoir","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-35","concept":34,"pt":"receber","word":"erhalten","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-36","concept":35,"pt":"enviar","word":"send","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-36","concept":35,"pt":"enviar","word":"enviar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-36","concept":35,"pt":"enviar","word":"inviare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-36","concept":35,"pt":"enviar","word":"envoyer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-36","concept":35,"pt":"enviar","word":"senden","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-37","concept":36,"pt":"compartilhar","word":"share","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-37","concept":36,"pt":"compartilhar","word":"compartir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-37","concept":36,"pt":"compartilhar","word":"condividere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-37","concept":36,"pt":"compartilhar","word":"partager","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-37","concept":36,"pt":"compartilhar","word":"teilen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-38","concept":37,"pt":"mostrar","word":"show","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-38","concept":37,"pt":"mostrar","word":"mostrar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-38","concept":37,"pt":"mostrar","word":"mostrare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-38","concept":37,"pt":"mostrar","word":"montrer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-38","concept":37,"pt":"mostrar","word":"zeigen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-39","concept":38,"pt":"gastar","word":"spend","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-39","concept":38,"pt":"gastar","word":"gastar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-39","concept":38,"pt":"gastar","word":"spendere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-39","concept":38,"pt":"gastar","word":"dépenser","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-39","concept":38,"pt":"gastar","word":"ausgeben","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-40","concept":39,"pt":"começar","word":"start","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-40","concept":39,"pt":"começar","word":"empezar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-40","concept":39,"pt":"começar","word":"iniziare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-40","concept":39,"pt":"começar","word":"commencer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-40","concept":39,"pt":"começar","word":"beginnen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-41","concept":40,"pt":"parar","word":"stop","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-41","concept":40,"pt":"parar","word":"parar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-41","concept":40,"pt":"parar","word":"fermare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-41","concept":40,"pt":"parar","word":"arrêter","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-41","concept":40,"pt":"parar","word":"stoppen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-42","concept":41,"pt":"ensinar","word":"teach","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-42","concept":41,"pt":"ensinar","word":"enseñar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-42","concept":41,"pt":"ensinar","word":"insegnare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-42","concept":41,"pt":"ensinar","word":"enseigner","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-42","concept":41,"pt":"ensinar","word":"unterrichten","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-43","concept":42,"pt":"tentar","word":"try","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-43","concept":42,"pt":"tentar","word":"intentar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-43","concept":42,"pt":"tentar","word":"provare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-43","concept":42,"pt":"tentar","word":"essayer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-43","concept":42,"pt":"tentar","word":"versuchen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-44","concept":43,"pt":"usar","word":"use","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-44","concept":43,"pt":"usar","word":"usar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-44","concept":43,"pt":"usar","word":"usare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-44","concept":43,"pt":"usar","word":"utiliser","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-44","concept":43,"pt":"usar","word":"benutzen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-45","concept":44,"pt":"esperar","word":"wait","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-45","concept":44,"pt":"esperar","word":"esperar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-45","concept":44,"pt":"esperar","word":"aspettare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-45","concept":44,"pt":"esperar","word":"attendre","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-45","concept":44,"pt":"esperar","word":"warten","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-46","concept":45,"pt":"vencer","word":"win","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-46","concept":45,"pt":"vencer","word":"ganar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-46","concept":45,"pt":"vencer","word":"vincere","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-46","concept":45,"pt":"vencer","word":"gagner","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-46","concept":45,"pt":"vencer","word":"gewinnen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-47","concept":46,"pt":"concordar","word":"agree","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-47","concept":46,"pt":"concordar","word":"estar de acuerdo","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-47","concept":46,"pt":"concordar","word":"essere d'accordo","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-47","concept":46,"pt":"concordar","word":"être d'accord","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-47","concept":46,"pt":"concordar","word":"zustimmen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-48","concept":47,"pt":"comparar","word":"compare","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-48","concept":47,"pt":"comparar","word":"comparar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-48","concept":47,"pt":"comparar","word":"confrontare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-48","concept":47,"pt":"comparar","word":"comparer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-48","concept":47,"pt":"comparar","word":"vergleichen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-49","concept":48,"pt":"construir","word":"build","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-49","concept":48,"pt":"construir","word":"construir","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-49","concept":48,"pt":"construir","word":"costruire","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-49","concept":48,"pt":"construir","word":"construire","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-49","concept":48,"pt":"construir","word":"bauen","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"},{"id":"en-50","concept":49,"pt":"preparar","word":"prepare","lang":"en","langName":"Inglês","flag":"🇺🇸","voice":"en-US"},{"id":"es-50","concept":49,"pt":"preparar","word":"preparar","lang":"es","langName":"Espanhol","flag":"🇪🇸","voice":"es-ES"},{"id":"it-50","concept":49,"pt":"preparar","word":"preparare","lang":"it","langName":"Italiano","flag":"🇮🇹","voice":"it-IT"},{"id":"fr-50","concept":49,"pt":"preparar","word":"préparer","lang":"fr","langName":"Francês","flag":"🇫🇷","voice":"fr-FR"},{"id":"de-50","concept":49,"pt":"preparar","word":"vorbereiten","lang":"de","langName":"Alemão","flag":"🇩🇪","voice":"de-DE"}];
+const LANGS=["en","es","it","fr","de"];
+const $=id=>document.getElementById(id);
+let voices=[],deck=[],roundIndex=0,totalRounds=20,score=0,streak=0,selectedAudio=null,matched=0,currentItems=[],level="normal";
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function escapeHtml(s){return String(s).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
+
+function loadVoices(){
+  voices=speechSynthesis.getVoices();
+  const available=LANGS.filter(code=>voices.some(v=>v.lang.toLowerCase().startsWith(code)));
+  $("warn").style.display=available.length<5?"block":"none";
+}
+if("speechSynthesis" in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}else{$("warn").style.display="block";$("warn").textContent="Este navegador não oferece áudio por síntese de voz."}
+
+function speak(item,slow=false){
+  if(!("speechSynthesis" in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(item.word);
+  u.lang=item.voice;
+  u.rate=slow?0.65:(level==="hard"?0.95:0.82);
+  const exact=voices.find(v=>v.lang.toLowerCase()===item.voice.toLowerCase());
+  const near=voices.find(v=>v.lang.toLowerCase().startsWith(item.lang));
+  if(exact||near)u.voice=exact||near;
+  speechSynthesis.speak(u);
+}
+
+function createRounds(){
+  const byLang={};
+  LANGS.forEach(l=>byLang[l]=DATA.filter(x=>x.lang===l));
+  const offsets={en:0,es:7,it:14,fr:21,de:28};
+  deck=[];
+  for(let r=0;r<50;r++){
+    deck.push(LANGS.map(l=>byLang[l][(r+offsets[l])%50]));
+  }
+  shuffle(deck);
+}
+
+function startGame(){
+  totalRounds=Number($("rounds").value);
+  level=$("level").value;
+  createRounds();
+  deck=deck.slice(0,totalRounds);
+  roundIndex=0;score=0;streak=0;
+  $("setup").classList.add("hidden");
+  $("game").classList.remove("hidden");
+  renderRound();
+}
+
+function renderRound(){
+  currentItems=deck[roundIndex];
+  selectedAudio=null;matched=0;
+  $("score").textContent=score;
+  $("streak").textContent=streak;
+  $("prog").textContent=(roundIndex+1)+"/"+totalRounds;
+  $("bar").style.width=(roundIndex/totalRounds*100)+"%";
+  $("feedback").className="feedback hidden";
+  $("next").classList.add("hidden");
+  $("audios").innerHTML="";
+  $("words").innerHTML="";
+  const audioOrder=shuffle(currentItems.slice());
+  const wordOrder=shuffle(currentItems.slice());
+
+  audioOrder.forEach((item,n)=>{
+    const b=document.createElement("button");
+    b.className="audioBtn";
+    b.dataset.id=item.id;
+    b.innerHTML="🔊 Áudio "+(n+1);
+    b.onclick=()=>selectAudio(item,b);
+    $("audios").appendChild(b);
+  });
+
+  wordOrder.forEach(item=>{
+    const b=document.createElement("button");
+    b.className="wordBtn";
+    b.dataset.id=item.id;
+    const translation=level==="easy"?'<small>'+escapeHtml(item.pt)+'</small>':"";
+    b.innerHTML=escapeHtml(item.word)+translation;
+    b.onclick=()=>selectWord(item,b);
+    $("words").appendChild(b);
+  });
+}
+
+function selectAudio(item,button){
+  if(button.classList.contains("matched"))return;
+  document.querySelectorAll(".audioBtn").forEach(b=>b.classList.remove("selected"));
+  selectedAudio=item;
+  button.classList.add("selected");
+  speak(item);
+}
+
+function selectWord(item,button){
+  if(!selectedAudio||button.classList.contains("matched"))return;
+  const audioButton=document.querySelector('.audioBtn[data-id="'+selectedAudio.id+'"]');
+  if(item.id===selectedAudio.id){
+    matched++;
+    score+=100+(streak*5);
+    streak++;
+    button.className="wordBtn matched";
+    button.innerHTML=escapeHtml(item.word)+'<small>'+item.flag+" "+escapeHtml(item.langName)+" • "+escapeHtml(item.pt)+'</small>';
+    audioButton.className="audioBtn matched";
+    audioButton.innerHTML="✅ "+item.flag+" "+escapeHtml(item.langName);
+    showFeedback("Correto: "+item.word+" = "+item.pt,true);
+    speak(item,true);
+    selectedAudio=null;
+    $("score").textContent=score;
+    $("streak").textContent=streak;
+    if(matched===5){
+      $("bar").style.width=((roundIndex+1)/totalRounds*100)+"%";
+      $("next").classList.remove("hidden");
+      $("tip").textContent="Rodada completa: 5 de 5.";
+    }
+  }else{
+    streak=0;
+    score=Math.max(0,score-20);
+    $("score").textContent=score;
+    $("streak").textContent=streak;
+    button.classList.add("wrong");
+    setTimeout(()=>button.classList.remove("wrong"),300);
+    showFeedback("Não corresponde a esse áudio. Tente outra escrita.",false);
+  }
+}
+
+function showFeedback(text,ok){
+  const el=$("feedback");
+  el.textContent=text;
+  el.className="feedback "+(ok?"ok":"bad");
+}
+
+function nextRound(){
+  roundIndex++;
+  if(roundIndex>=totalRounds){
+    $("game").classList.add("hidden");
+    $("endScreen").classList.remove("hidden");
+    $("result").textContent="Você concluiu "+totalRounds+" rodadas e marcou "+score+" pontos.";
+    return;
+  }
+  $("tip").textContent="A tradução aparece depois do acerto.";
+  renderRound();
+}
+
+$("start").addEventListener("click",startGame);
+$("next").addEventListener("click",nextRound);
+$("replay").addEventListener("click",()=>{if(selectedAudio)speak(selectedAudio,true);else showFeedback("Selecione primeiro um áudio.",false)});
+</script>
+</body>
+</html>
