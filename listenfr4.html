@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0055a4">
+<title>HL Listen Français 4</title>
+<style>
+:root{--blue:#0055a4;--purple:#7c3aed;--ink:#172033;--muted:#667085;--line:#e5e7eb;--soft:#eef6ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100dvh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(145deg,var(--blue),var(--purple));padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+.app{width:min(880px,100%);margin:auto;background:#fff;border-radius:26px;padding:clamp(13px,3vw,24px);box-shadow:0 20px 48px rgba(15,23,42,.25)}
+h1{margin:0;text-align:center;color:var(--blue);font-size:clamp(29px,7vw,48px);line-height:1.04}
+.sub{text-align:center;color:var(--muted);margin:8px 0 15px}
+.setup{text-align:center;padding:8px 0}
+.setupGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+label{display:block;text-align:left;font-weight:850;margin-bottom:5px}
+select{width:100%;padding:12px;border:2px solid var(--line);border-radius:14px;background:#fff;font:inherit;font-weight:800}
+.btn{border:0;border-radius:14px;padding:12px 14px;font:inherit;font-weight:900;cursor:pointer}
+.primary{background:var(--blue);color:#fff}.secondary{background:#e5e7eb;color:#111827}
+.note{font-size:13px;color:var(--muted);line-height:1.4;margin-top:10px}
+.warn{display:none;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:13px;padding:9px;margin-top:9px;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
+.stat{border:1px solid var(--line);border-radius:14px;background:#f3f4f6;padding:8px;text-align:center;font-weight:900}
+.progress{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-bottom:11px}
+.bar{height:100%;width:0;background:var(--blue);transition:.2s}
+.tip{background:#f9fafb;border:1px solid var(--line);border-radius:14px;padding:9px;text-align:center;color:#475467;font-weight:750;margin-bottom:10px}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.col h2{font-size:16px;text-align:center;color:var(--blue);margin:0 0 7px}
+.items{display:grid;gap:8px}
+.audioBtn,.wordBtn{width:100%;min-height:59px;border:2px solid var(--line);border-radius:15px;background:#fff;padding:8px;font:inherit;font-weight:850;cursor:pointer}
+.audioBtn{background:#f8fafc;font-size:17px}.wordBtn{font-size:clamp(14px,3.7vw,19px)}
+.wordBtn small{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.selected{border-color:var(--blue)!important;background:var(--soft)!important;box-shadow:0 0 0 3px rgba(0,85,164,.12)}
+.matched{border-color:#86efac!important;background:#dcfce7!important;color:#166534!important}
+.wrong{border-color:#fca5a5!important;background:#fee2e2!important}
+.feedback{margin-top:10px;border-radius:14px;padding:10px;text-align:center;font-weight:850}
+.feedback.ok{background:#dcfce7;color:#166534}.feedback.bad{background:#fee2e2;color:#991b1b}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.hidden{display:none!important}
+@media(max-width:560px){.app{padding:11px;border-radius:20px}.board{gap:5px}.audioBtn,.wordBtn{min-height:56px;padding:7px}.stats{gap:5px}}
+@media(max-width:390px){.audioBtn{font-size:15px}.wordBtn{font-size:13px}}
+</style>
+</head>
+<body>
+<main class="app">
+
+<section id="setup" class="setup">
+<h1>🇫🇷 HL Listen Français 4</h1>
+<p class="sub">Quarta leva: 500 palavras francesas novas, sem repetições das três primeiras levas.</p>
+<div class="setupGrid">
+<div><label for="rounds">Etapas</label><select id="rounds"><option value="10">10</option><option value="25">25</option><option value="50" selected>50</option><option value="75">75</option><option value="100">Todas (100)</option></select></div>
+<div><label for="level">Nível</label><select id="level"><option value="easy">Fácil</option><option value="normal" selected>Normal</option><option value="hard">Difícil</option></select></div>
+</div>
+<button id="start" class="btn primary" style="width:100%">Começar ▶</button>
+<div id="warn" class="warn">A voz francesa não foi localizada. O navegador tentará usar a voz mais próxima disponível.</div>
+<p class="note">Base validada: 100 etapas • 5 palavras por etapa • 500 palavras novas • zero repetições das levas 1, 2 e 3.</p>
+</section>
+
+<section id="game" class="hidden">
+<h1>🇫🇷 Listen Français 4</h1>
+<p class="sub">Conecte os 5 áudios às 5 palavras francesas.</p>
+<div class="stats"><div class="stat">⭐ <span id="score">0</span></div><div class="stat">🔥 <span id="streak">0</span></div><div class="stat">📘 <span id="prog">1/50</span></div></div>
+<div class="progress"><div id="bar" class="bar"></div></div>
+<div id="tip" class="tip">A tradução aparece depois do acerto.</div>
+
+<div class="board">
+<section class="col"><h2>🔊 Áudios</h2><div id="audios" class="items"></div></section>
+<section class="col"><h2>✍️ Palavras</h2><div id="words" class="items"></div></section>
+</div>
+
+<div id="feedback" class="feedback hidden"></div>
+<div class="actions">
+<button id="replay" class="btn secondary">🔁 Repetir áudio</button>
+<button id="next" class="btn primary hidden">Próxima etapa ➜</button>
+</div>
+</section>
+
+<section id="end" class="setup hidden">
+<h1>🏆 Concluído</h1>
+<p class="sub" id="result"></p>
+<button class="btn primary" style="width:100%" onclick="location.reload()">Jogar novamente</button>
+</section>
+
+</main>
+
+<script>
+"use strict";
+const STEPS=[[["toit","telhado"],["cheminée","chaminé"],["balcon","sacada"],["terrasse","terraço"],["garage","garagem"]],[["brique","tijolo"],["ciment","cimento"],["poutre","viga"],["tuile","telha"],["escalier","escada"]],[["pelouse","gramado"],["haie","cerca viva"],["pelle","pá"],["râteau","ancinho"],["arrosoir","regador"]],[["lessive","sabão para roupas"],["sèche-linge","secadora"],["machine à laver","máquina de lavar"],["cintre","cabide"],["fer à repasser","ferro de passar"]],[["poêle","frigideira"],["marmite","caldeirão"],["louche","concha"],["passoire","escorredor"],["fouet","batedor de cozinha"]],[["micro-ondes","micro-ondas"],["grille-pain","torradeira"],["bouilloire","chaleira"],["mixeur","liquidificador"],["cafetière","cafeteira"]],[["fromage","queijo"],["crème","creme"],["œuf","ovo"],["glace","sorvete"],["lactose","lactose"]],[["baguette","baguete"],["brioche","pão doce"],["biscuit","biscoito"],["tarte","torta"],["pâtisserie","confeitaria"]],[["agneau","cordeiro"],["dinde","peru"],["veau","vitela"],["sardine","sardinha"],["truite","truta"]],[["millet","painço"],["soja","soja"],["pois chiche","grão-de-bico"],["fève","fava"],["quinoa","quinoa"]],[["pomme","maçã"],["banane","banana"],["raisin","uva"],["prune","ameixa"],["abricot","damasco"]],[["tomate","tomate"],["pomme de terre","batata"],["radis","rabanete"],["navet","nabo"],["betterave","beterraba"]],[["persil","salsa"],["thym","tomilho"],["romarin","alecrim"],["menthe","hortelã"],["muscade","noz-moscada"]],[["eau","água"],["thé","chá"],["limonade","limonada"],["cacao","cacau"],["boisson","bebida"]],[["nappe","toalha de mesa"],["réservation","reserva"],["entrée","entrada"],["plat","prato principal"],["buffet","bufê"]],[["boutique","loja pequena"],["rayon","seção de loja"],["étiquette","etiqueta"],["cabine","provador"],["échange","troca"]],[["place","praça"],["boulevard","avenida larga"],["ruelle","beco"],["passage","passagem"],["tunnel","túnel"]],[["commissariat","delegacia"],["caserne","quartel"],["université","universidade"],["crèche","creche"],["cimetière","cemitério"]],[["moto","motocicleta"],["scooter","motoneta"],["bicyclette","bicicleta"],["ferry","balsa"],["fusée","foguete"]],[["moteur","motor"],["volant","volante"],["frein","freio"],["pneu","pneu"],["phare","farol"]],[["itinéraire","itinerário"],["destination","destino"],["séjour","estadia"],["touriste","turista"],["guide","guia"]],[["suite","suíte"],["auberge","albergue"],["réceptionniste","recepcionista"],["pension","pensão"],["camping","acampamento"]],[["continent","continente"],["capitale","capital"],["région","região"],["village","vilarejo"],["port","porto"]],[["branche","galho"],["racine","raiz"],["tronc","tronco"],["fleur","flor"],["herbe","grama"]],[["tulipe","tulipa"],["marguerite","margarida"],["orchidée","orquídea"],["cactus","cacto"],["bambou","bambu"]],[["température","temperatura"],["saison","estação do ano"],["météo","previsão do tempo"],["sécheresse","seca"],["inondation","inundação"]],[["planète","planeta"],["étoile","estrela"],["lune","lua"],["ciel","céu"],["comète","cometa"]],[["joue","bochecha"],["lèvre","lábio"],["gorge","garganta"],["menton","queixo"],["sourcil","sobrancelha"]],[["peau","pele"],["sang","sangue"],["os","osso"],["muscle","músculo"],["colonne vertébrale","coluna vertebral"]],[["intestin","intestino"],["pancréas","pâncreas"],["vessie","bexiga"],["rate","baço"],["artère","artéria"]],[["symptôme","sintoma"],["traitement","tratamento"],["opération","operação"],["consultation","consulta"],["guérison","cura"]],[["carie","cárie"],["gencive","gengiva"],["mâchoire","mandíbula"],["molaire","dente molar"],["incisive","dente incisivo"]],[["envie","vontade"],["jalousie","ciúme"],["fierté","orgulho"],["ennui","tédio"],["soulagement","alívio"]],[["poli","educado"],["paresseux","preguiçoso"],["bavard","falante"],["fidèle","fiel"],["courageux","corajoso"]],[["haut","alto"],["bas","baixo"],["long","comprido"],["court","curto"],["lourd","pesado"]],[["dur","duro"],["mou","macio"],["lisse","liso"],["rugueux","áspero"],["sec","seco"]],[["froid","frio"],["chaud","quente"],["sucré","doce"],["savoureux","saboroso"],["amer","amargo"]],[["beige","bege"],["marron","marrom"],["indigo","índigo"],["écarlate","escarlate"],["pourpre","púrpura"]],[["biologie","biologia"],["chimie","química"],["physique","física"],["économie","economia"],["informatique","informática"]],[["compas","compasso"],["ciseaux","tesoura"],["colle","cola"],["surligneur","marca-texto"],["feutre","canetinha"]],[["exercice","exercício"],["note","nota"],["diplôme","diploma"],["bourse","bolsa de estudos"],["inscription","matrícula"]],[["campus","campus"],["faculté","faculdade"],["semestre","semestre"],["cours","aula"],["laboratoire","laboratório"]],[["agenda","agenda"],["rendez-vous","compromisso"],["archive","arquivo"],["tampon","carimbo"],["agrafeuse","grampeador"]],[["concurrence","concorrência"],["publicité","publicidade"],["marque","marca"],["stock","estoque"],["livraison","entrega"]],[["budget","orçamento"],["épargne","poupança"],["revenu","renda"],["impôt","imposto"],["assurance","seguro"]],[["mot de passe","senha"],["fichier","arquivo digital"],["mémoire vive","memória RAM"],["processeur","processador"],["câble","cabo"]],[["profil","perfil"],["utilisateur","usuário"],["connexion","conexão"],["commentaire","comentário"],["abonnement","assinatura"]],[["notification","notificação"],["sonnerie","toque de chamada"],["chargeur","carregador"],["contact","contato"],["touche","tecla"]],[["télévision","televisão"],["émission","programa de TV"],["série","série"],["film","filme"],["acteur","ator"]],[["concert","concerto"],["orchestre","orquestra"],["rythme","ritmo"],["mélodie","melodia"],["voix","voz"]],[["couleur","cor"],["pinceau","pincel"],["toile","tela de pintura"],["exposition","exposição"],["galerie","galeria"]],[["roman","romance"],["chapitre","capítulo"],["auteur","autor"],["lecteur","leitor"],["librairie","livraria"]],[["information","informação"],["actualité","notícia atual"],["reportage","reportagem"],["interview","entrevista"],["presse","imprensa"]],[["basket-ball","basquete"],["volley-ball","vôlei"],["rugby","rúgbi"],["ski","esqui"],["boxe","boxe"]],[["terrain","campo esportivo"],["but","gol"],["équipe","equipe"],["arbitre","árbitro"],["score","placar"]],[["éléphant","elefante"],["girafe","girafa"],["rhinocéros","rinoceronte"],["hippopotame","hipopótamo"],["kangourou","canguru"]],[["écureuil","esquilo"],["hérisson","ouriço"],["cerf","cervo"],["sanglier","javali"],["castor","castor"]],[["moineau","pardal"],["corbeau","corvo"],["canari","canário"],["paon","pavão"],["mouette","gaivota"]],[["coccinelle","joaninha"],["libellule","libélula"],["scarabée","besouro"],["sauterelle","gafanhoto"],["chenille","lagarta"]],[["orque","orca"],["hippocampe","cavalo-marinho"],["anguille","enguia"],["coquillage","concha do mar"],["étoile de mer","estrela-do-mar"]],[["fils","filho"],["petit-fils","neto"],["neveu","sobrinho"],["nièce","sobrinha"],["beau-père","sogro ou padrasto"]],[["partenaire","parceiro"],["couple","casal"],["connaissance","conhecido"],["camarade","companheiro"],["étranger","estrangeiro"]],[["chirurgien","cirurgião"],["pharmacien","farmacêutico"],["vétérinaire","veterinário"],["psychologue","psicólogo"],["kinésithérapeute","fisioterapeuta"]],[["architecte","arquiteto"],["maçon","pedreiro"],["plombier","encanador"],["électricien","eletricista"],["mécanicien","mecânico"]],[["coiffeur","cabeleireiro"],["facteur","carteiro"],["caissier","caixa de loja"],["boulanger","padeiro"],["gardien","vigia"]],[["écrivain","escritor"],["musicien","músico"],["danseur","dançarino"],["photographe","fotógrafo"],["réalisateur","diretor de cinema"]],[["chercheur","pesquisador"],["biologiste","biólogo"],["chimiste","químico"],["physicien","físico"],["astronome","astrônomo"]],[["annoncer","anunciar"],["répondre","responder"],["raconter","contar uma história"],["décrire","descrever"],["traduire","traduzir"]],[["sauter","pular"],["grimper","escalar"],["glisser","escorregar"],["voler","voar"],["tomber","cair"]],[["calculer","calcular"],["comparer","comparar"],["vérifier","verificar"],["deviner","adivinhar"],["mémoriser","memorizar"]],[["se réveiller","acordar"],["s'habiller","vestir-se"],["se brosser","escovar-se"],["se coucher","deitar-se"],["se reposer","descansar"]],[["cuire","cozinhar no fogo"],["frire","fritar"],["bouillir","ferver"],["mélanger","misturar"],["verser","despejar"]],[["fermer","fechar"],["verrouiller","trancar"],["brancher","conectar à tomada"],["débrancher","desconectar da tomada"],["plier","dobrar"]],[["payer","pagar"],["économiser","economizar"],["coûter","custar"],["réserver","reservar"],["rembourser","reembolsar"]],[["organiser","organizar"],["planifier","planejar"],["créer","criar"],["produire","produzir"],["gérer","gerenciar"]],[["rencontrer","encontrar alguém"],["partager","compartilhar"],["soutenir","apoiar"],["remercier","agradecer"],["excuser","desculpar"]],[["sentir","sentir"],["entendre","ouvir"],["goûter","provar o sabor"],["respirer","respirar"],["observer","observar"]],[["grandir","crescer"],["vieillir","envelhecer"],["améliorer","melhorar"],["augmenter","aumentar"],["diminuer","diminuir"]],[["résoudre","resolver"],["éviter","evitar"],["protéger","proteger"],["prévenir","prevenir"],["risquer","arriscar"]],[["planter","plantar"],["arroser","regar"],["cueillir","colher"],["récolter","fazer a colheita"],["creuser","cavar"]],[["hier","ontem"],["tôt","cedo"],["tard","tarde"],["déjà","já"],["encore","ainda"]],[["doucement","suavemente"],["fortement","fortemente"],["clairement","claramente"],["heureusement","felizmente"],["malheureusement","infelizmente"]],[["car","pois"],["afin que","para que"],["tandis que","enquanto"],["lorsque","quando"],["sinon","senão"]],[["avant","antes"],["après","depois"],["entre","entre"],["autour","ao redor"],["vers","em direção a"]],[["assez","suficiente"],["trop","demais"],["plusieurs","vários"],["moins","menos"],["davantage","mais em quantidade"]],[["lequel","qual deles"],["combien","quanto"],["depuis quand","desde quando"],["jusqu'où","até onde"],["à qui","a quem"]],[["problème","problema"],["solution","solução"],["erreur","erro"],["résultat","resultado"],["objectif","objetivo"]],[["souvenir","lembrança"],["attention","atenção"],["habitude","hábito"],["expérience","experiência"],["compétence","habilidade"]],[["culture","cultura"],["population","população"],["communauté","comunidade"],["tradition","tradição"],["religion","religião"]],[["biodiversité","biodiversidade"],["ressource","recurso"],["habitat","habitat"],["espèce","espécie"],["paysage","paisagem"]],[["élection","eleição"],["parti","partido político"],["maire","prefeito"],["député","deputado"],["constitution","constituição"]],[["police","polícia"],["prison","prisão"],["crime","crime"],["victime","vítima"],["témoin","testemunha"]],[["hypothèse","hipótese"],["méthode","método"],["mesure","medida"],["analyse","análise"],["preuve","prova ou evidência"]],[["nombre","número"],["somme","soma"],["différence","diferença"],["fraction","fração"],["pourcentage","porcentagem"]],[["angle","ângulo"],["centre","centro"],["surface","superfície"],["volume","volume"],["distance","distância"]],[["semaine","semana"],["mois","mês"],["date","data"],["siècle","século"],["époque","época"]],[["Noël","Natal"],["Pâques","Páscoa"],["carnaval","carnaval"],["festival","festival"],["réveillon","véspera de Ano-Novo"]],[["prêtre","padre"],["mosquée","mesquita"],["temple","templo"],["paradis","paraíso"],["ange","anjo"]],[["danger","perigo"],["accident","acidente"],["secours","socorro"],["alarme","alarme"],["extincteur","extintor"]],[["adresse","endereço"],["nom","nome"],["âge","idade"],["endroit","lugar"],["chemin","caminho"]]];
+const $=id=>document.getElementById(id);
+let voices=[],frenchVoice=null,deck=[],roundIndex=0,totalRounds=50,level="normal",score=0,streak=0,matched=0,selected=null,current=[];
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
+function loadVoices(){voices=speechSynthesis.getVoices();frenchVoice=voices.find(v=>v.lang.toLowerCase()==="fr-fr")||voices.find(v=>v.lang.toLowerCase().startsWith("fr"));$("warn").style.display=frenchVoice?"none":"block"}
+if("speechSynthesis" in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+
+function speak(text,slow=false){
+ if(!("speechSynthesis" in window))return;
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(text);
+ u.lang="fr-FR";
+ u.rate=slow?0.62:(level==="hard"?0.95:0.82);
+ u.pitch=1;
+ if(frenchVoice)u.voice=frenchVoice;
+ speechSynthesis.speak(u);
+}
+
+function startGame(){
+ level=$("level").value;
+ totalRounds=Number($("rounds").value);
+ deck=shuffle(STEPS.slice()).slice(0,totalRounds);
+ roundIndex=0;score=0;streak=0;
+ $("setup").classList.add("hidden");
+ $("game").classList.remove("hidden");
+ renderRound();
+}
+
+function renderRound(){
+ current=deck[roundIndex].map((x,i)=>({id:roundIndex+"-"+i,word:x[0],pt:x[1]}));
+ matched=0;selected=null;
+ $("score").textContent=score;
+ $("streak").textContent=streak;
+ $("prog").textContent=(roundIndex+1)+"/"+totalRounds;
+ $("bar").style.width=(roundIndex/totalRounds*100)+"%";
+ $("tip").textContent="A tradução aparece depois do acerto.";
+ $("feedback").className="feedback hidden";
+ $("next").classList.add("hidden");
+ $("audios").innerHTML="";
+ $("words").innerHTML="";
+
+ shuffle(current.slice()).forEach((item,n)=>{
+  const b=document.createElement("button");
+  b.className="audioBtn";
+  b.dataset.id=item.id;
+  b.textContent="🔊 Áudio "+(n+1);
+  b.onclick=()=>selectAudio(item,b);
+  $("audios").appendChild(b);
+ });
+
+ shuffle(current.slice()).forEach(item=>{
+  const b=document.createElement("button");
+  b.className="wordBtn";
+  b.dataset.id=item.id;
+  b.innerHTML=esc(item.word)+(level==="easy"?'<small>'+esc(item.pt)+'</small>':"");
+  b.onclick=()=>selectWord(item,b);
+  $("words").appendChild(b);
+ });
+}
+
+function selectAudio(item,b){
+ if(b.classList.contains("matched"))return;
+ document.querySelectorAll(".audioBtn").forEach(x=>x.classList.remove("selected"));
+ selected=item;
+ b.classList.add("selected");
+ speak(item.word);
+}
+
+function selectWord(item,b){
+ if(!selected||b.classList.contains("matched"))return;
+ const audioButton=document.querySelector('.audioBtn[data-id="'+selected.id+'"]');
+
+ if(item.id===selected.id){
+  matched++;
+  score+=100+streak*5;
+  streak++;
+  b.className="wordBtn matched";
+  b.innerHTML=esc(item.word)+'<small>'+esc(item.pt)+'</small>';
+  audioButton.className="audioBtn matched";
+  audioButton.textContent="✅ "+item.word;
+  show(item.word+" = "+item.pt,true);
+  speak(item.word,true);
+  selected=null;
+  $("score").textContent=score;
+  $("streak").textContent=streak;
+
+  if(matched===5){
+   $("bar").style.width=((roundIndex+1)/totalRounds*100)+"%";
+   $("tip").textContent="Etapa concluída: 5 de 5.";
+   $("next").classList.remove("hidden");
+  }
+ }else{
+  streak=0;
+  score=Math.max(0,score-20);
+  $("score").textContent=score;
+  $("streak").textContent=streak;
+  b.classList.add("wrong");
+  setTimeout(()=>b.classList.remove("wrong"),300);
+  show("Não corresponde ao áudio. Tente outra palavra.",false);
+ }
+}
+
+function show(text,ok){
+ const f=$("feedback");
+ f.textContent=text;
+ f.className="feedback "+(ok?"ok":"bad");
+}
+
+$("replay").onclick=()=>selected?speak(selected.word,true):show("Selecione um áudio primeiro.",false);
+$("next").onclick=()=>{
+ roundIndex++;
+ if(roundIndex>=totalRounds){
+  $("game").classList.add("hidden");
+  $("end").classList.remove("hidden");
+  $("result").textContent="Você concluiu "+totalRounds+" etapas e marcou "+score+" pontos.";
+  return;
+ }
+ renderRound();
+};
+$("start").onclick=startGame;
+</script>
+</body>
+</html>
