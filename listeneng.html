@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0055a4">
+<title>HL American English Travel</title>
+<style>
+:root{--blue:#1d4ed8;--purple:#0f766e;--ink:#172033;--muted:#667085;--line:#e5e7eb;--soft:#eef6ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100dvh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(145deg,var(--blue),var(--purple));padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+.app{width:min(880px,100%);margin:auto;background:#fff;border-radius:26px;padding:clamp(13px,3vw,24px);box-shadow:0 20px 48px rgba(15,23,42,.25)}
+h1{margin:0;text-align:center;color:var(--blue);font-size:clamp(29px,7vw,48px);line-height:1.04}
+.sub{text-align:center;color:var(--muted);margin:8px 0 15px}
+.setup{text-align:center;padding:8px 0}
+.setupGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+label{display:block;text-align:left;font-weight:850;margin-bottom:5px}
+select{width:100%;padding:12px;border:2px solid var(--line);border-radius:14px;background:#fff;font:inherit;font-weight:800}
+.btn{border:0;border-radius:14px;padding:12px 14px;font:inherit;font-weight:900;cursor:pointer}
+.primary{background:var(--blue);color:#fff}.secondary{background:#e5e7eb;color:#111827}
+.note{font-size:13px;color:var(--muted);line-height:1.4;margin-top:10px}
+.warn{display:none;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:13px;padding:9px;margin-top:9px;font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
+.stat{border:1px solid var(--line);border-radius:14px;background:#f3f4f6;padding:8px;text-align:center;font-weight:900}
+.progress{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-bottom:11px}
+.bar{height:100%;width:0;background:var(--blue);transition:.2s}
+.tip{background:#f9fafb;border:1px solid var(--line);border-radius:14px;padding:9px;text-align:center;color:#475467;font-weight:750;margin-bottom:10px}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.col h2{font-size:16px;text-align:center;color:var(--blue);margin:0 0 7px}
+.items{display:grid;gap:8px}
+.audioBtn,.wordBtn{width:100%;min-height:59px;border:2px solid var(--line);border-radius:15px;background:#fff;padding:8px;font:inherit;font-weight:850;cursor:pointer}
+.audioBtn{background:#f8fafc;font-size:17px}.wordBtn{font-size:clamp(14px,3.7vw,19px)}
+.wordBtn small{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.selected{border-color:var(--blue)!important;background:var(--soft)!important;box-shadow:0 0 0 3px rgba(0,85,164,.12)}
+.matched{border-color:#86efac!important;background:#dcfce7!important;color:#166534!important}
+.wrong{border-color:#fca5a5!important;background:#fee2e2!important}
+.feedback{margin-top:10px;border-radius:14px;padding:10px;text-align:center;font-weight:850}
+.feedback.ok{background:#dcfce7;color:#166534}.feedback.bad{background:#fee2e2;color:#991b1b}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.hidden{display:none!important}
+@media(max-width:560px){.app{padding:11px;border-radius:20px}.board{gap:5px}.audioBtn,.wordBtn{min-height:56px;padding:7px}.stats{gap:5px}}
+@media(max-width:390px){.audioBtn{font-size:15px}.wordBtn{font-size:13px}}
+</style>
+</head>
+<body>
+<main class="app">
+
+<section id="setup" class="setup">
+<h1>🇺🇸 HL American English Travel</h1>
+<p class="sub">Vocabulário de alta frequência para viagens, hospedagem, transporte, alimentação e eventos.</p>
+<div class="setupGrid">
+<div><label for="rounds">Etapas</label><select id="rounds"><option value="20">20</option><option value="50" selected>50</option><option value="100">100</option><option value="200">Todas (200)</option></select></div>
+<div><label for="level">Nível</label><select id="level"><option value="easy">Fácil</option><option value="normal" selected>Normal</option><option value="hard">Difícil</option></select></div>
+</div>
+<button id="start" class="btn primary" style="width:100%">Começar ▶</button>
+<div id="warn" class="warn">A voz de inglês americano não foi localizada. O navegador tentará usar a voz em inglês mais próxima disponível.</div>
+<p class="note">200 etapas • 5 palavras por etapa • 1000 palavras e termos • áudio em inglês americano pelo navegador.</p>
+</section>
+
+<section id="game" class="hidden">
+<h1>🇺🇸 American English Travel</h1>
+<p class="sub">Conecte os 5 áudios às 5 palavras em inglês americano.</p>
+<div class="stats"><div class="stat">⭐ <span id="score">0</span></div><div class="stat">🔥 <span id="streak">0</span></div><div class="stat">📘 <span id="prog">1/50</span></div></div>
+<div class="progress"><div id="bar" class="bar"></div></div>
+<div id="tip" class="tip">A tradução aparece depois do acerto.</div>
+
+<div class="board">
+<section class="col"><h2>🔊 Áudios</h2><div id="audios" class="items"></div></section>
+<section class="col"><h2>✍️ Palavras</h2><div id="words" class="items"></div></section>
+</div>
+
+<div id="feedback" class="feedback hidden"></div>
+<div class="actions">
+<button id="replay" class="btn secondary">🔁 Repetir áudio</button>
+<button id="next" class="btn primary hidden">Próxima etapa ➜</button>
+</div>
+</section>
+
+<section id="end" class="setup hidden">
+<h1>🏆 Concluído</h1>
+<p class="sub" id="result"></p>
+<button class="btn primary" style="width:100%" onclick="location.reload()">Jogar novamente</button>
+</section>
+
+</main>
+
+<script>
+"use strict";
+const STEPS=[[["hello","olá"],["hi","oi"],["please","por favor"],["thanks","obrigado"],["sorry","desculpe"]],[["yes","sim"],["no","não"],["maybe","talvez"],["okay","certo"],["help","ajuda"]],[["excuse me","com licença"],["welcome","bem-vindo"],["goodbye","tchau"],["understand","entender"],["repeat","repetir"]],[["slowly","devagar"],["again","novamente"],["English","inglês"],["Portuguese","português"],["name","nome"]],[["address","endereço"],["phone","telefone"],["email","e-mail"],["question","pergunta"],["answer","resposta"]],[["be","ser/estar"],["have","ter"],["do","fazer"],["go","ir"],["come","vir"]],[["get","conseguir/pegar"],["make","fazer/criar"],["take","pegar/levar"],["give","dar"],["know","saber/conhecer"]],[["think","pensar"],["want","querer"],["need","precisar"],["like","gostar"],["use","usar"]],[["find","encontrar"],["tell","contar/dizer"],["ask","perguntar"],["work","trabalhar"],["call","ligar/chamar"]],[["try","tentar"],["feel","sentir"],["leave","sair/deixar"],["put","colocar"],["keep","manter"]],[["bring","trazer"],["buy","comprar"],["pay","pagar"],["open","abrir"],["close","fechar"]],[["start","começar"],["finish","terminar"],["wait","esperar"],["walk","caminhar"],["run","correr"]],[["sit","sentar"],["stand","ficar em pé"],["look","olhar"],["watch","assistir/observar"],["listen","escutar"]],[["hear","ouvir"],["speak","falar"],["read","ler"],["write","escrever"],["show","mostrar"]],[["choose","escolher"],["change","mudar"],["check","verificar"],["remember","lembrar"],["forget","esquecer"]],[["good","bom"],["bad","ruim"],["big","grande"],["small","pequeno"],["new","novo"]],[["old","velho/antigo"],["easy","fácil"],["hard","difícil"],["fast","rápido"],["slow","lento"]],[["hot","quente"],["cold","frio"],["clean","limpo"],["dirty","sujo"],["full","cheio"]],[["empty","vazio"],["vacant","vago"],["closed","fechado"],["free","grátis/livre"],["busy","ocupado"]],[["ready","pronto"],["early","cedo"],["late","atrasado/tarde"],["safe","seguro"],["important","importante"]],[["near","perto"],["far","longe"],["right","certo/direito"],["wrong","errado"],["same","mesmo"]],[["different","diferente"],["available","disponível"],["possible","possível"],["necessary","necessário"],["comfortable","confortável"]],[["quiet","silencioso"],["loud","alto/barulhento"],["friendly","amigável"],["helpful","prestativo"],["expensive","caro"]],[["cheap","barato"],["local","local"],["international","internacional"],["public","público"],["private","privado"]],[["direct","direto"],["correct","correto"],["clear","claro"],["simple","simples"],["special","especial"]],[["who","quem"],["what","o que"],["where","onde"],["when","quando"],["why","por quê"]],[["how","como"],["which","qual"],["how much","quanto"],["how many","quantos"],["what time","que horas"]],[["where is","onde fica"],["can I","eu posso"],["could you","você poderia"],["do you have","você tem"],["is there","há/existe"]],[["are there","há/existem"],["what happened","o que aconteceu"],["what does it mean","o que significa"],["how long","quanto tempo"],["how far","quão longe"]],[["how often","com que frequência"],["whose","de quem"],["what kind","que tipo"],["what size","que tamanho"],["what number","qual número"]],[["zero","zero"],["one","um"],["two","dois"],["three","três"],["four","quatro"]],[["five","cinco"],["six","seis"],["seven","sete"],["eight","oito"],["nine","nove"]],[["ten","dez"],["eleven","onze"],["twelve","doze"],["twenty","vinte"],["thirty","trinta"]],[["hundred","cem"],["thousand","mil"],["first","primeiro"],["second","segundo"],["last","último"]],[["more","mais"],["less","menos"],["enough","suficiente"],["all","todos"],["each","cada"]],[["today","hoje"],["tomorrow","amanhã"],["yesterday","ontem"],["morning","manhã"],["afternoon","tarde"]],[["evening","noite/início da noite"],["night","noite"],["hour","hora"],["minute","minuto"],["day","dia"]],[["week","semana"],["month","mês"],["year","ano"],["Monday","segunda-feira"],["Tuesday","terça-feira"]],[["Wednesday","quarta-feira"],["Thursday","quinta-feira"],["Friday","sexta-feira"],["Saturday","sábado"],["Sunday","domingo"]],[["date","data"],["time","horário/tempo"],["now","agora"],["later","mais tarde"],["soon","em breve"]],[["weather","clima"],["sun","sol"],["rain","chuva"],["wind","vento"],["cloud","nuvem"]],[["storm","tempestade"],["heat","calor"],["shade","sombra"],["temperature","temperatura"],["forecast","previsão"]],[["sunny","ensolarado"],["rainy","chuvoso"],["windy","ventoso"],["cloudy","nublado"],["dry","seco"]],[["humid","úmido"],["summer","verão"],["winter","inverno"],["spring","primavera"],["fall","outono"]],[["umbrella","guarda-chuva"],["jacket","jaqueta"],["sunscreen","protetor solar"],["water","água"],["bottle","garrafa"]],[["airport","aeroporto"],["terminal","terminal"],["airline","companhia aérea"],["flight","voo"],["ticket","passagem"]],[["passport","passaporte"],["boarding pass","cartão de embarque"],["gate","portão"],["departure","partida"],["arrival","chegada"]],[["check-in","check-in"],["counter","balcão"],["agent","atendente"],["reservation","reserva"],["confirmation","confirmação"]],[["itinerary","itinerário"],["destination","destino"],["connection","conexão"],["layover","escala"],["delay","atraso"]],[["cancellation","cancelamento"],["announcement","anúncio"],["screen","tela"],["information","informação"],["security","segurança"]],[["luggage","bagagem"],["baggage","bagagem"],["suitcase","mala"],["carry-on","bagagem de mão"],["backpack","mochila"]],[["tag","etiqueta"],["weight","peso"],["scale","balança"],["oversized","fora do tamanho padrão"],["fragile","frágil"]],[["carousel","esteira de bagagem"],["claim","retirada/reclamação"],["lost","perdido"],["found","encontrado"],["customs","alfândega"]],[["immigration","imigração"],["officer","agente"],["visa","visto"],["entry","entrada"],["exit","saída"]],[["document","documento"],["form","formulário"],["signature","assinatura"],["purpose","finalidade"],["trip","viagem"]],[["airplane","avião"],["plane","avião"],["seat","assento"],["aisle","corredor"],["window","janela"]],[["row","fileira"],["overhead bin","compartimento superior"],["seat belt","cinto de segurança"],["crew","tripulação"],["pilot","piloto"]],[["flight attendant","comissário de bordo"],["takeoff","decolagem"],["landing","pouso"],["turbulence","turbulência"],["altitude","altitude"]],[["snack","lanche"],["meal","refeição"],["tray","bandeja"],["blanket","cobertor"],["pillow","travesseiro"]],[["headphones","fones de ouvido"],["charger","carregador"],["outlet","tomada"],["restroom","banheiro"],["emergency exit","saída de emergência"]],[["hotel","hotel"],["lobby","saguão"],["front desk","recepção"],["receptionist","recepcionista"],["guest","hóspede"]],[["booking","reserva"],["room","quarto"],["key","chave"],["keycard","cartão-chave"],["deposit","depósito/caução"]],[["rate","diária/tarifa"],["nightly","por noite"],["included","incluído"],["available room","quarto disponível"],["single room","quarto individual"]],[["double room","quarto duplo"],["suite","suíte"],["floor","andar"],["elevator","elevador"],["stairs","escadas"]],[["check-out","check-out"],["receipt","recibo"],["invoice","fatura"],["concierge","concierge"],["bellhop","mensageiro de hotel"]],[["bed","cama"],["mattress","colchão"],["sheet","lençol"],["towel","toalha"],["bathroom","banheiro"]],[["shower","chuveiro"],["bathtub","banheira"],["sink","pia"],["toilet","vaso sanitário"],["soap","sabonete"]],[["shampoo","xampu"],["hair dryer","secador de cabelo"],["closet","armário"],["hanger","cabide"],["safe box","cofre"]],[["minibar","frigobar"],["air conditioning","ar-condicionado"],["heater","aquecedor"],["remote","controle remoto"],["television","televisão"]],[["Wi-Fi","Wi-Fi"],["password","senha"],["housekeeping","serviço de quarto"],["laundry","lavanderia"],["wake-up call","chamada para despertar"]],[["noise","barulho"],["leak","vazamento"],["broken","quebrado"],["missing","faltando"],["extra","extra"]],[["maintenance","manutenção"],["repair","conserto"],["replacement","substituição"],["upgrade","melhoria de categoria"],["complaint","reclamação"]],[["manager","gerente"],["service","serviço"],["breakfast","café da manhã"],["gym","academia"],["pool","piscina"]],[["spa","spa"],["parking","estacionamento"],["shuttle","transporte do hotel"],["storage","depósito de bagagem"],["late checkout","saída tardia"]],[["early check-in","entrada antecipada"],["do not disturb","não perturbe"],["room service","serviço de quarto"],["tipping","gorjeta"],["availability","disponibilidade"]],[["bus","ônibus"],["subway","metrô"],["train","trem"],["tram","bonde"],["station","estação"]],[["stop","parada"],["platform","plataforma"],["route","rota"],["line","linha"],["map","mapa"]],[["fare","tarifa"],["pass","passe"],["transfer","baldeação"],["driver","motorista"],["conductor","cobrador/condutor"]],[["schedule","horário"],["timetable","tabela de horários"],["downtown","centro da cidade"],["uptown","parte alta da cidade"],["express","expresso"]],[["local train","trem local"],["last stop","última parada"],["next stop","próxima parada"],["rush hour","horário de pico"],["public transportation","transporte público"]],[["taxi","táxi"],["cab","táxi"],["ride","corrida/carona"],["rideshare","transporte por aplicativo"],["pickup","local de embarque"]],[["drop-off","local de desembarque"],["vehicle","veículo"],["car","carro"],["rental","aluguel"],["license","carteira/licença"]],[["insurance","seguro"],["fuel","combustível"],["gas","gasolina"],["gas station","posto de gasolina"],["parking lot","estacionamento"]],[["traffic","trânsito"],["highway","rodovia"],["street","rua"],["avenue","avenida"],["intersection","cruzamento"]],[["toll","pedágio"],["speed limit","limite de velocidade"],["traffic light","semáforo"],["license plate","placa do carro"],["trunk","porta-malas"]],[["left","esquerda"],["right side","lado direito"],["straight","reto/em frente"],["north","norte"],["south","sul"]],[["east","leste"],["west","oeste"],["corner","esquina"],["block","quarteirão"],["building","prédio"]],[["entrance","entrada"],["door","porta"],["hallway","corredor"],["upstairs","andar de cima"],["downstairs","andar de baixo"]],[["inside","dentro"],["outside","fora"],["across","do outro lado"],["between","entre"],["behind","atrás"]],[["in front","na frente"],["beside","ao lado"],["nearby","próximo"],["distance","distância"],["location","localização"]],[["city","cidade"],["neighborhood","bairro"],["center","centro"],["square","praça"],["park","parque"]],[["museum","museu"],["theater","teatro"],["library","biblioteca"],["store","loja"],["mall","shopping center"]],[["market","mercado"],["supermarket","supermercado"],["pharmacy","farmácia"],["hospital","hospital"],["bank","banco"]],[["post office","correio"],["police station","delegacia"],["embassy","embaixada"],["consulate","consulado"],["church","igreja"]],[["bridge","ponte"],["river","rio"],["lake","lago"],["beach","praia"],["mountain","montanha"]],[["tour","passeio"],["guide","guia"],["attraction","atração"],["landmark","ponto turístico"],["monument","monumento"]],[["view","vista"],["photo","foto"],["camera","câmera"],["souvenir","lembrança"],["visitor","visitante"]],[["admission","entrada/ingresso"],["opening hours","horário de funcionamento"],["closed today","fechado hoje"],["guided tour","visita guiada"],["self-guided","autoguiado"]],[["reservation time","horário da reserva"],["meeting point","ponto de encontro"],["brochure","folheto"],["exhibit","exposição"],["gallery","galeria"]],[["historic","histórico"],["famous","famoso"],["scenic","panorâmico"],["crowded","lotado"],["recommended","recomendado"]],[["restaurant","restaurante"],["table","mesa"],["menu","cardápio"],["server","garçom/atendente"],["host","recepcionista do restaurante"]],[["reservation name","nome da reserva"],["party","grupo de pessoas"],["seat available","lugar disponível"],["wait time","tempo de espera"],["order","pedido"]],[["daily special","prato do dia"],["recommendation","recomendação"],["appetizer","entrada"],["main course","prato principal"],["side dish","acompanhamento"]],[["dessert","sobremesa"],["bill","conta"],["tip","gorjeta"],["service charge","taxa de serviço"],["separate checks","contas separadas"]],[["together","juntos"],["to go","para viagem"],["dine in","comer no local"],["reservation list","lista de reservas"],["waiting area","área de espera"]],[["bread","pão"],["rice","arroz"],["beans","feijão"],["meat","carne"],["beef","carne bovina"]],[["chicken","frango"],["pork","carne suína"],["fish","peixe"],["egg","ovo"],["cheese","queijo"]],[["milk","leite"],["butter","manteiga"],["salad","salada"],["soup","sopa"],["sandwich","sanduíche"]],[["pizza","pizza"],["pasta","massa"],["noodles","macarrão"],["potato","batata"],["fries","batata frita"]],[["vegetable","legume"],["fruit","fruta"],["sauce","molho"],["salt","sal"],["pepper","pimenta"]],[["apple","maçã"],["banana","banana"],["orange fruit","laranja"],["grape","uva"],["strawberry","morango"]],[["lemon","limão"],["tomato","tomate"],["onion","cebola"],["garlic","alho"],["carrot","cenoura"]],[["lettuce","alface"],["corn","milho"],["mushroom","cogumelo"],["avocado","abacate"],["bacon","bacon"]],[["sausage","linguiça"],["hamburger","hambúrguer"],["steak","bife"],["seafood","frutos do mar"],["shrimp","camarão"]],[["cake","bolo"],["cookie","biscoito"],["ice cream","sorvete"],["chocolate","chocolate"],["candy","doce"]],[["coffee","café"],["tea","chá"],["juice","suco"],["soda","refrigerante"],["sparkling water","água com gás"]],[["still water","água sem gás"],["ice","gelo"],["cup","xícara/copo"],["glass","copo de vidro"],["straw","canudo"]],[["breakfast buffet","bufê de café da manhã"],["cereal","cereal"],["oatmeal","mingau de aveia"],["pancake","panqueca"],["waffle","waffle"]],[["toast","torrada"],["jam","geleia"],["yogurt","iogurte"],["cream","creme"],["sugar","açúcar"]],[["sweetener","adoçante"],["refill","reposição"],["decaf","descafeinado"],["regular coffee","café comum"],["hot chocolate","chocolate quente"]],[["hungry","com fome"],["thirsty","com sede"],["delicious","delicioso"],["spicy","apimentado"],["mild","suave"]],[["sweet","doce"],["salty","salgado"],["sour","azedo"],["bitter","amargo"],["fresh","fresco"]],[["cooked","cozido"],["raw","cru"],["grilled","grelhado"],["fried","frito"],["baked","assado"]],[["vegetarian","vegetariano"],["vegan","vegano"],["gluten-free","sem glúten"],["dairy-free","sem laticínios"],["allergy","alergia"]],[["ingredient","ingrediente"],["portion","porção"],["medium rare","ao ponto para mal"],["well done","bem passado"],["without","sem"]],[["shop","loja/comprar"],["price","preço"],["cost","custo"],["size","tamanho"],["color","cor"]],[["brand","marca"],["sale","promoção"],["discount","desconto"],["deal","oferta"],["cashier","caixa"]],[["checkout counter","caixa de pagamento"],["bag","sacola"],["box","caixa"],["gift","presente"],["return","devolução"]],[["exchange","troca"],["refund","reembolso"],["warranty","garantia"],["customer","cliente"],["stock","estoque"]],[["out of stock","sem estoque"],["fitting room","provador"],["try on","experimentar roupa"],["medium size","tamanho médio"],["large size","tamanho grande"]],[["money","dinheiro"],["cash","dinheiro vivo"],["credit card","cartão de crédito"],["debit card","cartão de débito"],["payment","pagamento"]],[["currency","moeda"],["dollar","dólar"],["cent","centavo"],["change money","troco"],["ATM","caixa eletrônico"]],[["withdrawal","saque"],["balance","saldo"],["bank fee","tarifa bancária"],["exchange rate","taxa de câmbio"],["PIN","senha numérica"]],[["contactless","pagamento por aproximação"],["chip","chip"],["tax","imposto"],["total","total"],["subtotal","subtotal"]],[["charge","cobrança"],["approved","aprovado"],["declined","recusado"],["budget","orçamento"],["expense","despesa"]],[["event","evento"],["conference","conferência"],["convention","convenção"],["registration","credenciamento"],["badge","crachá"]],[["attendee","participante"],["organizer","organizador"],["staff","equipe"],["volunteer","voluntário"],["venue","local do evento"]],[["registration desk","balcão de credenciamento"],["badge pickup","retirada do crachá"],["ticket holder","portador do ingresso"],["confirmation email","e-mail de confirmação"],["photo ID","documento com foto"]],[["wristband","pulseira"],["lanyard","cordão de crachá"],["access","acesso"],["entrance line","fila de entrada"],["queue","fila"]],[["opening","abertura"],["closing","encerramento"],["rules","regras"],["policy","política"],["code of conduct","código de conduta"]],[["agenda","agenda"],["program","programação"],["session","sessão"],["talk","palestra"],["workshop","oficina"]],[["training","treinamento"],["briefing","apresentação informativa"],["keynote","palestra principal"],["speaker","palestrante"],["panel","painel de discussão"]],[["track","trilha temática"],["room number","número da sala"],["conference room","sala de conferência"],["main hall","salão principal"],["business hall","salão de negócios"]],[["exhibit hall","pavilhão de exposição"],["stage","palco"],["audience","público"],["capacity","capacidade"],["reserved seat","assento reservado"]],[["standing room","espaço em pé"],["break","intervalo"],["lunch break","intervalo para almoço"],["time slot","faixa de horário"],["schedule change","mudança de horário"]],[["booth","estande"],["exhibitor","expositor"],["sponsor","patrocinador"],["vendor","fornecedor"],["demonstration","demonstração"]],[["display","mostruário"],["handout","material impresso"],["flyer","panfleto"],["giveaway","brinde"],["merchandise","produtos promocionais"]],[["networking","contatos profissionais"],["introduction","apresentação pessoal"],["contact","contato"],["business card","cartão de visita"],["company","empresa"]],[["team","equipe"],["colleague","colega"],["community","comunidade"],["group","grupo"],["conversation","conversa"]],[["connection request","pedido de conexão"],["follow-up","acompanhamento posterior"],["meeting","reunião"],["appointment","compromisso"],["opportunity","oportunidade"]],[["presentation","apresentação"],["slide","slide"],["microphone","microfone"],["projector","projetor"],["podium","púlpito"]],[["screening","exibição"],["recording","gravação"],["livestream","transmissão ao vivo"],["caption","legenda"],["translation service","serviço de tradução"]],[["note","anotação"],["notebook","caderno"],["pen","caneta"],["hand","mão"],["applause","aplausos"]],[["discussion","discussão"],["comment","comentário"],["feedback","retorno"],["example","exemplo"],["topic","tópico"]],[["summary","resumo"],["detail","detalhe"],["explanation","explicação"],["beginner","iniciante"],["advanced","avançado"]],[["office","escritório"],["job","trabalho/emprego"],["career","carreira"],["project","projeto"],["task","tarefa"]],[["deadline","prazo"],["client","cliente"],["partner","parceiro"],["leader","líder"],["member","membro"]],[["department","departamento"],["industry","setor"],["market sector","segmento de mercado"],["product","produto"],["solution","solução"]],[["plan","plano"],["goal","objetivo"],["result","resultado"],["report","relatório"],["contract","contrato"]],[["proposal","proposta"],["decision","decisão"],["agreement","acordo"],["experience","experiência"],["skill","habilidade"]],[["cellphone","celular"],["smartphone","smartphone"],["battery","bateria"],["signal","sinal"],["network","rede"]],[["internet","internet"],["website","site"],["app","aplicativo"],["account","conta"],["username","nome de usuário"]],[["login","entrada na conta"],["logout","saída da conta"],["download","baixar"],["upload","enviar arquivo"],["message","mensagem"]],[["text","mensagem de texto"],["notification","notificação"],["setting","configuração"],["language setting","configuração de idioma"],["airplane mode","modo avião"]],[["roaming","roaming"],["data plan","plano de dados"],["hotspot","ponto de acesso"],["QR code","código QR"],["power bank","bateria portátil"]],[["careful","cuidadoso"],["danger","perigo"],["warning","aviso"],["closed area","área fechada"],["restricted","restrito"]],[["authorized","autorizado"],["guard","segurança/vigia"],["camera surveillance","vigilância por câmera"],["lost item","objeto perdido"],["theft","furto"]],[["stolen","roubado"],["wallet","carteira"],["purse","bolsa"],["lock","cadeado/fechadura"],["emergency","emergência"]],[["alarm","alarme"],["fire exit","saída de incêndio"],["assembly point","ponto de encontro de emergência"],["police","polícia"],["report incident","relatar ocorrência"]],[["identity","identidade"],["copy","cópia"],["original","original"],["contact person","pessoa de contato"],["safe route","rota segura"]],[["doctor","médico"],["nurse","enfermeiro"],["clinic","clínica"],["medicine","remédio"],["prescription","receita médica"]],[["pain","dor"],["fever","febre"],["headache","dor de cabeça"],["stomachache","dor de estômago"],["cough","tosse"]],[["cold illness","resfriado"],["sore throat","dor de garganta"],["dizzy","tonto"],["tired","cansado"],["sick","doente"]],[["injury","ferimento"],["bandage","curativo"],["first aid","primeiros socorros"],["allergic","alérgico"],["insurance card","cartão do seguro"]],[["appointment time","horário da consulta"],["urgent care","atendimento de urgência"],["emergency room","pronto-socorro"],["ambulance","ambulância"],["recovery","recuperação"]],[["shirt","camisa"],["T-shirt","camiseta"],["pants","calça"],["jeans","calça jeans"],["shorts","bermuda"]],[["dress","vestido"],["skirt","saia"],["coat","casaco"],["sweater","suéter"],["shoes","sapatos"]],[["sneakers","tênis"],["socks","meias"],["underwear","roupa íntima"],["hat","chapéu"],["cap","boné"]],[["belt","cinto"],["glasses","óculos"],["sunglasses","óculos de sol"],["watch item","relógio"],["toothbrush","escova de dentes"]],[["toothpaste","creme dental"],["deodorant","desodorante"],["comb","pente"],["razor","barbeador"],["personal care","cuidados pessoais"]],[["friend","amigo"],["family","família"],["country","país"],["Brazil","Brasil"],["United States","Estados Unidos"]],[["travel","viajar/viagem"],["visit","visitar"],["stay","ficar/hospedar-se"],["enjoy","aproveitar/gostar"],["meet","conhecer/encontrar"]],[["nice to meet you","prazer em conhecer"],["where are you from","de onde você é"],["first time","primeira vez"],["business trip","viagem de negócios"],["vacation","férias"]],[["weekend","fim de semana"],["hobby","passatempo"],["food preference","preferência alimentar"],["favorite","favorito"],["interesting","interessante"]],[["great","ótimo"],["wonderful","maravilhoso"],["really","realmente"],["probably","provavelmente"],["of course","claro"]],[["happy","feliz"],["sad","triste"],["excited","animado"],["nervous","nervoso"],["worried","preocupado"]],[["relaxed","relaxado"],["surprised","surpreso"],["confused","confuso"],["interested","interessado"],["bored","entediado"]],[["agree","concordar"],["disagree","discordar"],["prefer","preferir"],["opinion","opinião"],["idea","ideia"]],[["reason","motivo"],["choice","escolha"],["problem","problema"],["solution idea","ideia de solução"],["luck","sorte"]],[["hope","esperança"],["trust","confiança"],["respect","respeito"],["patience","paciência"],["confidence","confiança em si"]],[["pack","arrumar a mala"],["unpack","desfazer a mala"],["book","reservar"],["confirm","confirmar"],["cancel","cancelar"]],[["reschedule","remarcar"],["board","embarcar"],["land","pousar"],["depart","partir"],["arrive","chegar"]],[["connect","fazer conexão"],["transfer buses","trocar de transporte"],["rent","alugar"],["drive","dirigir"],["pull over","encostar o carro"]],[["cross","atravessar"],["follow","seguir"],["turn","virar"],["enter","entrar"],["return home","voltar para casa"]],[["explore","explorar"],["reserve","reservar"],["print","imprimir"],["scan","escanear"],["sign","assinar"]],[["always","sempre"],["usually","geralmente"],["often","frequentemente"],["sometimes","às vezes"],["rarely","raramente"]],[["never","nunca"],["before","antes"],["after","depois"],["during","durante"],["until","até"]],[["since","desde/pois"],["because","porque"],["but","mas"],["and","e"],["or","ou"]],[["if","se"],["then","então"],["also","também"],["only","somente"],["almost","quase"]],[["already","já"],["still","ainda"],["very","muito"],["quite","bastante"],["especially","especialmente"]]];
+const $=id=>document.getElementById(id);
+let voices=[],americanVoice=null,deck=[],roundIndex=0,totalRounds=50,level="normal",score=0,streak=0,matched=0,selected=null,current=[];
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
+function loadVoices(){voices=speechSynthesis.getVoices();americanVoice=voices.find(v=>v.lang.toLowerCase()==="en-us")||voices.find(v=>v.lang.toLowerCase().startsWith("en"));$("warn").style.display=americanVoice?"none":"block"}
+if("speechSynthesis" in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+
+function speak(text,slow=false){
+ if(!("speechSynthesis" in window))return;
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(text);
+ u.lang="en-US";
+ u.rate=slow?0.62:(level==="hard"?0.95:0.82);
+ u.pitch=1;
+ if(americanVoice)u.voice=americanVoice;
+ speechSynthesis.speak(u);
+}
+
+function startGame(){
+ level=$("level").value;
+ totalRounds=Number($("rounds").value);
+ deck=shuffle(STEPS.slice()).slice(0,totalRounds);
+ roundIndex=0;score=0;streak=0;
+ $("setup").classList.add("hidden");
+ $("game").classList.remove("hidden");
+ renderRound();
+}
+
+function renderRound(){
+ current=deck[roundIndex].map((x,i)=>({id:roundIndex+"-"+i,word:x[0],pt:x[1]}));
+ matched=0;selected=null;
+ $("score").textContent=score;
+ $("streak").textContent=streak;
+ $("prog").textContent=(roundIndex+1)+"/"+totalRounds;
+ $("bar").style.width=(roundIndex/totalRounds*100)+"%";
+ $("tip").textContent="A tradução aparece depois do acerto.";
+ $("feedback").className="feedback hidden";
+ $("next").classList.add("hidden");
+ $("audios").innerHTML="";
+ $("words").innerHTML="";
+
+ shuffle(current.slice()).forEach((item,n)=>{
+  const b=document.createElement("button");
+  b.className="audioBtn";
+  b.dataset.id=item.id;
+  b.textContent="🔊 Áudio "+(n+1);
+  b.onclick=()=>selectAudio(item,b);
+  $("audios").appendChild(b);
+ });
+
+ shuffle(current.slice()).forEach(item=>{
+  const b=document.createElement("button");
+  b.className="wordBtn";
+  b.dataset.id=item.id;
+  b.innerHTML=esc(item.word)+(level==="easy"?'<small>'+esc(item.pt)+'</small>':"");
+  b.onclick=()=>selectWord(item,b);
+  $("words").appendChild(b);
+ });
+}
+
+function selectAudio(item,b){
+ if(b.classList.contains("matched"))return;
+ document.querySelectorAll(".audioBtn").forEach(x=>x.classList.remove("selected"));
+ selected=item;
+ b.classList.add("selected");
+ speak(item.word);
+}
+
+function selectWord(item,b){
+ if(!selected||b.classList.contains("matched"))return;
+ const audioButton=document.querySelector('.audioBtn[data-id="'+selected.id+'"]');
+
+ if(item.id===selected.id){
+  matched++;
+  score+=100+streak*5;
+  streak++;
+  b.className="wordBtn matched";
+  b.innerHTML=esc(item.word)+'<small>'+esc(item.pt)+'</small>';
+  audioButton.className="audioBtn matched";
+  audioButton.textContent="✅ "+item.word;
+  show(item.word+" = "+item.pt,true);
+  speak(item.word,true);
+  selected=null;
+  $("score").textContent=score;
+  $("streak").textContent=streak;
+
+  if(matched===5){
+   $("bar").style.width=((roundIndex+1)/totalRounds*100)+"%";
+   $("tip").textContent="Etapa concluída: 5 de 5.";
+   $("next").classList.remove("hidden");
+  }
+ }else{
+  streak=0;
+  score=Math.max(0,score-20);
+  $("score").textContent=score;
+  $("streak").textContent=streak;
+  b.classList.add("wrong");
+  setTimeout(()=>b.classList.remove("wrong"),300);
+  show("Não corresponde ao áudio. Tente outra palavra.",false);
+ }
+}
+
+function show(text,ok){
+ const f=$("feedback");
+ f.textContent=text;
+ f.className="feedback "+(ok?"ok":"bad");
+}
+
+$("replay").onclick=()=>selected?speak(selected.word,true):show("Selecione um áudio primeiro.",false);
+$("next").onclick=()=>{
+ roundIndex++;
+ if(roundIndex>=totalRounds){
+  $("game").classList.add("hidden");
+  $("end").classList.remove("hidden");
+  $("result").textContent="Você concluiu "+totalRounds+" etapas e marcou "+score+" pontos.";
+  return;
+ }
+ renderRound();
+};
+$("start").onclick=startGame;
+</script>
+</body>
+</html>
