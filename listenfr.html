@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0055a4">
+<title>HL Français — Alphabet & Listening</title>
+<style>
+:root{--blue:#0055a4;--red:#ef4135;--ink:#172033;--muted:#667085;--line:#e5e7eb;--soft:#eef6ff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;min-height:100dvh;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:linear-gradient(145deg,#0055a4,#7c3aed);padding:max(10px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+.app{width:min(940px,100%);margin:auto;background:#fff;border-radius:28px;padding:clamp(13px,3vw,25px);box-shadow:0 20px 48px rgba(15,23,42,.25)}
+h1{margin:0;text-align:center;color:var(--blue);font-size:clamp(29px,7vw,49px);line-height:1.04}
+.sub{text-align:center;color:var(--muted);margin:8px 0 15px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px}
+.tab{border:2px solid var(--line);border-radius:15px;padding:11px 6px;background:#fff;font:inherit;font-weight:900;cursor:pointer}
+.tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.panel{display:none}.panel.active{display:block}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:13px;justify-content:center}
+.btn{border:0;border-radius:14px;padding:11px 14px;font:inherit;font-weight:900;cursor:pointer}
+.primary{background:var(--blue);color:#fff}.secondary{background:#e5e7eb;color:#111827}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px}
+.card{border:2px solid var(--line);border-radius:16px;padding:12px;background:#fff;text-align:center}
+.letter{font-size:31px;font-weight:950;color:var(--blue)}
+.sound{font-weight:850;margin:4px 0}.example{font-size:13px;color:var(--muted)}
+.speak{margin-top:8px;width:100%;border:0;border-radius:11px;padding:8px;background:var(--soft);color:var(--blue);font-weight:900;cursor:pointer}
+.patterns{display:grid;gap:9px}.pattern{border:1px solid var(--line);border-radius:15px;padding:12px;background:#fff}
+.pattern strong{color:var(--blue)}.pattern span{display:block;color:var(--muted);margin-top:3px}
+.setup{text-align:center;padding:8px 0}.setupGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0}
+label{display:block;text-align:left;font-weight:850;margin-bottom:5px}
+select{width:100%;padding:12px;border:2px solid var(--line);border-radius:14px;background:#fff;font:inherit;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
+.stat{border:1px solid var(--line);border-radius:14px;background:#f3f4f6;padding:8px;text-align:center;font-weight:900}
+.progress{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-bottom:11px}.bar{height:100%;width:0;background:var(--blue);transition:.2s}
+.board{display:grid;grid-template-columns:1fr 1fr;gap:8px}.col h2{font-size:16px;text-align:center;color:var(--blue);margin:0 0 7px}
+.items{display:grid;gap:8px}
+.audioBtn,.wordBtn{width:100%;min-height:59px;border:2px solid var(--line);border-radius:15px;background:#fff;padding:8px;font:inherit;font-weight:850;cursor:pointer}
+.audioBtn{background:#f8fafc;font-size:17px}.wordBtn{font-size:clamp(14px,3.7vw,19px)}
+.wordBtn small{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.selected{border-color:var(--blue)!important;background:var(--soft)!important;box-shadow:0 0 0 3px rgba(0,85,164,.12)}
+.matched{border-color:#86efac!important;background:#dcfce7!important;color:#166534!important}
+.wrong{border-color:#fca5a5!important;background:#fee2e2!important}
+.feedback{margin-top:10px;border-radius:14px;padding:10px;text-align:center;font-weight:850}
+.feedback.ok{background:#dcfce7;color:#166534}.feedback.bad{background:#fee2e2;color:#991b1b}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.hidden{display:none!important}.note{font-size:13px;color:var(--muted);line-height:1.4;margin-top:10px}
+.warn{display:none;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;border-radius:13px;padding:9px;margin-top:9px;font-size:13px}
+@media(max-width:560px){.app{padding:11px;border-radius:20px}.tabs{gap:5px}.tab{font-size:13px;padding:9px 4px}.board{gap:5px}.audioBtn,.wordBtn{min-height:56px;padding:7px}}
+</style>
+</head>
+<body>
+<main class="app">
+<h1>🇫🇷 HL Français</h1>
+<p class="sub">Alfabeto, sons e escuta de palavras francesas.</p>
+
+<div class="tabs">
+<button class="tab active" data-tab="alphabet">🔤 Alfabeto</button>
+<button class="tab" data-tab="sounds">🗣️ Sons</button>
+<button class="tab" data-tab="game">🎧 Jogo</button>
+</div>
+
+<section id="alphabet" class="panel active">
+<div class="toolbar"><button id="playAlphabet" class="btn primary">▶ Ouvir alfabeto</button><button id="stopAudio1" class="btn secondary">■ Parar</button></div>
+<div id="alphabetGrid" class="grid"></div>
+</section>
+
+<section id="sounds" class="panel">
+<div class="toolbar"><button id="playPatterns" class="btn primary">▶ Ouvir exemplos</button><button id="stopAudio2" class="btn secondary">■ Parar</button></div>
+<div id="patternsList" class="patterns"></div>
+</section>
+
+<section id="game" class="panel">
+<div id="setup" class="setup">
+<h2>Listen Français</h2><p>Em cada etapa, conecte 5 áudios a 5 palavras francesas.</p>
+<div class="setupGrid">
+<div><label for="rounds">Etapas</label><select id="rounds"><option value="10">10</option><option value="20">20</option><option value="30" selected>Todas (30)</option></select></div>
+<div><label for="level">Nível</label><select id="level"><option value="easy">Fácil</option><option value="normal" selected>Normal</option><option value="hard">Difícil</option></select></div>
+</div>
+<button id="start" class="btn primary" style="width:100%">Começar ▶</button>
+<div id="warn" class="warn">A voz francesa não foi encontrada. O navegador tentará usar a voz mais próxima.</div>
+<p class="note">150 palavras francesas, organizadas em 30 etapas de 5 palavras. O áudio usa a voz francesa instalada no navegador.</p>
+</div>
+
+<div id="playArea" class="hidden">
+<div class="stats"><div class="stat">⭐ <span id="score">0</span></div><div class="stat">🔥 <span id="streak">0</span></div><div class="stat">📘 <span id="prog">1/30</span></div></div>
+<div class="progress"><div id="bar" class="bar"></div></div>
+<div class="board">
+<section class="col"><h2>🔊 Áudios</h2><div id="audios" class="items"></div></section>
+<section class="col"><h2>✍️ Palavras</h2><div id="words" class="items"></div></section>
+</div>
+<div id="feedback" class="feedback hidden"></div>
+<div class="actions"><button id="replay" class="btn secondary">🔁 Repetir</button><button id="next" class="btn primary hidden">Próxima etapa ➜</button></div>
+</div>
+
+<div id="end" class="setup hidden"><h2>🏆 Fim do treino</h2><p id="result"></p><button class="btn primary" onclick="location.reload()">Recomeçar</button></div>
+</section>
+</main>
+
+<script>
+"use strict";
+const STEPS=[[["ami","amigo","a-mi","A"],["année","ano","a-nê","ÉE"],["arbre","árvore","ar-br","R"],["avion","avião","a-vi-on","ON"],["avec","com","a-vék","C final"]],[["bébé","bebê","bê-bê","É"],["beau","bonito","bô","EAU"],["beurre","manteiga","bêr","EU"],["bonjour","bom dia","bon-jur","ON"],["bouche","boca","buch","OU"]],[["café","café","ka-fê","É"],["cœur","coração","kêr","ŒU"],["chaise","cadeira","chéz","CH"],["chat","gato","chá","CH"],["citron","limão","si-tron","ON"]],[["danser","dançar","dan-sê","AN"],["deux","dois","dê","EU"],["dimanche","domingo","di-manch","CH"],["dormir","dormir","dor-mir","R"],["douce","doce","dus","OU"]],[["école","escola","ê-kól","É"],["écouter","escutar","ê-ku-tê","OU"],["écrire","escrever","ê-krir","R"],["enfant","criança","an-fan","AN"],["été","verão","ê-tê","É"]],[["famille","família","fa-mí-i","ILLE"],["femme","mulher","fam","E"],["fenêtre","janela","fê-nétr","Ê"],["fille","menina","fi-i","ILLE"],["français","francês","fran-sê","Ç"]],[["garçon","menino","gar-son","Ç"],["gare","estação","gar","G"],["gâteau","bolo","ga-tô","EAU"],["gauche","esquerda","gôch","AU/CH"],["grand","grande","gran","AN"]],[["heure","hora","êr","EU"],["histoire","história","is-tuár","H mudo"],["hiver","inverno","i-vér","H mudo"],["homme","homem","óm","H mudo"],["hôtel","hotel","ô-tél","H mudo"]],[["ici","aqui","i-si","C"],["idée","ideia","i-dê","ÉE"],["important","importante","an-por-tan","AN"],["inviter","convidar","an-vi-tê","IN"],["île","ilha","il","Î"]],[["jamais","nunca","ja-mê","J"],["jardin","jardim","jar-dan","IN"],["jaune","amarelo","jôn","AU"],["jeudi","quinta-feira","jê-di","EU"],["jour","dia","jur","OU"]],[["kilomètre","quilômetro","ki-lo-métr","K"],["kiwi","kiwi","ki-wi","K"],["kiosque","quiosque","ki-ósk","QU"],["klaxon","buzina","klak-son","X"],["kayak","caiaque","ka-i-ak","K"]],[["lait","leite","lé","AI"],["langue","língua","lang","AN"],["livre","livro","livr","R"],["lumière","luz","lu-mi-ér","U"],["lundi","segunda-feira","lan-di","UN"]],[["maison","casa","mê-zon","AI/ON"],["manger","comer","man-jê","AN/G"],["mère","mãe","mér","È"],["mieux","melhor","mi-ê","IEU"],["musique","música","mu-zik","U"]],[["nature","natureza","na-tur","U"],["neige","neve","néj","EI"],["neuf","nove","nêf","EU"],["nez","nariz","nê","Z final"],["nuit","noite","nü-i","UI"]],[["œil","olho","êi","ŒIL"],["oiseau","pássaro","ua-zô","OI/EAU"],["oncle","tio","on-kl","ON"],["orange","laranja","o-ranj","AN"],["oublier","esquecer","u-bli-ê","OU"]],[["pain","pão","pan","AIN"],["père","pai","pér","È"],["petit","pequeno","pê-ti","T final"],["pluie","chuva","plü-i","UI"],["poisson","peixe","pua-son","OI/ON"]],[["quand","quando","kan","QU/AN"],["quatre","quatro","katr","QU"],["quelque","algum","kél-k","QU"],["question","pergunta","kés-tion","TION"],["quinze","quinze","kanz","QU/IN"]],[["radio","rádio","ra-di-ô","R"],["regarder","olhar","rê-gar-dê","R"],["reine","rainha","rén","EI"],["restaurant","restaurante","rés-to-ran","AN"],["rouge","vermelho","ruj","OU"]],[["samedi","sábado","sam-di","E mudo"],["sans","sem","san","AN"],["sœur","irmã","sêr","ŒU"],["soleil","sol","so-lêi","EIL"],["stylo","caneta","sti-lô","Y"]],[["table","mesa","tabl","E mudo"],["temps","tempo","tan","EM"],["tête","cabeça","tét","Ê"],["toujours","sempre","tu-jur","OU"],["train","trem","tran","AIN"]],[["unique","único","ü-nik","U"],["univers","universo","ü-ni-vér","U"],["utile","útil","ü-til","U"],["usine","fábrica","ü-zin","U"],["urgent","urgente","ür-jan","U"]],[["vacances","férias","va-kans","AN"],["vélo","bicicleta","vê-lô","É"],["venir","vir","vê-nir","R"],["vert","verde","vér","T final"],["ville","cidade","vil","ILLE"]],[["wagon","vagão","va-gon","W"],["week-end","fim de semana","uik-end","W"],["web","internet","uéb","W"],["whisky","uísque","uis-ki","W"],["wifi","wi-fi","ui-fi","W"]],[["xylophone","xilofone","gzi-lo-fón","X"],["taxi","táxi","tak-si","X"],["exemple","exemplo","ég-zan-pl","X"],["exact","exato","ég-zakt","X"],["texte","texto","tékst","X"]],[["yaourt","iogurte","ia-ur","Y"],["yeux","olhos","iê","YEU"],["yoga","ioga","io-ga","Y"],["y","lá/aí","i","Y"],["yacht","iate","iót","Y"]],[["zéro","zero","zê-rô","Z"],["zoo","zoológico","zô","Z"],["zone","zona","zon","Z"],["zèbre","zebra","zé-br","Z"],["zigzag","zigue-zague","zig-zag","Z"]],[["blanc","branco","blan","AN"],["bon","bom","bon","ON"],["brun","marrom","bran","UN"],["matin","manhã","ma-tan","IN"],["important","importante","an-por-tan","AN"]],[["chanson","canção","chan-son","CH/ON"],["champagne","champanhe","chan-pa-nh","GN"],["montagne","montanha","mon-ta-nh","GN"],["feuille","folha","fê-i","EUIL"],["travail","trabalho","tra-vai","AIL"]],[["tu","você","tü","U"],["tout","tudo","tu","OU"],["peu","pouco","pê","EU"],["peur","medo","pêr","EUR"],["porte","porta","port","O"]],[["petits","pequenos","pê-ti","S final mudo"],["vous avez","vocês têm","vu-za-vê","liaison"],["les amis","os amigos","lê-za-mi","liaison"],["grand homme","grande homem","gran-tóm","liaison"],["beaucoup","muito","bô-ku","P final mudo"]]];
+const ALPHABET=[["A","a","avion"],["B","bé","bébé"],["C","cé","café"],["D","dé","danser"],["E","e","école"],["F","effe","famille"],["G","gé","garçon"],["H","ache","hôtel"],["I","i","idée"],["J","ji","jour"],["K","ka","kiwi"],["L","elle","livre"],["M","emme","maison"],["N","enne","nature"],["O","o","oiseau"],["P","pé","pain"],["Q","ku","question"],["R","erre","rouge"],["S","esse","soleil"],["T","té","table"],["U","u","unique"],["V","vé","vélo"],["W","double vé","wagon"],["X","ix","xylophone"],["Y","i grec","yaourt"],["Z","zède","zéro"]];
+const PATTERNS=[["É / ER / EZ","som de ê","été, parler, nez"],["È / Ê / AI","som aberto próximo de é","mère, tête, lait"],["OU","som de u português","rouge, bouche"],["U","som arredondado sem equivalente exato","tu, musique"],["EU / ŒU","som entre ê e ô","deux, sœur"],["OI","som aproximado de ua","oiseau, poisson"],["EAU / AU","som de ô","beau, jaune"],["AN / EN","vogal nasal","enfant, blanc"],["ON","vogal nasal","bonjour, maison"],["IN / AIN","vogal nasal","jardin, pain"],["UN","vogal nasal arredondada","lundi, brun"],["CH","som de ch","chat, chanson"],["J / G + E,I","som de j","jour, manger"],["GN","som de nh","montagne"],["ILL / IL","pode soar como i/ilh","famille, travail"],["R","r francês produzido na garganta","rouge, restaurant"],["H","normalmente mudo","hôtel, histoire"],["Ç","som de s","garçon, français"],["PH","som de f","photo, téléphone"],["QU","som de k","quatre, question"],["S entre vogais","frequentemente som de z","maison"],["Consoante final","muitas vezes muda","petit, beaucoup"],["Liaison","consoante final liga à vogal seguinte","vous avez"]];
+const $=id=>document.getElementById(id);
+let voices=[],frenchVoice=null,level="normal",deck=[],roundIndex=0,totalRounds=30,score=0,streak=0,matched=0,selected=null,current=[];
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
+function loadVoices(){voices=speechSynthesis.getVoices();frenchVoice=voices.find(v=>v.lang.toLowerCase()==="fr-fr")||voices.find(v=>v.lang.toLowerCase().startsWith("fr"));$("warn").style.display=frenchVoice?"none":"block"}
+if("speechSynthesis" in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices}
+
+function speak(text,slow=false){
+ if(!("speechSynthesis" in window))return;
+ speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="fr-FR";u.rate=slow?0.62:0.82;u.pitch=1;if(frenchVoice)u.voice=frenchVoice;speechSynthesis.speak(u)
+}
+function speakSequence(list,index=0){
+ if(index>=list.length)return;
+ const u=new SpeechSynthesisUtterance(list[index]);u.lang="fr-FR";u.rate=.72;if(frenchVoice)u.voice=frenchVoice;
+ u.onend=()=>setTimeout(()=>speakSequence(list,index+1),180);speechSynthesis.speak(u)
+}
+function renderAlphabet(){
+ const box=$("alphabetGrid");box.innerHTML="";
+ ALPHABET.forEach(([letter,name,example])=>{const c=document.createElement("div");c.className="card";c.innerHTML='<div class="letter">'+esc(letter)+'</div><div class="sound">'+esc(name)+'</div><div class="example">'+esc(example)+'</div><button class="speak">🔊 Ouvir</button>';c.querySelector("button").onclick=()=>speak(name+" comme "+example,true);box.appendChild(c)})
+}
+function renderPatterns(){
+ const box=$("patternsList");box.innerHTML="";
+ PATTERNS.forEach(([pat,desc,examples])=>{const d=document.createElement("div");d.className="pattern";d.innerHTML='<strong>'+esc(pat)+'</strong><span>'+esc(desc)+'</span><span>Exemplos: '+esc(examples)+'</span><button class="speak">🔊 Ouvir exemplos</button>';d.querySelector("button").onclick=()=>speak(examples.replace(/,/g,", "),true);box.appendChild(d)})
+}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(b.dataset.tab).classList.add("active")});
+$("playAlphabet").onclick=()=>{speechSynthesis.cancel();speakSequence(ALPHABET.map(x=>x[1]))};
+$("playPatterns").onclick=()=>{speechSynthesis.cancel();speakSequence(PATTERNS.map(x=>x[2].split(",")[0].trim()))};
+$("stopAudio1").onclick=$("stopAudio2").onclick=()=>speechSynthesis.cancel();
+
+function startGame(){
+ level=$("level").value;totalRounds=Number($("rounds").value);deck=shuffle(STEPS.slice()).slice(0,totalRounds);roundIndex=0;score=0;streak=0;
+ $("setup").classList.add("hidden");$("playArea").classList.remove("hidden");renderRound()
+}
+function renderRound(){
+ current=deck[roundIndex].map((x,i)=>({id:roundIndex+"-"+i,word:x[0],pt:x[1],hint:x[2],pattern:x[3]}));
+ matched=0;selected=null;$("score").textContent=score;$("streak").textContent=streak;$("prog").textContent=(roundIndex+1)+"/"+totalRounds;
+ $("bar").style.width=(roundIndex/totalRounds*100)+"%";$("feedback").className="feedback hidden";$("next").classList.add("hidden");$("audios").innerHTML="";$("words").innerHTML="";
+ shuffle(current.slice()).forEach((item,n)=>{const b=document.createElement("button");b.className="audioBtn";b.dataset.id=item.id;b.textContent="🔊 Áudio "+(n+1);b.onclick=()=>selectAudio(item,b);$("audios").appendChild(b)});
+ shuffle(current.slice()).forEach(item=>{const b=document.createElement("button");b.className="wordBtn";b.dataset.id=item.id;b.innerHTML=esc(item.word)+(level==="easy"?'<small>'+esc(item.pt)+'</small>':"");b.onclick=()=>selectWord(item,b);$("words").appendChild(b)})
+}
+function selectAudio(item,b){
+ if(b.classList.contains("matched"))return;document.querySelectorAll(".audioBtn").forEach(x=>x.classList.remove("selected"));selected=item;b.classList.add("selected");speak(item.word)
+}
+function selectWord(item,b){
+ if(!selected||b.classList.contains("matched"))return;const ab=document.querySelector('.audioBtn[data-id="'+selected.id+'"]');
+ if(item.id===selected.id){
+   matched++;score+=100+streak*5;streak++;b.className="wordBtn matched";b.innerHTML=esc(item.word)+'<small>'+esc(item.pt)+' • '+esc(item.pattern)+'</small>';
+   ab.className="audioBtn matched";ab.textContent="✅ "+item.word;show(item.word+" = "+item.pt,true);speak(item.word,true);selected=null;$("score").textContent=score;$("streak").textContent=streak;
+   if(matched===5){$("bar").style.width=((roundIndex+1)/totalRounds*100)+"%";$("next").classList.remove("hidden")}
+ }else{
+   streak=0;score=Math.max(0,score-20);$("score").textContent=score;$("streak").textContent=streak;b.classList.add("wrong");setTimeout(()=>b.classList.remove("wrong"),300);show("Não corresponde ao áudio. Tente outra palavra.",false)
+ }
+}
+function show(text,ok){const f=$("feedback");f.textContent=text;f.className="feedback "+(ok?"ok":"bad")}
+$("replay").onclick=()=>selected?speak(selected.word,true):show("Selecione um áudio primeiro.",false);
+$("next").onclick=()=>{roundIndex++;if(roundIndex>=totalRounds){$("playArea").classList.add("hidden");$("end").classList.remove("hidden");$("result").textContent="Você concluiu "+totalRounds+" etapas e marcou "+score+" pontos.";return}renderRound()};
+$("start").onclick=startGame;
+renderAlphabet();renderPatterns();
+</script>
+</body>
+</html>
