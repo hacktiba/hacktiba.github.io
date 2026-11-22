@@ -111,3 +111,6 @@ body.feed-mode .global-feed{margin:4px 0 0}
 .global-feed-status{font-size:11px;line-height:1.5}
 @media(max-width:600px){.global-feed-item{flex-direction:column}.feed-security-badge{align-self:flex-start}.global-feed{padding:10px}}
 .feed-refresh-icon{display:inline-flex;align-items:center;justify-content:center;min-width:42px;min-height:42px;padding:8px!important;flex:0 0 auto}.feed-refresh-icon svg{display:block}.feed-refresh-icon:disabled{opacity:.5;cursor:wait}
+
+/* Assinatura institucional Hacktiba Labs */
+.app-top h1 .brand-by{display:block;margin-top:4px;font-size:11px;font-weight:650;letter-spacing:.02em;color:#526b7d;line-height:1.3}

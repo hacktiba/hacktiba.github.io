@@ -7,8 +7,14 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
-  const API = String(window.HACKTIBA_API_BASE || '').replace(/\/+$/, '');
-  const configured = /^https:\/\/[^/]+\.workers\.dev$/i.test(API) && !API.includes('SEU-WORKER');
+  const appConfig = window.HACKTIBA_CONFIG || {};
+  const API = String(appConfig.apiBase || '').replace(/\/+$/, '');
+  const siteKey = String(appConfig.turnstileSiteKey || '');
+  const configured = /^https:\/\/[^/]+\.workers\.dev$/i.test(API) && !API.includes('CONFIGURAR')
+    && /^[a-zA-Z0-9_-]{8,100}$/.test(siteKey) && !siteKey.includes('CONFIGURAR');
+  let session = '';
+  let acquiringSession = false;
+  let widgetId = null;
   const mode = () => document.querySelector('input[name="mode"]:checked')?.value || 'feed';
   let selected = null, timer = null, revision = 0;
   let searchController = null, lastFeedData = null, lastFeedAt = 0;
@@ -26,8 +32,57 @@
     $('results').hidden = false;
     $('results').scrollIntoView({behavior: 'smooth', block: 'nearest'});
   }
+  function showAccess(reason) {
+    session = '';
+    $('accessPanel').hidden = false;
+    $('accessStatus').textContent = reason || 'Resolva a validação para pesquisar.';
+    $('retryAccess').hidden = false;
+    if (widgetId !== null && window.turnstile) {
+      try {window.turnstile.reset(widgetId);} catch (_) {}
+    }
+    update();
+  }
+  window.hacktibaTurnstileReady = () => {
+    if (!configured) {
+      $('accessStatus').textContent = 'Site ainda não configurado. Verifique config.js e a Cloudflare.';
+      return;
+    }
+    if (!window.turnstile) return;
+    widgetId = window.turnstile.render('#turnstileWidget', {
+      sitekey: siteKey,
+      action: 'hacktiba_access',
+      callback: async token => {
+        if (acquiringSession) return;
+        acquiringSession = true;
+        $('accessStatus').textContent = 'Validando acesso...';
+        try {
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), 12000);
+          let resp;
+          try {
+            resp = await fetch(API + '/api/session', {
+              method:'POST', headers:{'Content-Type':'application/json'},
+              body: JSON.stringify({token}), credentials:'omit', referrerPolicy:'no-referrer', signal:ctrl.signal
+            });
+          } finally {clearTimeout(timer);}
+          const data = await resp.json().catch(() => ({}));
+          if (!resp.ok || typeof data.session !== 'string') throw new Error(data.error || 'Não foi possível liberar a pesquisa.');
+          session = data.session; // somente memória, nunca cookie ou localStorage
+          $('accessPanel').hidden = true;
+          $('retryAccess').hidden = true;
+          update();
+          if (mode() === 'feed') loadFeed();
+        } catch (error) {
+          showAccess(error.name === 'AbortError' ? 'Verificação demorou demais. Tente novamente.' : error.message);
+        } finally {acquiringSession = false;}
+      },
+      'expired-callback': () => {if (!session) $('accessStatus').textContent = 'Validação expirada. Tente novamente.';},
+      'error-callback': () => {if (!session) $('accessStatus').textContent = 'Erro ao carregar a verificação. Recarregue a página.';}
+    });
+  };
   async function request(path, params = {}, externalSignal = null) {
-    if (!configured) throw new Error('Backend não configurado: edite config.js e coloque o endereço do seu Cloudflare Worker.');
+    if (!configured) throw new Error('Backend ainda não configurado. Verifique config.js.');
+    if (!session) throw new Error('Valide seu acesso antes de pesquisar.');
     const url = new URL(API + '/api/' + path);
     for (const [key, value] of Object.entries(params)) {
       if (value !== undefined && value !== null) url.searchParams.set(key, String(value));
@@ -38,15 +93,17 @@
     if (externalSignal?.aborted) ctrl.abort();
     const timeout = setTimeout(() => ctrl.abort(), 27000);
     try {
-      const res = await fetch(url, {signal: ctrl.signal, credentials: 'omit', referrerPolicy: 'no-referrer'});
+      const res = await fetch(url, {signal: ctrl.signal, credentials: 'omit',
+        referrerPolicy: 'no-referrer', headers: {'Authorization':`Bearer ${session}`}});
       const data = await res.json().catch(() => ({}));
+      if (res.status === 401) {showAccess('A sessão expirou. Confirme seu acesso novamente.'); throw new Error('Sessão expirada.');}
       if (!res.ok) throw new Error(data.error || `Erro de consulta (${res.status}).`);
       return data;
     } catch (err) {
       if (err.name === 'AbortError') throw new Error('A consulta demorou demais. Tente novamente.');
-      if (err instanceof TypeError) throw new Error('Não foi possível conectar ao backend. Confira o endereço, a origem autorizada e a rede.');
+      if (err instanceof TypeError) throw new Error('Não foi possível conectar ao backend. Verifique a rede.');
       throw err;
-    } finally { clearTimeout(timeout); externalSignal?.removeEventListener('abort', abortFromCaller); }
+    } finally {clearTimeout(timeout); externalSignal?.removeEventListener('abort', abortFromCaller);}
   }
   function reset() {
     revision++;
@@ -81,6 +138,7 @@
     $('stepTitle').textContent = m === 'context' ? 'Conhecer um plugin' : ioc ? 'Pesquisar indicador' : mal ? 'Pesquisar malware' : 'Pesquisar plugin e versão';
     $('pluginLabel').textContent = ioc ? 'Hash, IP, domínio, endereço web ou artefato' : mal ? 'Nome exato do pacote ou identificador MAL' : 'Buscar plugin no catálogo';
     $('plugin').placeholder = ioc ? 'Cole o indicador para pesquisar...' : mal ? 'Nome do pacote ou MAL-2025-...' : 'Comece a digitar: file manager, elementor...';
+    $('plugin').maxLength = ioc ? 250 : mal ? 90 : 64;
     $('lookupStatus').hidden = mal || ioc;
     $('selection').hidden = !(m === 'context' || m === 'cve') || !selected;
     $('pluginOverview').hidden = m !== 'context' || !selected;
@@ -88,7 +146,11 @@
     $('clearQuery').hidden = !$('plugin').value;
     $('analyze').hidden = m === 'context' || m === 'feed';
     $('analyze').textContent = ioc ? 'Pesquisar IOC' : mal ? 'Pesquisar malware' : 'Pesquisar vulnerabilidades';
-    $('analyze').disabled = !configured || (ioc ? !$('plugin').value.trim() : mal ? (!$('plugin').value.trim() || (!/^MAL-\d{4}-\d+$/i.test($('plugin').value.trim()) && !$('ecosystem').value)) : (!selected || $('version').disabled));
+    $('plugin').disabled = !session;
+    $('refreshFeed').disabled = !session;
+    for (const id of ['runContextSample','runCveSample','runIocSample']) $(id).disabled = !session;
+    for (const sample of document.querySelectorAll('.example')) sample.disabled = !session;
+    $('analyze').disabled = !configured || !session || (ioc ? !$('plugin').value.trim() : mal ? (!$('plugin').value.trim() || (!/^MAL-\d{4}-\d+$/i.test($('plugin').value.trim()) && !$('ecosystem').value)) : (!selected || $('version').disabled));
   }
   async function loadFeed(force = false) {
     const stamp = revision;
@@ -313,6 +375,7 @@
     $('malVersion').value = '';
     update(); analyze();
   }));
+  $('retryAccess').onclick = () => showAccess('Confirme seu acesso para continuar.');
   reset();
-  loadFeed();
+  if (!configured) $('accessStatus').textContent = 'Para utilizar, publique os Workers e execute o instalador.';
 })();
