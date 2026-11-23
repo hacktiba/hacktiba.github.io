@@ -83,9 +83,12 @@
   async function request(path, params = {}, externalSignal = null) {
     if (!configured) throw new Error('Backend ainda não configurado. Verifique config.js.');
     if (!session) throw new Error('Valide seu acesso antes de pesquisar.');
+    const isIoc = path === 'ioc';
     const url = new URL(API + '/api/' + path);
-    for (const [key, value] of Object.entries(params)) {
-      if (value !== undefined && value !== null) url.searchParams.set(key, String(value));
+    if (!isIoc) {
+      for (const [key, value] of Object.entries(params)) {
+        if (value !== undefined && value !== null) url.searchParams.set(key, String(value));
+      }
     }
     const ctrl = new AbortController();
     const abortFromCaller = () => ctrl.abort();
@@ -93,8 +96,17 @@
     if (externalSignal?.aborted) ctrl.abort();
     const timeout = setTimeout(() => ctrl.abort(), 27000);
     try {
-      const res = await fetch(url, {signal: ctrl.signal, credentials: 'omit',
-        referrerPolicy: 'no-referrer', headers: {'Authorization':`Bearer ${session}`}});
+      const res = await fetch(url, {
+        method: isIoc ? 'POST' : 'GET',
+        ...(isIoc ? {body: JSON.stringify({value: params.value, kind: params.kind})} : {}),
+        signal: ctrl.signal,
+        credentials: 'omit',
+        referrerPolicy: 'no-referrer',
+        headers: {
+          'Authorization': `Bearer ${session}`,
+          ...(isIoc ? {'Content-Type': 'application/json'} : {})
+        }
+      });
       const data = await res.json().catch(() => ({}));
       if (res.status === 401) {showAccess('A sessão expirou. Confirme seu acesso novamente.'); throw new Error('Sessão expirada.');}
       if (!res.ok) throw new Error(data.error || `Erro de consulta (${res.status}).`);
