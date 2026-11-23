@@ -148,7 +148,7 @@
     $('analyze').textContent = ioc ? 'Pesquisar IOC' : mal ? 'Pesquisar malware' : 'Pesquisar vulnerabilidades';
     $('plugin').disabled = !session;
     $('refreshFeed').disabled = !session;
-    for (const id of ['runContextSample','runCveSample','runIocSample']) $(id).disabled = !session;
+    for (const id of ['runContextSample','runCveSample','runIocSample','runIocSample2']) $(id).disabled = !session;
     for (const sample of document.querySelectorAll('.example')) sample.disabled = !session;
     $('analyze').disabled = !configured || !session || (ioc ? !$('plugin').value.trim() : mal ? (!$('plugin').value.trim() || (!/^MAL-\d{4}-\d+$/i.test($('plugin').value.trim()) && !$('ecosystem').value)) : (!selected || $('version').disabled));
   }
@@ -293,11 +293,21 @@
   }
   function renderIoc(data) {
     let html = `<p class="result-note">${esc(data.notice || '')}</p>`;
-    if (!data.items?.length) html += '<div class="status warn">Nenhuma referência correspondente na base demonstrativa. Isso não comprova ausência de ameaças.</div>';
+    if (Array.isArray(data.sources)) {
+      const labels = {encontrado:'registro encontrado',sem_registro:'sem registro',indisponivel:'indisponível',documental:'referência documental'};
+      html += `<p class="help"><b>Fontes:</b> ${data.sources.map(s => esc(s.name || 'Fonte') + ': ' + esc(labels[s.status] || 'estado desconhecido')).join(' · ')}</p>`;
+    }
+    if (!data.items?.length) {
+      html += '<div class="status warn">Nenhuma referência encontrada nas fontes consultadas. Isso não comprova ausência de ameaças.</div>';
+    }
     for (const item of data.items || []) {
+      const url = (() => {try {const u = new URL(String(item.sourceUrl || '')); return u.protocol === 'https:' && ['blog.sucuri.net','threatfox.abuse.ch','urlhaus.abuse.ch'].includes(u.hostname) ? u.href : '';} catch (_) {return '';}})();
       html += `<article class="item"><div class="finding-head"><b>${esc(item.value)}</b><span class="tag">${esc(item.type)}</span></div>` +
         (item.plugin ? `<p><b>Plugin citado:</b> ${esc(item.plugin)}</p>` : '') +
-        (item.description ? `<p>${esc(item.description)}</p>` : '') + '</article>';
+        (item.description ? `<p>${esc(item.description)}</p>` : '') +
+        `<p class="help"><b>Fonte:</b> ${esc(item.source || 'não informada')} · ${item.method === 'consulta-api' ? 'consulta à API' : 'referência histórica'}${item.observedAt ? ' · ' + esc(item.observedAt) : ''}</p>` +
+        (url ? `<p><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Ver relatório da fonte</a></p>` : '') +
+        '</article>';
     }
     return html;
   }
@@ -320,7 +330,7 @@
         html = renderMalware(data); title = 'Resultado de malware';
       } else if (m === 'ioc') {
         data = await request('ioc', {value: $('plugin').value.trim(), kind: $('iocKind').value});
-        html = renderIoc(data); title = 'Indicadores encontrados';
+        html = renderIoc(data); title = 'Resultado da consulta IOC';
       } else return;
       renderResult(title, html);
     } catch (e) { message(e.message, 'error'); }
@@ -367,7 +377,11 @@
   };
   $('runIocSample').onclick = () => {
     $('plugin').value = 'wp-content/plugins/wp-compat/wp-compat.php';
-    $('iocKind').value = 'auto'; update(); analyze();
+    $('iocKind').value = 'artifact'; update(); analyze();
+  };
+  $('runIocSample2').onclick = () => {
+    $('plugin').value = 'wp-content/plugins/DebugMaster/DebugMaster.php';
+    $('iocKind').value = 'artifact'; update(); analyze();
   };
   document.querySelectorAll('.example').forEach(btn => btn.addEventListener('click', () => {
     $('plugin').value = btn.dataset.name || '';
